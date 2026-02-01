@@ -20,10 +20,10 @@ const productSchema = z.object({
   description: z.string().min(1, "Description is required"),
   longDescriptionSectionTitle: z.string(),
   longDescriptionParagraphs: z
-    .array(z.string())
+    .array(z.object({ value: z.string() }))
     .min(1, "At least one paragraph is required")
     .refine(
-      (paragraphs) => paragraphs.some((p) => p.trim().length > 0),
+      (paragraphs) => paragraphs.some((p) => p.value.trim().length > 0),
       "At least one paragraph must not be empty",
     ),
   price: z.string().min(1, "Price is required"),
@@ -67,9 +67,13 @@ export default function ProductForm({ product }: ProductFormProps) {
   // Parse existing longDescription if editing
   const parsedDescription = useMemo(() => {
     if (product?.longDescription) {
-      return parseLongDescription(product.longDescription);
+      const parsed = parseLongDescription(product.longDescription);
+      return {
+        sectionTitle: parsed.sectionTitle,
+        paragraphs: parsed.paragraphs.map((p) => ({ value: p })),
+      };
     }
-    return { sectionTitle: "", paragraphs: [""] };
+    return { sectionTitle: "", paragraphs: [{ value: "" }] };
   }, [product?.longDescription]);
 
   const {
@@ -114,7 +118,7 @@ export default function ProductForm({ product }: ProductFormProps) {
     fields: paragraphFields,
     append: appendParagraph,
     remove: removeParagraph,
-  } = useFieldArray<FormData, "longDescriptionParagraphs">({
+  } = useFieldArray({
     control,
     name: "longDescriptionParagraphs",
   });
@@ -128,7 +132,7 @@ export default function ProductForm({ product }: ProductFormProps) {
     // Combine section title and paragraphs into HTML
     const longDescription = combineLongDescription(
       data.longDescriptionSectionTitle,
-      data.longDescriptionParagraphs,
+      data.longDescriptionParagraphs.map((p) => p.value),
     );
 
     const formData: ProductFormData = {
@@ -215,7 +219,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           {paragraphFields.map((field, index) => (
             <S.ParagraphRow key={field.id}>
               <S.TextArea
-                {...register(`longDescriptionParagraphs.${index}`)}
+                {...register(`longDescriptionParagraphs.${index}.value`)}
                 rows={3}
                 placeholder={`Paragraph ${index + 1}...`}
                 $hasError={!!errors.longDescriptionParagraphs}
@@ -238,7 +242,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           )}
           <S.AddButton
             type="button"
-            onClick={() => appendParagraph("")}
+            onClick={() => appendParagraph({ value: "" })}
           >
             + Add Paragraph
           </S.AddButton>
