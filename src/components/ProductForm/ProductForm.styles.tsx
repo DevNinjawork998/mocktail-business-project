@@ -89,14 +89,28 @@ export const TextArea = styled.textarea<{ $hasError?: boolean }>`
 `;
 
 export const ColorInput = styled.input<{ $hasError?: boolean }>`
-  width: 60px;
-  height: 40px;
+  width: 80px;
+  height: 50px;
   padding: 0;
   border: 2px solid
     ${({ theme, $hasError }) =>
       $hasError ? theme.semantic.danger : theme.currentSemantic.border};
-  border-radius: ${({ theme }) => theme.radii.md};
+  border-radius: ${({ theme }) => theme.radii.lg};
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+
+  &:hover {
+    transform: scale(1.05);
+    border-color: ${({ theme }) => theme.semantic.primary};
+    box-shadow: ${({ theme }) => theme.shadows.md};
+  }
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.semantic.primary};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.semantic.primary}20;
+  }
 `;
 
 export const FieldError = styled.span`
