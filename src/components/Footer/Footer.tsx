@@ -23,7 +23,6 @@ import {
   SocialLinksContainer,
   SocialLinkButton,
   SocialIcon,
-  DividerLine,
   FooterBottom,
   CopyrightSection,
   CopyrightText,
