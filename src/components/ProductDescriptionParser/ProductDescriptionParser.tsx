@@ -14,7 +14,7 @@ interface ParsedSection {
 
 export default function ProductDescriptionParser({
   htmlContent,
-}: ProductDescriptionParserProps): JSX.Element {
+}: ProductDescriptionParserProps): React.ReactElement {
   const parseHTML = (html: string): ParsedSection[] => {
     const sections: ParsedSection[] = [];
     const parser = new DOMParser();

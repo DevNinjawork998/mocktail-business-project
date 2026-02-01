@@ -23,7 +23,7 @@ export default function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState<string | null>(null);
-  const [providers, setProviders] = useState<Record<string, any>>({});
+  const [providers, setProviders] = useState<Record<string, { id: string; name: string; type: string }>>({});
 
   useEffect(() => {
     const loadProviders = async () => {

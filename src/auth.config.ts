@@ -64,7 +64,7 @@ export default {
     signIn: "/login",
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       // Always allow credentials provider
       if (account?.provider === "credentials") {
         return true;
