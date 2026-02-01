@@ -6,6 +6,7 @@ import { canManageUsers } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
+import { Role } from "@prisma/client";
 
 type ActionResult<T = void> =
   | { success: true; data?: T }
@@ -172,7 +173,7 @@ export async function updateUser(
     const updateData: {
       email?: string;
       name?: string;
-      role?: string;
+      role?: Role;
       password?: string;
     } = {};
 
@@ -183,7 +184,7 @@ export async function updateUser(
       updateData.name = validated.name;
     }
     if (validated.role) {
-      updateData.role = validated.role;
+      updateData.role = validated.role as Role;
     }
     if (validated.password) {
       updateData.password = await bcrypt.hash(validated.password, 12);
