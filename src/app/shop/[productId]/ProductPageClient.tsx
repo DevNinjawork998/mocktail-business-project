@@ -13,7 +13,6 @@ import {
   ProductSubtitle,
   ProductFeatures,
   FeatureBadge,
-  ProductDescription,
   PriceSection,
   Price,
   PriceSubtext,
@@ -62,6 +61,7 @@ import {
   ModalCancelButton,
 } from "./page.styles";
 import { formatCurrency } from "@/app/lib/stripe";
+import ProductDescriptionParser from "@/components/ProductDescriptionParser/ProductDescriptionParser";
 
 interface ProductPageClientProps {
   product: Product;
@@ -176,9 +176,7 @@ export default function ProductPageClient({
               ))}
             </ProductFeatures>
 
-            <ProductDescription
-              dangerouslySetInnerHTML={{ __html: product.longDescription }}
-            />
+            <ProductDescriptionParser htmlContent={product.longDescription} />
 
             <PriceSection>
               <Price>{formatCurrency(priceNumber * 100)}</Price>
