@@ -14,16 +14,11 @@ export default function PrivacyPage() {
         <S.Paragraph>
           At Mocktails On the Go, we take your privacy seriously and are committed
           to protecting your personal data in accordance with the Personal Data
-          Protection Act 2010 (PDPA) of Malaysia. This Privacy Policy explains how
-          we collect, use, disclose, and safeguard your personal information when
-          you visit our website or use our services.
-          At Mocktails On the Go, we take your privacy seriously and are committed
-          to protecting your personal data in accordance with the Personal Data
-          Protection Act 2010 (PDPA) of Malaysia. This Privacy Policy explains how
-          we collect, use, disclose, and safeguard your personal information when
-          you visit our website or use our services.
+          Protection Act 2010 (PDPA) of Malaysia, including amendments effective 2024–2025. This Privacy Policy explains how we
+          collect, record, retain, store, use, analyze, process, and disclose your personal
+          information when you visit our website or use our services.
         </S.Paragraph>
-        <S.Paragraph>Last updated: January 2025</S.Paragraph>
+        <S.Paragraph>Last updated: January 2026</S.Paragraph>
 
         <S.PrivacySection>
           <S.SectionTitle>1. Personal Data Protection Act (PDPA) Compliance</S.SectionTitle>
@@ -38,7 +33,7 @@ export default function PrivacyPage() {
         <S.PrivacySection>
           <S.SectionTitle>2. Information We Collect</S.SectionTitle>
           <S.Paragraph>
-            We may collect the following types of personal data from you:
+            We may collect, record, retain, store, use, analyze, process, and disclose the following types of personal data:
           </S.Paragraph>
           <S.List>
             <S.ListItem>
@@ -65,29 +60,24 @@ export default function PrivacyPage() {
         <S.PrivacySection>
           <S.SectionTitle>3. How We Use Your Information</S.SectionTitle>
           <S.Paragraph>
-            We use your personal data for the following purposes:
+            We process your personal data only for lawful, necessary, and proportionate purposes, including:
           </S.Paragraph>
           <S.List>
             <S.ListItem>
-              To process and fulfill your orders, including delivery arrangements
+              To process and fulfill your orders, including delivery arrangements.
             </S.ListItem>
             <S.ListItem>
               To communicate with you regarding your orders, inquiries, and customer
-              service requests
+              service requests.
             </S.ListItem>
             <S.ListItem>
-              To send you marketing communications (only with your consent) about our
-              products, promotions, and events
+              To send you marketing communications (only with your explicit consent).
             </S.ListItem>
             <S.ListItem>
-              To improve our website, products, and services based on your feedback
-              and usage patterns
+              To improve our website, products, and services based on usage patterns.
             </S.ListItem>
             <S.ListItem>
-              To comply with legal obligations and protect our legal rights
-            </S.ListItem>
-            <S.ListItem>
-              To prevent fraud and ensure the security of our website and services
+              To comply with legal obligations and prevent fraud.
             </S.ListItem>
           </S.List>
         </S.PrivacySection>
@@ -124,16 +114,10 @@ export default function PrivacyPage() {
             disclosure, or destruction. These measures include:
           </S.Paragraph>
           <S.List>
-            <S.ListItem>Secure data transmission using encryption (SSL/TLS)</S.ListItem>
-            <S.ListItem>Secure storage of personal data</S.ListItem>
-            <S.ListItem>Regular security assessments and updates</S.ListItem>
-            <S.ListItem>Limited access to personal data on a need-to-know basis</S.ListItem>
+            <S.ListItem>Secure data transmission using encryption (SSL/TLS).</S.ListItem>
+            <S.ListItem>Limited access to personal data on a need-to-know basis.</S.ListItem>
+            <S.ListItem>Regular compliance audits and staff training.</S.ListItem>
           </S.List>
-          <S.Paragraph>
-            However, no method of transmission over the Internet or electronic storage
-            is 100% secure. While we strive to protect your personal data, we cannot
-            guarantee absolute security.
-          </S.Paragraph>
         </S.PrivacySection>
 
         <S.PrivacySection>
@@ -144,31 +128,18 @@ export default function PrivacyPage() {
           </S.Paragraph>
           <S.List>
             <S.ListItem>
-              <S.StrongText>Right of Access:</S.StrongText> You have the right to
-              request access to your personal data held by us
+              <S.StrongText>Right of Access & Correction:</S.StrongText> Request access to or correction of your data.
             </S.ListItem>
             <S.ListItem>
-              <S.StrongText>Right of Correction:</S.StrongText> You have the right to
-              request correction of inaccurate or incomplete personal data
+              <S.StrongText>Right to Withdraw Consent:</S.StrongText> Withdraw consent at any time.
             </S.ListItem>
             <S.ListItem>
-              <S.StrongText>Right to Withdraw Consent:</S.StrongText> You have the
-              right to withdraw your consent for the processing of your personal data
-              at any time
+              <S.StrongText>Right to Limit Processing:</S.StrongText> Restrict how your data is used.
             </S.ListItem>
             <S.ListItem>
-              <S.StrongText>Right to Limit Processing:</S.StrongText> You have the
-              right to limit the processing of your personal data
-            </S.ListItem>
-            <S.ListItem>
-              <S.StrongText>Right to Object:</S.StrongText> You have the right to
-              object to the processing of your personal data in certain circumstances
+              <S.StrongText>Right to Object:</S.StrongText> Object to processing in certain circumstances.
             </S.ListItem>
           </S.List>
-          <S.Paragraph>
-            To exercise any of these rights, please contact us using the contact
-            information provided in Section 10 below.
-          </S.Paragraph>
         </S.PrivacySection>
 
         <S.PrivacySection>
@@ -184,32 +155,21 @@ export default function PrivacyPage() {
         <S.PrivacySection>
           <S.SectionTitle>8. Cookies and Tracking Technologies</S.SectionTitle>
           <S.Paragraph>
-            Our website uses cookies and similar tracking technologies to enhance your
-            browsing experience, analyze website traffic, and understand user
-            preferences. You can control cookie settings through your browser
-            preferences. However, disabling cookies may affect the functionality of
-            our website.
+            Our website uses cookies to enhance your browsing experience. By continuing to use our website, you consent to the use of cookies. You may withdraw consent at any time by adjusting your browser settings.
           </S.Paragraph>
         </S.PrivacySection>
 
         <S.PrivacySection>
-          <S.SectionTitle>9. Third-Party Links</S.SectionTitle>
+          <S.SectionTitle>9. Liability Disclaimer</S.SectionTitle>
           <S.Paragraph>
-            Our website may contain links to third-party websites. We are not
-            responsible for the privacy practices or content of these external sites.
-            We encourage you to review the privacy policies of any third-party sites
-            you visit.
+            We disclaim responsibility for breaches beyond our reasonable control, including third-party service providers and external websites. We encourage you to review the privacy policies of any third-party sites you visit. Your use of such sites is at your own risk.
           </S.Paragraph>
         </S.PrivacySection>
 
         <S.PrivacySection>
           <S.SectionTitle>10. Changes to This Privacy Policy</S.SectionTitle>
           <S.Paragraph>
-            We may update this Privacy Policy from time to time to reflect changes in
-            our practices or legal requirements. We will notify you of any material
-            changes by posting the updated policy on this page and updating the
-            &quot;Last updated&quot; date. Your continued use of our services after such
-            changes constitutes your acceptance of the updated Privacy Policy.
+            We reserve the right to amend, vary, or revise this Privacy Policy at any time. By publishing the updated policy on our website, we deem that you have been notified. Continued use of our services constitutes valid and express consent to the revised terms.
           </S.Paragraph>
         </S.PrivacySection>
 
@@ -220,27 +180,28 @@ export default function PrivacyPage() {
             Policy or wish to exercise your rights under the PDPA, please contact us:
           </S.Paragraph>
           <S.Paragraph>
-            <S.StrongText>Mocktails On the Go</S.StrongText>
-            <br />
-            Email: [Your Email Address]
-            <br />
-            Phone: [Your Phone Number]
-            <br />
-            Address: [Your Business Address]
-          </S.Paragraph>
-          <S.Paragraph>
-            We will respond to your inquiries within a reasonable timeframe in
-            accordance with the PDPA requirements.
+            <S.StrongText>Mocktails On the Go Email: krishanthini@mocktailsonthego.com</S.StrongText>
           </S.Paragraph>
         </S.PrivacySection>
 
         <S.PrivacySection>
           <S.SectionTitle>12. Consent</S.SectionTitle>
           <S.Paragraph>
-            By using our website and services, you consent to the collection, use,
-            and disclosure of your personal data as described in this Privacy Policy.
-            If you do not agree with this Privacy Policy, please do not use our
-            website or services.
+            By using our website and services, you expressly consent to the continued collection, recording, retention, storage, use, analyzing, disclosure and processing of your personal data as described in this Privacy Policy. Your consent will continue until withdrawn.
+          </S.Paragraph>
+        </S.PrivacySection>
+
+        <S.PrivacySection>
+          <S.SectionTitle>13. Cross-border Transfers</S.SectionTitle>
+          <S.Paragraph>
+            If personal data is transferred outside Malaysia, we will ensure equivalent protection standards in line with PDPA requirements. Such transfers will only occur with your consent or where permitted by law.
+          </S.Paragraph>
+        </S.PrivacySection>
+
+        <S.PrivacySection>
+          <S.SectionTitle>14. Data Breach Notification</S.SectionTitle>
+          <S.Paragraph>
+            In the event of a personal data breach, we will notify the Personal Data Protection Commissioner and affected individuals within the timeframe required by law. We will also take immediate steps to mitigate risks and prevent recurrence.
           </S.Paragraph>
         </S.PrivacySection>
       </S.ContentSection>
