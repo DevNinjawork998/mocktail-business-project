@@ -47,7 +47,7 @@ export default function UsersListClient({
 
   const getInitials = (name: string | null, email: string): string => {
     if (name) {
-      const parts = users.data?.name?.split(" ") || [];
+      const parts = name.split(" ");
       if (parts.length >= 2) {
         return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
       }

@@ -11,7 +11,7 @@ import {
   type UserCreateData,
   type UserUpdateData,
 } from "@/app/actions/users";
-import * as S from "../ProductForm/ProductForm.styles";
+import * as S from "./UserForm.styles";
 
 const userCreateSchema = z.object({
   email: z.string().email("Invalid email address"),
