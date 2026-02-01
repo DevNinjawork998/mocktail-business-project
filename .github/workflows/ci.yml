@@ -39,7 +39,7 @@ jobs:
           DATABASE_URL: "file:./dev.db"
 
       - name: Run ESLint
-        run: npm run lint .
+        run: npx next lint .
 
       - name: Run tests
         run: npm run test:ci
