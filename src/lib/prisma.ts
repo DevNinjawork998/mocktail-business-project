@@ -11,52 +11,68 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   // Priority 1: Direct PostgreSQL connection (works for both build and runtime)
   const directPostgresUrl = process.env.POSTGRES_URL || process.env.DIRECT_URL;
-  
-  if (directPostgresUrl && 
-      (directPostgresUrl.startsWith("postgres://") || directPostgresUrl.startsWith("postgresql://"))) {
+
+  if (
+    directPostgresUrl &&
+    (directPostgresUrl.startsWith("postgres://") ||
+      directPostgresUrl.startsWith("postgresql://"))
+  ) {
     // Reuse existing pool if available
-    const pool = globalForPrisma.pool ?? new Pool({
-      connectionString: directPostgresUrl,
-      max: 10, // Maximum number of clients in the pool
-      idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-      connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
-    });
-    
+    const pool =
+      globalForPrisma.pool ??
+      new Pool({
+        connectionString: directPostgresUrl,
+        max: 10, // Maximum number of clients in the pool
+        idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+        connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+      });
+
     if (!globalForPrisma.pool) {
       globalForPrisma.pool = pool;
     }
-    
+
     const adapter = new PrismaPg(pool);
     return new PrismaClient({ adapter });
   }
 
   // Priority 2: Check DATABASE_URL for direct PostgreSQL connection
   const databaseUrl = process.env.DATABASE_URL;
-  
+
   if (databaseUrl) {
     // Direct PostgreSQL connection
-    if (databaseUrl.startsWith("postgresql://") || databaseUrl.startsWith("postgres://")) {
+    if (
+      databaseUrl.startsWith("postgresql://") ||
+      databaseUrl.startsWith("postgres://")
+    ) {
       // Reuse existing pool if available
-      const pool = globalForPrisma.pool ?? new Pool({
-        connectionString: databaseUrl,
-        max: 10, // Maximum number of clients in the pool
-        idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-        connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
-      });
-      
+      const pool =
+        globalForPrisma.pool ??
+        new Pool({
+          connectionString: databaseUrl,
+          max: 10, // Maximum number of clients in the pool
+          idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+          connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+        });
+
       if (!globalForPrisma.pool) {
         globalForPrisma.pool = pool;
       }
-      
+
       const adapter = new PrismaPg(pool);
       return new PrismaClient({ adapter });
     }
 
     // Prisma Accelerate: prisma:// or prisma+postgres://
-    if (databaseUrl.startsWith("prisma://") || databaseUrl.startsWith("prisma+postgres://")) {
+    if (
+      databaseUrl.startsWith("prisma://") ||
+      databaseUrl.startsWith("prisma+postgres://")
+    ) {
       // Use standard PrismaClient - it will read DATABASE_URL from environment
       return new PrismaClient({
-        log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+        log:
+          process.env.NODE_ENV === "development"
+            ? ["error", "warn"]
+            : ["error"],
       });
     }
 
@@ -73,18 +89,20 @@ function createPrismaClient() {
     // Set DATABASE_URL to Accelerate URL for Prisma Client
     process.env.DATABASE_URL = prismaAccelerateUrl;
     return new PrismaClient({
-      log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+      log:
+        process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
     });
   }
 
   // If no valid database URL is found
-  const isBuildTime = process.env.NEXT_PHASE === "phase-production-build" || 
-                      process.env.NODE_ENV === "production" && !process.env.VERCEL_ENV;
-  
+  const isBuildTime =
+    process.env.NEXT_PHASE === "phase-production-build" ||
+    (process.env.NODE_ENV === "production" && !process.env.VERCEL_ENV);
+
   throw new Error(
     `DATABASE_URL, POSTGRES_URL, DIRECT_URL, or PRISMA_DATABASE_URL environment variable is required. ` +
-    `Please set it to your PostgreSQL connection string (postgres://...), Prisma Accelerate URL (prisma://... or prisma+postgres://...), or SQLite (file:...). ` +
-    `${isBuildTime ? "This error occurred during build - make sure the database URL is set in Vercel's environment variables and marked as 'Available during build'." : ""}`
+      `Please set it to your PostgreSQL connection string (postgres://...), Prisma Accelerate URL (prisma://... or prisma+postgres://...), or SQLite (file:...). ` +
+      `${isBuildTime ? "This error occurred during build - make sure the database URL is set in Vercel's environment variables and marked as 'Available during build'." : ""}`
   );
 }
 
@@ -94,24 +112,28 @@ function getPrismaClient(): PrismaClient {
   if (!globalForPrisma.prisma) {
     // During build time, if no DATABASE_URL is available, create a minimal client
     // that won't be used (Next.js static analysis won't execute the code)
-    const hasDatabaseUrl = 
-      process.env.DATABASE_URL || 
-      process.env.POSTGRES_URL || 
-      process.env.DIRECT_URL || 
+    const hasDatabaseUrl =
+      process.env.DATABASE_URL ||
+      process.env.POSTGRES_URL ||
+      process.env.DIRECT_URL ||
       process.env.PRISMA_DATABASE_URL;
-    
-    if (!hasDatabaseUrl && process.env.NODE_ENV === "production" && typeof window === "undefined") {
+
+    if (
+      !hasDatabaseUrl &&
+      process.env.NODE_ENV === "production" &&
+      typeof window === "undefined"
+    ) {
       // During build, if we don't have a database URL, we can't create a real client
       // But we'll create a dummy one that will fail gracefully when actually used
       // This prevents the module from throwing during static analysis
       throw new Error(
         "DATABASE_URL, POSTGRES_URL, DIRECT_URL, or PRISMA_DATABASE_URL environment variable is required. " +
-        "Please set it to your PostgreSQL connection string (postgres://...), Prisma Accelerate URL (prisma://... or prisma+postgres://...), or SQLite (file:...)"
+          "Please set it to your PostgreSQL connection string (postgres://...), Prisma Accelerate URL (prisma://... or prisma+postgres://...), or SQLite (file:...)"
       );
     }
-    
+
     globalForPrisma.prisma = createPrismaClient();
-    
+
     // Graceful shutdown: disconnect Prisma on process termination
     if (typeof process !== "undefined") {
       process.on("beforeExit", async () => {
@@ -127,7 +149,8 @@ function getPrismaClient(): PrismaClient {
 export const prisma = new Proxy({} as PrismaClient, {
   get(_target, prop) {
     const client = getPrismaClient();
-    const value = (client as Record<string, unknown>)[prop as string];
+    // Use unknown first to avoid type errors, then check the actual value
+    const value = (client as unknown as Record<string, unknown>)[prop as string];
     // If it's a function, bind it to the client to preserve 'this' context
     if (typeof value === "function") {
       return (value as (...args: unknown[]) => unknown).bind(client);
