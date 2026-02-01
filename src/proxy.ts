@@ -1,6 +1,10 @@
 import { auth } from "@/auth";
 
-export default auth((req) => {
+/**
+ * Next.js 16 Proxy - runs on Node.js runtime by default.
+ * Handles authentication checks for protected routes.
+ */
+export const proxy = auth((req) => {
   const isLoggedIn = !!req.auth;
   const isAdminRoute = req.nextUrl.pathname.startsWith("/dashboard");
   const isLoginPage = req.nextUrl.pathname === "/login";
@@ -20,7 +24,6 @@ export default auth((req) => {
   return;
 });
 
-// Next.js 15 matcher pattern
 export const config = {
   matcher: ["/dashboard/:path*", "/login"],
 };
