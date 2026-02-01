@@ -49,12 +49,12 @@ describe("FounderStory", () => {
 
     expect(
       screen.getByText(
-        /Hi! I'm Sarah, the founder of Mocktails On the Go/,
+        /Growing up, stress was a constant companion in my life/,
       ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Every mocktail is crafted with intention/,
+        /That's when I knew I wanted to change the drinking scene in Malaysia/,
       ),
     ).toBeInTheDocument();
   });

@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
   ];
 
   const companyLinks = [
-    { label: "Our Story", href: "/founders" },
+    { label: "Our Founder", href: "/founders" },
     { label: "Contact", href: "/contact" },
     // { label: "Careers", href: "/careers" },
   ];

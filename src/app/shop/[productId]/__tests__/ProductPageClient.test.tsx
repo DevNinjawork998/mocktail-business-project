@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent } from "../../../../__tests__/test-utils";
+import { render, screen, fireEvent, waitFor } from "../../../../__tests__/test-utils";
 import ProductPageClient from "../ProductPageClient";
 import { Product } from "@/data/serverProductService";
 
@@ -319,7 +319,7 @@ describe("ProductPageClient", () => {
       ).toBeInTheDocument();
     });
 
-    it("opens WhatsApp when button is clicked", () => {
+    it("opens WhatsApp when button is clicked", async () => {
       const consoleErrorSpy = jest
         .spyOn(console, "error")
         .mockImplementation(() => {});
@@ -335,8 +335,21 @@ describe("ProductPageClient", () => {
       if (whatsappButton) {
         fireEvent.click(whatsappButton);
 
+        // Modal should appear
+        expect(screen.getByText("Terms of Service Consent Required")).toBeInTheDocument();
+        
+        // Check consent checkbox
+        const consentCheckbox = screen.getByLabelText(/I agree to the collection/i);
+        fireEvent.click(consentCheckbox);
+        
+        // Click proceed button
+        const proceedButton = screen.getByText("Proceed to WhatsApp");
+        fireEvent.click(proceedButton);
+
         // window.open should be called with WhatsApp URL
-        expect(mockWindowOpen).toHaveBeenCalled();
+        await waitFor(() => {
+          expect(mockWindowOpen).toHaveBeenCalled();
+        });
         const callArgs = mockWindowOpen.mock.calls[0];
         expect(callArgs[0]).toContain("wa.me/60146491165");
         // URL is encoded, so check for encoded version
@@ -347,7 +360,7 @@ describe("ProductPageClient", () => {
       consoleErrorSpy.mockRestore();
     });
 
-    it("handles WhatsApp error gracefully", () => {
+    it("handles WhatsApp error gracefully", async () => {
       const consoleErrorSpy = jest
         .spyOn(console, "error")
         .mockImplementation(() => {});
@@ -366,8 +379,21 @@ describe("ProductPageClient", () => {
       if (whatsappButton) {
         fireEvent.click(whatsappButton);
 
+        // Modal should appear
+        expect(screen.getByText("Terms of Service Consent Required")).toBeInTheDocument();
+        
+        // Check consent checkbox
+        const consentCheckbox = screen.getByLabelText(/I agree to the collection/i);
+        fireEvent.click(consentCheckbox);
+        
+        // Click proceed button
+        const proceedButton = screen.getByText("Proceed to WhatsApp");
+        fireEvent.click(proceedButton);
+
         // Should attempt to open window, and fallback to location.href when it returns null
-        expect(mockWindowOpen).toHaveBeenCalled();
+        await waitFor(() => {
+          expect(mockWindowOpen).toHaveBeenCalled();
+        });
         // The error from jsdom's navigation limitation is expected and handled
         // We verify the function attempted to handle the error gracefully
       }

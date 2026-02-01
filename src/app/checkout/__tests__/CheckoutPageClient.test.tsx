@@ -379,6 +379,10 @@ describe("CheckoutPageClient", () => {
         target: { value: "No peanuts" },
       });
 
+      // Check the terms consent checkbox
+      const consentCheckbox = screen.getByLabelText(/I agree to the collection/i);
+      fireEvent.click(consentCheckbox);
+
       // Submit the form directly to ensure proper event
       fireEvent.submit(screen.getByRole("form"));
 

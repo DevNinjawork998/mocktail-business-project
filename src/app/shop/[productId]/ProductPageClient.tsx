@@ -84,6 +84,12 @@ export default function ProductPageClient({
     setConsentGiven(false);
   };
 
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      handleCloseModal();
+    }
+  };
+
   const handleProceedToWhatsApp = () => {
     if (!consentGiven) {
       return;
@@ -111,12 +117,6 @@ export default function ProductPageClient({
     } catch (error) {
       console.error("Error opening WhatsApp:", error);
       alert("There was an error opening WhatsApp. Please try again.");
-    }
-  };
-
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      handleCloseModal();
     }
   };
 

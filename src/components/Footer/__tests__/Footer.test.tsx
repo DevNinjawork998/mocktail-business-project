@@ -50,6 +50,7 @@ describe("Footer", () => {
     render(<Footer />);
     expect(screen.getByText("Shop")).toBeInTheDocument();
     expect(screen.getByText("Company")).toBeInTheDocument();
+    expect(screen.getByText("More")).toBeInTheDocument();
   });
 
   it("renders shop navigation links", () => {
@@ -65,8 +66,10 @@ describe("Footer", () => {
 
   it("renders legal links", () => {
     render(<Footer />);
-    expect(screen.getByText("Privacy Policy")).toBeInTheDocument();
-    expect(screen.getByText("Terms of Service")).toBeInTheDocument();
-    expect(screen.getByText("Shipping")).toBeInTheDocument();
+    // Privacy Policy appears in both "More" section and legal links, so use getAllByText
+    const privacyLinks = screen.getAllByText("Privacy Policy");
+    expect(privacyLinks.length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Terms of Service").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Shipping").length).toBeGreaterThan(0);
   });
 });
