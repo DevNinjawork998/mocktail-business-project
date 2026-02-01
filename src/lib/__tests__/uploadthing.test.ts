@@ -1,4 +1,5 @@
 import "@jest/globals";
+import { UploadButton, UploadDropzone } from "../uploadthing";
 
 // Mock the uploadthing/react module to avoid TextEncoder issues in Jest
 jest.mock("@uploadthing/react", () => ({
@@ -8,12 +9,9 @@ jest.mock("@uploadthing/react", () => ({
 
 describe("uploadthing exports", () => {
   it("exports UploadButton and UploadDropzone", () => {
-    // Dynamic import to ensure mocks are applied
-    const uploadthing = require("../uploadthing");
-    
-    expect(uploadthing.UploadButton).toBeDefined();
-    expect(uploadthing.UploadDropzone).toBeDefined();
-    expect(typeof uploadthing.UploadButton).toBe("function");
-    expect(typeof uploadthing.UploadDropzone).toBe("function");
+    expect(UploadButton).toBeDefined();
+    expect(UploadDropzone).toBeDefined();
+    expect(typeof UploadButton).toBe("function");
+    expect(typeof UploadDropzone).toBe("function");
   });
 });
