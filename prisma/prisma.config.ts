@@ -19,7 +19,7 @@ try {
       }
     }
   });
-} catch (e) {
+} catch (_e) {
   // Try legacy file if .env.production.local doesn't exist
   try {
     const envContent = readFileSync(envProdFileLegacy, "utf-8");
@@ -32,7 +32,7 @@ try {
         }
       }
     });
-  } catch (e2) {
+  } catch (_e2) {
     // Neither file exists, that's okay
   }
 }

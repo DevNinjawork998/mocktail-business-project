@@ -21,13 +21,17 @@ jobs:
           node-version: '24'
           cache: 'npm'
 
+      - name: Clean npm cache
+        run: npm cache clean --force
+
       - name: Install dependencies
         run: npm ci
 
       - name: Setup Prisma for CI
         run: |
           # Ensure we have a schema file (use dev schema for CI)
-          if [ ! -f prisma/schema.prisma ] || ! grep -q "provider = \"sqlite\"" prisma/schema.prisma; then
+          if [ ! -f prisma/schema.prisma ] || ! grep -q "provider = \"sqlite\"" prisma/schema.prisma;
+          then
             cp prisma/schema.dev.prisma prisma/schema.prisma
           fi
         env:
@@ -39,7 +43,9 @@ jobs:
           DATABASE_URL: "file:./dev.db"
 
       - name: Run ESLint
-        run: npm run lint
+        run: |
+          # Use ESLint directly with Next.js config (flat config format)
+          npx eslint . --config eslint.config.mjs
 
       - name: Run tests
         run: npm run test:ci
@@ -65,6 +71,9 @@ jobs:
         with:
           node-version: '24'
           cache: 'npm'
+
+      - name: Clean npm cache
+        run: npm cache clean --force
 
       - name: Install dependencies
         run: npm ci
