@@ -1,6 +1,9 @@
 import { Suspense } from "react";
+<<<<<<< HEAD
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+=======
+>>>>>>> main
 import LoginForm from "./LoginForm";
 
 export const metadata = {
@@ -16,6 +19,7 @@ function LoginFormFallback() {
   );
 }
 
+<<<<<<< HEAD
 export default async function LoginPage({
   searchParams,
 }: {
@@ -29,6 +33,9 @@ export default async function LoginPage({
     redirect(callbackUrl);
   }
 
+=======
+export default function LoginPage() {
+>>>>>>> main
   return (
     <Suspense fallback={<LoginFormFallback />}>
       <LoginForm />
