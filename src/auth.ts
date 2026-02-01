@@ -8,6 +8,7 @@ const { callbacks: authConfigCallbacks, ...restAuthConfig } = authConfig;
 // OAuth account linking is handled in signIn callback
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   ...restAuthConfig,
   callbacks: {
     // Include signIn callback from authConfig for OAuth account linking
