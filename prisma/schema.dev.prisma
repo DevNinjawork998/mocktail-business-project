@@ -20,7 +20,7 @@ model User {
   emailVerified DateTime?
   password      String    // bcrypt hashed
   image         String?
-  role          String    @default("EDITOR") // ADMIN or EDITOR (SQLite doesn't support enums)
+  role          String    @default("EDITOR") // SUPERADMIN, ADMIN, or EDITOR (SQLite doesn't support enums)
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now())

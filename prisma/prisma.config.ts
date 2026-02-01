@@ -1,46 +1,22 @@
 import path from "node:path";
 import { defineConfig } from "prisma/config";
-import { readFileSync } from "node:fs";
+import { config } from "dotenv";
 import { resolve } from "node:path";
 
-// Load .env.production.local (or .env.prod.local for backwards compatibility) if it exists
-const envProdFile = resolve(__dirname, "../.env.production.local");
-const envProdFileLegacy = resolve(__dirname, "../.env.prod.local");
-// Try .env.production.local first, then fall back to .env.prod.local
-const envFileToLoad = envProdFile;
-try {
-  const envContent = readFileSync(envFileToLoad, "utf-8");
-  envContent.split("\n").forEach((line) => {
-    const trimmed = line.trim();
-    if (trimmed && !trimmed.startsWith("#")) {
-      const match = trimmed.match(/^([^=\s]+)\s*=\s*(.*)$/);
-      if (match && !process.env[match[1]]) {
-        process.env[match[1]] = match[2].trim();
-      }
-    }
-  });
-} catch (_e) {
-  // Try legacy file if .env.production.local doesn't exist
-  try {
-    const envContent = readFileSync(envProdFileLegacy, "utf-8");
-    envContent.split("\n").forEach((line) => {
-      const trimmed = line.trim();
-      if (trimmed && !trimmed.startsWith("#")) {
-        const match = trimmed.match(/^([^=\s]+)\s*=\s*(.*)$/);
-        if (match && !process.env[match[1]]) {
-          process.env[match[1]] = match[2].trim();
-        }
-      }
-    });
-  } catch (_e2) {
-    // Neither file exists, that's okay
-  }
-}
+// Load environment variables from .env files in order of priority
+// dotenv will automatically load .env.local, .env.development.local, etc.
+config({ path: resolve(__dirname, "../.env.local") });
+config({ path: resolve(__dirname, "../.env.development.local") });
+config({ path: resolve(__dirname, "../.env.production.local") });
+config({ path: resolve(__dirname, "../.env.prod.local") }); // Legacy
+config({ path: resolve(__dirname, "../.env") });
 
 // Determine the database URL based on environment
 const getDatabaseUrl = () => {
-  const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
-  if (dbUrl) {
+  // Check environment variables first (may be set externally via export)
+  // Then check loaded from .env files
+  const dbUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.DIRECT_URL;
+  if (dbUrl && dbUrl !== "file:./dev.db" && !dbUrl.startsWith("prisma://") && !dbUrl.startsWith("prisma+")) {
     return dbUrl;
   }
   // Default to SQLite for development
@@ -49,7 +25,16 @@ const getDatabaseUrl = () => {
 
 const dbUrl = getDatabaseUrl();
 if (!dbUrl || dbUrl === "file:./dev.db") {
-  console.warn("Warning: No DATABASE_URL or POSTGRES_URL found, using SQLite default");
+  console.warn("Warning: No DATABASE_URL, POSTGRES_URL, or DIRECT_URL found, using SQLite default");
+  console.warn("For migrations, set DATABASE_URL to your direct PostgreSQL connection string");
+}
+
+// Ensure we have a valid URL for migrations
+if (!dbUrl || dbUrl === "file:./dev.db") {
+  throw new Error(
+    "DATABASE_URL, POSTGRES_URL, or DIRECT_URL must be set for migrations. " +
+    "Please set one of these environment variables to your PostgreSQL connection string."
+  );
 }
 
 export default defineConfig({
