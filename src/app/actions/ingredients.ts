@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { getEditorRoles, getDeleterRoles } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -25,7 +26,7 @@ export async function createIngredient(
   data: IngredientFormData
 ): Promise<ActionResult<{ id: string }>> {
   const session = await auth();
-  if (!session?.user || !["ADMIN", "EDITOR"].includes(session.user.role)) {
+  if (!session?.user || !getEditorRoles().includes(session.user.role)) {
     return { success: false, error: "Unauthorized" };
   }
 
@@ -56,7 +57,7 @@ export async function updateIngredient(
   data: IngredientFormData
 ): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user || !["ADMIN", "EDITOR"].includes(session.user.role)) {
+  if (!session?.user || !getEditorRoles().includes(session.user.role)) {
     return { success: false, error: "Unauthorized" };
   }
 
@@ -86,7 +87,7 @@ export async function updateIngredient(
 
 export async function deleteIngredient(id: string): Promise<ActionResult> {
   const session = await auth();
-  if (!session?.user || session.user.role !== "ADMIN") {
+  if (!session?.user || !getDeleterRoles().includes(session.user.role)) {
     return { success: false, error: "Only admins can delete ingredients" };
   }
 

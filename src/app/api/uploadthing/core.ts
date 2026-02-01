@@ -1,5 +1,6 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { auth } from "@/auth";
+import { getEditorRoles } from "@/lib/permissions";
 
 const f = createUploadthing();
 
@@ -13,7 +14,7 @@ export const ourFileRouter = {
         throw new Error("Unauthorized");
       }
 
-      if (!["ADMIN", "EDITOR"].includes(session.user.role)) {
+      if (!getEditorRoles().includes(session.user.role)) {
         throw new Error("Insufficient permissions");
       }
 
@@ -34,7 +35,7 @@ export const ourFileRouter = {
         throw new Error("Unauthorized");
       }
 
-      if (!["ADMIN", "EDITOR"].includes(session.user.role)) {
+      if (!getEditorRoles().includes(session.user.role)) {
         throw new Error("Insufficient permissions");
       }
 

@@ -12,6 +12,8 @@ async function main() {
   const { prisma } = await import("../src/lib/prisma");
   const adminEmail = process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;
+  const adminName = process.env.ADMIN_NAME;
+  const adminRole = (process.env.ADMIN_ROLE || "ADMIN") as "SUPERADMIN" | "ADMIN" | "EDITOR";
 
   if (!adminEmail || !adminPassword) {
     console.error(
@@ -21,7 +23,16 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("Seeding admin user...");
+  // Validate role
+  const validRoles = ["SUPERADMIN", "ADMIN", "EDITOR"];
+  if (!validRoles.includes(adminRole)) {
+    console.error(
+      `Error: ADMIN_ROLE must be one of: ${validRoles.join(", ")}`
+    );
+    process.exit(1);
+  }
+
+  console.log(`Seeding ${adminRole} user...`);
 
   const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
@@ -29,17 +40,18 @@ async function main() {
     where: { email: adminEmail },
     update: {
       password: hashedPassword,
-      role: "ADMIN",
+      role: adminRole,
+      name: adminName,
     },
     create: {
       email: adminEmail,
-      name: "Admin",
+      name: adminName,
       password: hashedPassword,
-      role: "ADMIN",
+      role: adminRole,
     },
   });
 
-  console.log(`Admin user created/updated: ${user.email} (role: ${user.role})`);
+  console.log(`Admin user created/updated: ${user.email} (name: ${user.name}, role: ${user.role})`);
 }
 
 main()

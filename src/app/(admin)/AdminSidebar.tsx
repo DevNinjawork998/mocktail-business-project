@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { ROLES } from "@/lib/permissions";
 import * as S from "./AdminSidebar.styles";
 
 interface AdminSidebarProps {
@@ -13,18 +14,27 @@ interface AdminSidebarProps {
   };
 }
 
-const navItems = [
+const baseNavItems = [
   { href: "/dashboard", label: "Dashboard", icon: "📊" },
   { href: "/dashboard/products", label: "Products", icon: "🍹" },
   { href: "/dashboard/ingredients", label: "Ingredients", icon: "🌿" },
 ];
 
+const superAdminNavItems = [
+  { href: "/dashboard/users", label: "Users", icon: "👥" },
+];
+
 export default function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
+  const isSuperAdmin = user.role === ROLES.SUPERADMIN;
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/login" });
   };
+
+  const navItems = isSuperAdmin
+    ? [...baseNavItems, ...superAdminNavItems]
+    : baseNavItems;
 
   return (
     <S.Sidebar>
