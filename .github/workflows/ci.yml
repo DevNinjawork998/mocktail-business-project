@@ -43,7 +43,9 @@ jobs:
           DATABASE_URL: "file:./dev.db"
 
       - name: Run ESLint
-        run: npm run lint
+        run: |
+          # Use ESLint directly with Next.js config (flat config format)
+          npx eslint . --config eslint.config.mjs
 
       - name: Run tests
         run: npm run test:ci

@@ -268,7 +268,7 @@ async function main() {
         where: { id: productId },
       });
       console.log(`Deleted product with id: ${productId}`);
-    } catch (error) {
+    } catch (_error) {
       // Product might not exist, that's okay
       console.log(`Product ${productId} not found or already deleted`);
     }
