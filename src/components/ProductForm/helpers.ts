@@ -10,6 +10,24 @@ export function parseLongDescription(html: string): {
     return { sectionTitle: "", paragraphs: [""] };
   }
 
+  // Check if we're on the client (DOMParser is browser-only)
+  if (typeof window === "undefined" || typeof DOMParser === "undefined") {
+    // Fallback: simple regex parsing for server-side
+    const h3Match = html.match(/<h3[^>]*>(.*?)<\/h3>/i);
+    const sectionTitle = h3Match ? h3Match[1].trim() : "";
+    
+    const pMatches = html.match(/<p[^>]*>(.*?)<\/p>/gi) || [];
+    const paragraphs = pMatches.map((p) => {
+      const textMatch = p.match(/<p[^>]*>(.*?)<\/p>/i);
+      return textMatch ? textMatch[1].replace(/<[^>]*>/g, "").trim() : "";
+    }).filter((p) => p.length > 0);
+    
+    return {
+      sectionTitle,
+      paragraphs: paragraphs.length > 0 ? paragraphs : [""],
+    };
+  }
+
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
 

@@ -51,6 +51,25 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
   width: 100%;
   transition: all 0.3s ease;
   position: relative;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  & .spinner {
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Ensure file inputs are accessible */
+  & input[type="file"] {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+  }
   
   /* Target the UploadDropzone root container */
   & > div {
@@ -63,6 +82,7 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
+    pointer-events: auto !important;
   }
   
   /* Ensure no overflow or clipping and center all nested divs */
@@ -74,6 +94,7 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
+    pointer-events: auto !important;
   }
   
   /* Fix text wrapping - target all text elements and center them */
@@ -93,13 +114,26 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
     margin-right: auto !important;
   }
   
-  /* Center the button specifically */
+  /* Center the button specifically and ensure it's clickable */
   & [data-ut-element="button"],
   & button {
     display: block !important;
     margin-left: auto !important;
     margin-right: auto !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 10 !important;
   }
+  
+  /* Ensure labels and file inputs are clickable */
+  & label {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+  
   
   /* Center the icon */
   & [data-ut-element="upload-icon"],
