@@ -168,6 +168,21 @@ describe("featureFlags", () => {
       // When window is defined (client-side), returns empty object
       expect(flags).toEqual({});
     });
+
+    it("handles feature names with different cases", () => {
+      process.env.NEXT_PUBLIC_ENABLE_TESTFEATURE = "true";
+      
+      expect(isFeatureEnabled("testfeature")).toBe(true);
+      expect(isFeatureEnabled("TESTFEATURE")).toBe(true);
+      expect(isFeatureEnabled("TestFeature")).toBe(true);
+    });
+
+    it("handles undefined environment variables correctly", () => {
+      delete process.env.NEXT_PUBLIC_ENABLE_UNKNOWNFEATURE;
+      
+      // Should default to true
+      expect(isFeatureEnabled("unknownfeature")).toBe(true);
+    });
   });
 
   describe("clearFeatureFlagsCache", () => {
