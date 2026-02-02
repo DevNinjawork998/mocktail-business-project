@@ -6,14 +6,20 @@ import "@jest/globals";
 // Mock the useUploadThing hook
 const mockStartUpload = jest.fn();
 let mockIsUploading = false;
-let currentOptions: any = null;
+
+interface UploadThingOptions {
+  onClientUploadComplete?: (res: Array<{ url: string }>) => void;
+  onUploadError?: (error: Error) => void;
+}
+
+let currentOptions: UploadThingOptions | undefined = undefined;
 
 jest.mock("@/lib/uploadthing", () => {
   return {
-    useUploadThing: jest.fn((endpoint: string, options?: any) => {
+    useUploadThing: jest.fn((endpoint: string, options?: UploadThingOptions) => {
       currentOptions = options;
       // Reset mock implementation
-      mockStartUpload.mockImplementation(async (files: File[]) => {
+      mockStartUpload.mockImplementation(async (_files: File[]) => {
         mockIsUploading = true;
         // Simulate async upload
         await new Promise((resolve) => setTimeout(resolve, 10));
@@ -250,15 +256,15 @@ describe("ImageUpload", () => {
       expect(dropzone).toBeInTheDocument();
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      const dataTransfer = {
-        files: [file],
-        items: [],
-        types: ["Files"],
-      };
+      const dataTransfer: DataTransfer = {
+        files: [file] as FileList,
+        items: [] as DataTransferItemList,
+        types: ["Files"] as ReadonlyArray<string>,
+      } as DataTransfer;
 
       await act(async () => {
         fireEvent.drop(dropzone!, {
-          dataTransfer: dataTransfer as any,
+          dataTransfer,
         });
       });
 

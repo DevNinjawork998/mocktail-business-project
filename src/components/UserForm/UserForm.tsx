@@ -105,7 +105,7 @@ export default function UserForm({ user, currentUserId }: UserFormProps) {
           setIsSubmitting(false);
         }
       }
-    } catch (err) {
+    } catch (_err) {
       setError("An unexpected error occurred");
       setIsSubmitting(false);
     }
