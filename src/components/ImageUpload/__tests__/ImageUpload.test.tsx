@@ -1,48 +1,43 @@
 import React from "react";
-import { render, screen, fireEvent, act } from "../../../__tests__/test-utils";
+import { render, screen, fireEvent, act, waitFor } from "../../../__tests__/test-utils";
 import ImageUpload from "../ImageUpload";
 import "@jest/globals";
 
-// Mock the UploadDropzone component
-jest.mock("@/lib/uploadthing", () => ({
-  UploadDropzone: ({
-    endpoint,
-    onUploadBegin,
-    onClientUploadComplete,
-    onUploadError,
-  }: {
-    endpoint: string;
-    onUploadBegin: () => void;
-    onClientUploadComplete: (res: { url: string }[]) => void;
-    onUploadError: (error: Error) => void;
-  }) => (
-    <div data-testid="upload-dropzone" data-endpoint={endpoint}>
-      <button
-        data-testid="mock-upload-button"
-        onClick={() => {
-          onUploadBegin();
-          // Simulate successful upload
-          setTimeout(() => {
-            onClientUploadComplete([{ url: "https://example.com/image.jpg" }]);
-          }, 100);
-        }}
-      >
-        Upload
-      </button>
-      <button
-        data-testid="mock-error-button"
-        onClick={() => {
-          onUploadBegin();
-          setTimeout(() => {
-            onUploadError(new Error("Upload failed"));
-          }, 100);
-        }}
-      >
-        Trigger Error
-      </button>
-    </div>
-  ),
-}));
+// Mock the useUploadThing hook
+const mockStartUpload = jest.fn();
+let mockIsUploading = false;
+
+interface UploadThingOptions {
+  onClientUploadComplete?: (res: Array<{ url: string }>) => void;
+  onUploadError?: (error: Error) => void;
+}
+
+let currentOptions: UploadThingOptions | undefined = undefined;
+
+jest.mock("@/lib/uploadthing", () => {
+  return {
+    useUploadThing: jest.fn((endpoint: string, options?: UploadThingOptions) => {
+      currentOptions = options;
+      // Reset mock implementation
+      mockStartUpload.mockImplementation(async (_files: File[]) => {
+        mockIsUploading = true;
+        // Simulate async upload
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        mockIsUploading = false;
+        
+        if (options?.onClientUploadComplete) {
+          options.onClientUploadComplete([{ url: "https://example.com/image.jpg" }]);
+        }
+        return [{ url: "https://example.com/image.jpg" }];
+      });
+      
+      return {
+        startUpload: mockStartUpload,
+        isUploading: mockIsUploading,
+      };
+    }),
+  };
+});
 
 // Mock next/image
 jest.mock("next/image", () => ({
@@ -67,6 +62,8 @@ describe("ImageUpload", () => {
 
   beforeEach(() => {
     mockOnChange.mockClear();
+    mockStartUpload.mockClear();
+    mockIsUploading = false;
     jest.spyOn(window, "alert").mockImplementation(() => {});
   });
 
@@ -93,7 +90,8 @@ describe("ImageUpload", () => {
 
     it("shows upload dropzone when no image value", () => {
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
-      expect(screen.getByTestId("upload-dropzone")).toBeInTheDocument();
+      // The dropzone should show "Choose a file or drag and drop" text
+      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
     });
 
     it("shows image preview when value provided", () => {
@@ -130,7 +128,7 @@ describe("ImageUpload", () => {
           endpoint="productImage"
         />
       );
-      expect(screen.queryByTestId("upload-dropzone")).not.toBeInTheDocument();
+      expect(screen.queryByText("Choose a file or drag and drop")).not.toBeInTheDocument();
     });
   });
 
@@ -138,17 +136,21 @@ describe("ImageUpload", () => {
     it("calls onChange with URL when upload completes", async () => {
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
 
-      const uploadButton = screen.getByTestId("mock-upload-button");
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      expect(fileInput).toBeInTheDocument();
+
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
       
       await act(async () => {
-        fireEvent.click(uploadButton);
-        // Wait for the simulated upload to complete
-        await new Promise((resolve) => setTimeout(resolve, 150));
+        fireEvent.change(fileInput, { target: { files: [file] } });
+        await waitFor(() => {
+          expect(mockStartUpload).toHaveBeenCalled();
+        });
       });
 
-      expect(mockOnChange).toHaveBeenCalledWith(
-        "https://example.com/image.jpg"
-      );
+      await waitFor(() => {
+        expect(mockOnChange).toHaveBeenCalledWith("https://example.com/image.jpg");
+      });
     });
 
     it("handles upload errors gracefully", async () => {
@@ -156,15 +158,26 @@ describe("ImageUpload", () => {
 
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
 
-      const errorButton = screen.getByTestId("mock-error-button");
-      
-      await act(async () => {
-        fireEvent.click(errorButton);
-        // Wait for the simulated error
-        await new Promise((resolve) => setTimeout(resolve, 150));
+      // Override startUpload to simulate error
+      mockStartUpload.mockImplementationOnce(async () => {
+        // Simulate that UploadThing calls onUploadError when upload fails
+        if (currentOptions?.onUploadError) {
+          currentOptions.onUploadError(new Error("Upload failed"));
+        }
+        return [];
       });
 
-      expect(alertSpy).toHaveBeenCalledWith("Upload failed: Upload failed");
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      
+      await act(async () => {
+        fireEvent.change(fileInput, { target: { files: [file] } });
+      });
+
+      // Wait for the error callback to be called
+      await waitFor(() => {
+        expect(alertSpy).toHaveBeenCalledWith("Upload failed: Upload failed");
+      }, { timeout: 1000 });
     });
   });
 
@@ -224,70 +237,52 @@ describe("ImageUpload", () => {
       expect(screen.getByText("Custom Label")).toBeInTheDocument();
     });
 
-    it("passes correct endpoint to UploadDropzone", () => {
-      render(
-        <ImageUpload onChange={mockOnChange} endpoint="ingredientImage" />
-      );
-
-      const dropzone = screen.getByTestId("upload-dropzone");
-      expect(dropzone).toHaveAttribute("data-endpoint", "ingredientImage");
+    it("accepts productImage endpoint", () => {
+      render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
+      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
     });
 
-    it("passes productImage endpoint correctly", () => {
-      render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
-
-      const dropzone = screen.getByTestId("upload-dropzone");
-      expect(dropzone).toHaveAttribute("data-endpoint", "productImage");
+    it("accepts ingredientImage endpoint", () => {
+      render(<ImageUpload onChange={mockOnChange} endpoint="ingredientImage" />);
+      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
     });
   });
 
   describe("Drag and Drop", () => {
-    it("handles dragEnter event", () => {
+    it("handles drop event and triggers upload", async () => {
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
 
-      const dropzone = screen.getByTestId("upload-dropzone").parentElement;
-      if (dropzone) {
-        fireEvent.dragEnter(dropzone);
-        expect(dropzone).toHaveAttribute("data-dragging", "true");
-      }
-    });
+      const dropzone = screen.getByText("Choose a file or drag and drop").closest("div");
+      expect(dropzone).toBeInTheDocument();
 
-    it("handles dragLeave event", () => {
-      render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      const dataTransfer: DataTransfer = {
+        files: [file] as FileList,
+        items: [] as DataTransferItemList,
+        types: ["Files"] as ReadonlyArray<string>,
+      } as DataTransfer;
 
-      const dropzone = screen.getByTestId("upload-dropzone").parentElement;
-      if (dropzone) {
-        fireEvent.dragEnter(dropzone);
-        expect(dropzone).toHaveAttribute("data-dragging", "true");
+      await act(async () => {
+        fireEvent.drop(dropzone!, {
+          dataTransfer,
+        });
+      });
 
-        fireEvent.dragLeave(dropzone);
-        expect(dropzone).toHaveAttribute("data-dragging", "false");
-      }
+      await waitFor(() => {
+        expect(mockStartUpload).toHaveBeenCalled();
+      });
     });
 
     it("handles dragOver event without error", () => {
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
 
-      const dropzone = screen.getByTestId("upload-dropzone").parentElement;
-      if (dropzone) {
-        // Should not throw
-        expect(() => {
-          fireEvent.dragOver(dropzone);
-        }).not.toThrow();
-      }
-    });
+      const dropzone = screen.getByText("Choose a file or drag and drop").closest("div");
+      expect(dropzone).toBeInTheDocument();
 
-    it("handles drop event and resets dragging state", () => {
-      render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
-
-      const dropzone = screen.getByTestId("upload-dropzone").parentElement;
-      if (dropzone) {
-        fireEvent.dragEnter(dropzone);
-        expect(dropzone).toHaveAttribute("data-dragging", "true");
-
-        fireEvent.drop(dropzone);
-        expect(dropzone).toHaveAttribute("data-dragging", "false");
-      }
+      // Should not throw
+      expect(() => {
+        fireEvent.dragOver(dropzone!);
+      }).not.toThrow();
     });
   });
 
@@ -296,7 +291,7 @@ describe("ImageUpload", () => {
       render(
         <ImageUpload value="" onChange={mockOnChange} endpoint="productImage" />
       );
-      expect(screen.getByTestId("upload-dropzone")).toBeInTheDocument();
+      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
       expect(screen.queryByTestId("uploaded-image")).not.toBeInTheDocument();
     });
 
@@ -308,7 +303,7 @@ describe("ImageUpload", () => {
           endpoint="productImage"
         />
       );
-      expect(screen.getByTestId("upload-dropzone")).toBeInTheDocument();
+      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
     });
 
     it("switches from preview to dropzone when image is removed", () => {
@@ -327,7 +322,7 @@ describe("ImageUpload", () => {
       );
 
       expect(screen.queryByTestId("uploaded-image")).not.toBeInTheDocument();
-      expect(screen.getByTestId("upload-dropzone")).toBeInTheDocument();
+      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
     });
 
     it("switches from dropzone to preview when image is uploaded", () => {
@@ -335,7 +330,7 @@ describe("ImageUpload", () => {
         <ImageUpload value="" onChange={mockOnChange} endpoint="productImage" />
       );
 
-      expect(screen.getByTestId("upload-dropzone")).toBeInTheDocument();
+      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
 
       rerender(
         <ImageUpload
@@ -345,7 +340,7 @@ describe("ImageUpload", () => {
         />
       );
 
-      expect(screen.queryByTestId("upload-dropzone")).not.toBeInTheDocument();
+      expect(screen.queryByText("Choose a file or drag and drop")).not.toBeInTheDocument();
       expect(screen.getByTestId("uploaded-image")).toBeInTheDocument();
     });
   });

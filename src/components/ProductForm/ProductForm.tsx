@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -63,6 +63,12 @@ export default function ProductForm({ product }: ProductFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isImageUploading, setIsImageUploading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(
+    product?.imageUrl || null
+  );
+  // Use a ref to ensure we always have the latest imageUrl value
+  const imageUrlRef = useRef<string | null>(product?.imageUrl || null);
 
   // Parse existing longDescription if editing
   const parsedDescription = useMemo(() => {
@@ -82,6 +88,7 @@ export default function ProductForm({ product }: ProductFormProps) {
     control,
     setValue,
     watch,
+    getValues,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(productSchema),
@@ -94,7 +101,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       price: product?.price || "",
       priceSubtext: product?.priceSubtext || "",
       imageColor: product?.imageColor || "#451515",
-      imageUrl: product?.imageUrl || "",
+      imageUrl: product?.imageUrl || null,
       features: product?.features || [{ text: "", color: "#451515" }],
       ingredients: product?.ingredients || [],
       productBrief: product?.productBrief || "",
@@ -125,7 +132,35 @@ export default function ProductForm({ product }: ProductFormProps) {
 
   const imageUrl = watch("imageUrl");
 
+  // Update ref when imageUrl changes
+  useEffect(() => {
+    if (imageUrl) {
+      imageUrlRef.current = imageUrl;
+    }
+  }, [imageUrl]);
+
+  // Also update ref when uploadedImageUrl changes
+  useEffect(() => {
+    if (uploadedImageUrl) {
+      imageUrlRef.current = uploadedImageUrl;
+    }
+  }, [uploadedImageUrl]);
+
+  // Sync hidden input with current imageUrl value
+  useEffect(() => {
+    const currentValue = imageUrl || uploadedImageUrl || imageUrlRef.current;
+    if (currentValue) {
+      setValue("imageUrl", currentValue, { shouldValidate: false, shouldDirty: false });
+    }
+  }, [imageUrl, uploadedImageUrl, setValue]);
+
   const onSubmit = async (data: FormData) => {
+    // Prevent submission if image is still uploading
+    if (isImageUploading) {
+      setError("Please wait for the image upload to complete before submitting.");
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
@@ -135,6 +170,15 @@ export default function ProductForm({ product }: ProductFormProps) {
       data.longDescriptionParagraphs.map((p) => p.value),
     );
 
+    // Get the current imageUrl value - check all possible sources including ref
+    const currentImageUrl = (
+      imageUrlRef.current || 
+      uploadedImageUrl || 
+      imageUrl || 
+      data.imageUrl || 
+      getValues("imageUrl")
+    )?.trim() || null;
+
     const formData: ProductFormData = {
       name: data.name,
       subtitle: data.subtitle,
@@ -143,7 +187,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       price: data.price,
       priceSubtext: data.priceSubtext,
       imageColor: data.imageColor,
-      imageUrl: data.imageUrl || null,
+      imageUrl: currentImageUrl || null,
       features: data.features,
       ingredients: data.ingredients?.filter((i) => i.trim()) || null,
       productBrief: data.productBrief || null,
@@ -166,6 +210,8 @@ export default function ProductForm({ product }: ProductFormProps) {
 
   return (
     <S.Form onSubmit={handleSubmit(onSubmit)}>
+      {/* Hidden input to ensure imageUrl is tracked by react-hook-form */}
+      <input type="hidden" {...register("imageUrl")} />
       {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
       <S.Section>
@@ -297,8 +343,16 @@ export default function ProductForm({ product }: ProductFormProps) {
 
           <S.FormGroup>
             <ImageUpload
-              value={imageUrl || ""}
-              onChange={(url) => setValue("imageUrl", url)}
+              value={imageUrl || uploadedImageUrl || ""}
+              onChange={(url) => {
+                imageUrlRef.current = url;
+                setUploadedImageUrl(url);
+                setValue("imageUrl", url, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+                setIsImageUploading(false);
+              }}
+              onUploadStart={() => {
+                setIsImageUploading(true);
+              }}
               endpoint="productImage"
               label="Product Image"
             />
@@ -376,12 +430,14 @@ export default function ProductForm({ product }: ProductFormProps) {
         <S.CancelButton type="button" onClick={() => router.back()}>
           Cancel
         </S.CancelButton>
-        <S.SubmitButton type="submit" disabled={isSubmitting}>
+        <S.SubmitButton type="submit" disabled={isSubmitting || isImageUploading}>
           {isSubmitting
             ? "Saving..."
-            : product
-              ? "Update Product"
-              : "Create Product"}
+            : isImageUploading
+              ? "Uploading Image..."
+              : product
+                ? "Update Product"
+                : "Create Product"}
         </S.SubmitButton>
       </S.ButtonGroup>
     </S.Form>
