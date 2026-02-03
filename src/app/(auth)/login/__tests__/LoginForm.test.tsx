@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@/__tests__/test-utils";
+import { render, screen, fireEvent, waitFor, act } from "@/__tests__/test-utils";
 import LoginForm from "../LoginForm";
 import "@jest/globals";
 
@@ -27,6 +27,17 @@ jest.mock("next-auth/react", () => ({
   getProviders: () => mockGetProviders(),
 }));
 
+// Helper to render LoginForm and wait for providers to load
+const renderLoginForm = async () => {
+  let result;
+  await act(async () => {
+    result = render(<LoginForm />);
+    // Wait for the providers to be fetched and state to update
+    await Promise.resolve();
+  });
+  return result!;
+};
+
 describe("LoginForm", () => {
   beforeEach(() => {
     mockPush.mockClear();
@@ -41,8 +52,8 @@ describe("LoginForm", () => {
   });
 
   describe("Rendering", () => {
-    it("renders login form with all fields", () => {
-      render(<LoginForm />);
+    it("renders login form with all fields", async () => {
+      await renderLoginForm();
 
       expect(screen.getByText("Mocktails Admin")).toBeInTheDocument();
       expect(screen.getByText("Sign in to manage your products")).toBeInTheDocument();
@@ -57,7 +68,7 @@ describe("LoginForm", () => {
         google: { id: "google", name: "Google", type: "oauth" },
       });
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       await waitFor(() => {
         expect(screen.getByText("Continue with Google")).toBeInTheDocument();
@@ -70,7 +81,7 @@ describe("LoginForm", () => {
         google: { id: "google", name: "Google", type: "oauth" },
       });
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       await waitFor(() => {
         expect(screen.getByText("or")).toBeInTheDocument();
@@ -82,7 +93,7 @@ describe("LoginForm", () => {
     it("submits form with valid credentials", async () => {
       mockSignIn.mockResolvedValue({ error: null });
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
@@ -110,7 +121,7 @@ describe("LoginForm", () => {
       mockGet.mockReturnValue("/dashboard/products");
       mockSignIn.mockResolvedValue({ error: null });
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
@@ -128,7 +139,7 @@ describe("LoginForm", () => {
     it("shows error on invalid credentials", async () => {
       mockSignIn.mockResolvedValue({ error: "Invalid credentials" });
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
@@ -146,7 +157,7 @@ describe("LoginForm", () => {
     it("handles unexpected errors", async () => {
       mockSignIn.mockRejectedValue(new Error("Network error"));
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
@@ -166,7 +177,7 @@ describe("LoginForm", () => {
         () => new Promise((resolve) => setTimeout(() => resolve({ error: null }), 1000))
       );
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
@@ -184,7 +195,7 @@ describe("LoginForm", () => {
 
   describe("Form Validation", () => {
     it("validates email format", async () => {
-      render(<LoginForm />);
+      await renderLoginForm();
 
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
@@ -206,7 +217,7 @@ describe("LoginForm", () => {
     });
 
     it("validates password length", async () => {
-      render(<LoginForm />);
+      await renderLoginForm();
 
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
@@ -234,7 +245,7 @@ describe("LoginForm", () => {
       });
       mockSignIn.mockResolvedValue(undefined);
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       await waitFor(() => {
         expect(screen.getByText("Continue with Google")).toBeInTheDocument();
@@ -262,7 +273,7 @@ describe("LoginForm", () => {
         () => new Promise(() => {}) // Never resolves to test loading state
       );
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       await waitFor(() => {
         expect(screen.getByText("Continue with Google")).toBeInTheDocument();
@@ -285,7 +296,7 @@ describe("LoginForm", () => {
       });
       mockSignIn.mockRejectedValue(new Error("OAuth error"));
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       await waitFor(() => {
         expect(screen.getByText("Continue with Google")).toBeInTheDocument();
@@ -306,7 +317,7 @@ describe("LoginForm", () => {
     it("handles missing providers gracefully", async () => {
       mockGetProviders.mockResolvedValue(null);
 
-      render(<LoginForm />);
+      await renderLoginForm();
 
       // Should still render the form
       expect(screen.getByText("Sign In")).toBeInTheDocument();

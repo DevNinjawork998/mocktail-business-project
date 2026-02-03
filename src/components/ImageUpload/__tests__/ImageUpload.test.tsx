@@ -16,19 +16,24 @@ let currentOptions: UploadThingOptions | undefined = undefined;
 
 jest.mock("@/lib/uploadthing", () => {
   return {
-    useUploadThing: jest.fn((endpoint: string, options?: UploadThingOptions) => {
+    useUploadThing: jest.fn((_endpoint: string, options?: UploadThingOptions) => {
       currentOptions = options;
       // Reset mock implementation
       mockStartUpload.mockImplementation(async (_files: File[]) => {
         mockIsUploading = true;
-        // Simulate async upload
-        await new Promise((resolve) => setTimeout(resolve, 10));
+        // Simulate async upload - reduced timeout for faster tests
+        await new Promise((resolve) => setTimeout(resolve, 0));
         mockIsUploading = false;
         
+        // Return results - callbacks are handled by the component
+        const result = [{ url: "https://example.com/image.jpg" }];
         if (options?.onClientUploadComplete) {
-          options.onClientUploadComplete([{ url: "https://example.com/image.jpg" }]);
+          // Schedule callback to be picked up by waitFor
+          queueMicrotask(() => {
+            options.onClientUploadComplete!(result);
+          });
         }
-        return [{ url: "https://example.com/image.jpg" }];
+        return result;
       });
       
       return {
