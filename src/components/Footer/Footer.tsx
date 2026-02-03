@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import {
   FooterContainer,
@@ -94,7 +93,7 @@ const Footer: React.FC = () => {
       label: "Follow us on Instagram",
     },
     {
-      href: "https://tiktok.com",
+      href: "https://www.tiktok.com/@mocktailsonthego_motg?_r=1&_t=ZS-93agDNKzVzD",
       icon: <TikTokIcon />,
       label: "Follow us on TikTok",
     },
@@ -120,15 +119,13 @@ const Footer: React.FC = () => {
 
   const moreLinks = [
     { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Disclaimer", href: "/disclaimer" },
+    { label: "Terms of Use", href: "/terms-of-use" },
     { label: "Shipping", href: "/shipping" },
   ];
 
   const legalLinks = [
     { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Disclaimer", href: "/disclaimer" },
+    { label: "Terms of Use", href: "/terms-of-use" },
     { label: "Shipping", href: "/shipping" },
   ];
 
@@ -225,7 +222,7 @@ const Footer: React.FC = () => {
                   Individual results may vary. These statements have not been
                   evaluated by health authorities. Our products are not intended to
                   diagnose, treat, cure, or prevent any disease. Please review our{" "}
-                  <Link href="/disclaimer">full disclaimer</Link> for more
+                  <Link href="/terms-of-use">full disclaimer</Link> for more
                   information.
                 </DisclaimerText>
               </CopyrightSection>

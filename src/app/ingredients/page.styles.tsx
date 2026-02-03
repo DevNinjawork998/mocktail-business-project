@@ -110,14 +110,17 @@ export const CarouselContainer = styled.div`
   margin-top: ${({ theme }) => theme.spacing["2xl"]};
 `;
 
-export const CarouselTrack = styled.div`
+export const CarouselTrack = styled.div<{ $isPaused?: boolean }>`
   display: flex;
   gap: ${({ theme }) => theme.spacing.xl};
   width: fit-content;
   animation: ${scrollAnimation} 40s linear infinite;
+  animation-play-state: ${({ $isPaused }) => ($isPaused ? "paused" : "running")};
+  cursor: grab;
+  user-select: none;
   
-  &:hover {
-    animation-play-state: paused;
+  &:active {
+    cursor: grabbing;
   }
 `;
 

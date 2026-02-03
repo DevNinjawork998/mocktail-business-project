@@ -63,10 +63,6 @@ const productSchema = z.object({
   features: z.array(z.object({ text: z.string(), color: z.string() })),
   ingredients: z.array(z.string()).optional().nullable(),
   productBrief: z.string().optional().nullable(),
-  nutritionFacts: z
-    .array(z.object({ label: z.string(), value: z.string() }))
-    .optional()
-    .nullable(),
 });
 
 export type ProductFormData = z.infer<typeof productSchema>;
@@ -87,7 +83,6 @@ export async function createProduct(
         imageUrl: validated.imageUrl || null,
         ingredients: validated.ingredients || [],
         productBrief: validated.productBrief || null,
-        nutritionFacts: validated.nutritionFacts || [],
       },
     });
 
@@ -136,7 +131,6 @@ export async function updateProduct(
         imageUrl: validated.imageUrl || null,
         ingredients: validated.ingredients || [],
         productBrief: validated.productBrief || null,
-        nutritionFacts: validated.nutritionFacts || [],
       },
     });
 

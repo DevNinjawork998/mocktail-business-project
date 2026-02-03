@@ -5,12 +5,12 @@ import Navigation from "@/components/Navigation/Navigation";
 import Footer from "@/components/Footer/Footer";
 import * as S from "./page.styles";
 
-export default function DisclaimerPage() {
+export default function TermsOfUsePage() {
   return (
     <S.PageContainer>
       <Navigation />
       <S.ContentSection>
-        <S.Title>Disclaimer</S.Title>
+        <S.Title>Terms of Use</S.Title>
         <S.Paragraph>
           Welcome to Mocktails On the Go. Please read this disclaimer carefully
           before using our website or purchasing our products.
@@ -20,9 +20,7 @@ export default function DisclaimerPage() {
           <S.SectionTitle>Health Claims Disclaimer</S.SectionTitle>
           <S.Paragraph>
             The statements made on this website regarding our products have not
-            been evaluated by health authorities (including but not limited to
-            the Food and Drug Administration, Health Canada, or similar
-            regulatory bodies). Our products are not intended to diagnose,
+            been evaluated by health authorities. Our products are not intended to diagnose,
             treat, cure, or prevent any disease or medical condition.
           </S.Paragraph>
           <S.Paragraph>
@@ -51,7 +49,8 @@ export default function DisclaimerPage() {
             </S.ListItem>
             <S.ListItem>
               Consult with a healthcare professional if you have any medical
-              conditions, allergies, or concerns
+              conditions, allergies, or{" "}
+              <S.IndentedText>concerns</S.IndentedText>
             </S.ListItem>
             <S.ListItem>
               Contact us directly if you have questions about specific
@@ -104,7 +103,7 @@ export default function DisclaimerPage() {
           </S.Paragraph>
         </S.DisclaimerSection>
 
-        <S.Paragraph>Last updated: January 2025</S.Paragraph>
+        <S.Paragraph>Last updated January 2026</S.Paragraph>
       </S.ContentSection>
       <Footer />
     </S.PageContainer>

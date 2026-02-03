@@ -16,41 +16,26 @@ const products = [
     subtitle: "Refreshing, tart and citrusy",
     description: "Very refreshing, tart and citrusy. Perfect for a hot weather",
     longDescription: `
-      <h3>Immunity & Glowing Skin</h3>
-      <p>Fresh orange, cranberry and baobab supports immunity and glowing skin. Perfect for hot weather, this refreshing blend combines the tangy sweetness of cranberries with the bright citrus notes of fresh orange.</p>
-      <p>Enriched with baobab, a superfood high in vitamin C and antioxidants, this mocktail helps boost your immune system while promoting healthy, radiant skin.</p>
+      <h3>Gut health & Immunity support</h3>
+      <ul>
+        <li>Fresh orange and cranberry are high in oxidants which protects cell damages from free radical linking to heart diseases, cancer and diabetes.</li>
+        <li>Baobab is high in iron and vitamin C which is good for immunity and gut support.</li>
+        <li>Pairing iron rich food with vitamin C rich fruits enhances iron uptake and aiding in iron deficiency anaemia.</li>
+      </ul>
     `,
     price: "$35.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#FF6347",
     imageUrl: "/images/products/tequila-sundown.jpg",
     features: [
-      { text: "Fresh Orange", color: "#FF6B6B" },
-      { text: "Cranberry", color: "#DC143C" },
-      { text: "Baobab", color: "#FFB347" },
+      { text: "Good Vit C", color: "#FF6B6B" },
+      { text: "Good Iron", color: "#DC143C" },
     ],
     ingredients: [
-      "Carbonated Water",
-      "Fresh Orange Juice",
-      "Cranberry Juice Concentrate",
-      "Baobab Powder",
-      "Natural Orange Flavor",
-      "Natural Cranberry Flavor",
-      "Stevia Leaf",
-      "Himalayan Pink Salt",
-    ],
-    productBrief:
-      "Very refreshing, tart and citrusy. Perfect for a hot weather. Fresh orange, cranberry and baobab supports immunity and glowing skin.",
-    nutritionFacts: [
-      { label: "Calories", value: "45" },
-      { label: "Total Fat", value: "0g" },
-      { label: "Sodium", value: "25mg" },
-      { label: "Total Carbohydrate", value: "15g" },
-      { label: "Dietary Fiber", value: "4g" },
-      { label: "Total Sugars", value: "4g" },
-      { label: "Includes Added Sugars", value: "0g" },
-      { label: "Protein", value: "0g" },
-      { label: "Vitamin C", value: "45%" },
+      "Orange juice",
+      "cranberry",
+      "peach",
+      "carbonated water",
     ],
   },
   {
@@ -69,34 +54,25 @@ const products = [
     imageColor: "#8B4513",
     imageUrl: "/images/products/dark-stormy.jpg",
     features: [
-      { text: "Ashwagandha", color: "#9B7653" },
-      { text: "Ginger", color: "#CD853F" },
-      { text: "Cinnamon", color: "#D2691E" },
+      { text: "Less sugar", color: "#9B7653" },
+      { text: "Good Antioxidant", color: "#CD853F" },
+      { text: "Good Fiber", color: "#D2691E" },
     ],
     ingredients: [
-      "Carbonated Water",
-      "Ginger Root Extract",
-      "Ashwagandha Root Powder",
-      "Black Tea Extract",
-      "Cinnamon Extract",
-      "Natural Rum Flavor (Non-Alcoholic)",
-      "Natural Ginger Flavor",
-      "Stevia Leaf",
-      "Himalayan Pink Salt",
+      "Ginger",
+      "Tea",
+      "Apple Juice",
+      "Carbonated water",
+      "Cinnamon",
+      "Star Anise",
+      "Molasses",
+      "Allulose",
+      "Lime",
+      "Orange",
+      "Ashwagandha extract",
     ],
     productBrief:
       "Acquired and aged taste from the perfect blend of ginger & our homemade non-alcoholic rum. The perfect blend of ashwagandha, tea, cinnamon and ginger supports digestion & relieves stress.",
-    nutritionFacts: [
-      { label: "Calories", value: "40" },
-      { label: "Total Fat", value: "0g" },
-      { label: "Sodium", value: "20mg" },
-      { label: "Total Carbohydrate", value: "14g" },
-      { label: "Dietary Fiber", value: "3g" },
-      { label: "Total Sugars", value: "4g" },
-      { label: "Includes Added Sugars", value: "0g" },
-      { label: "Protein", value: "0g" },
-      { label: "Vitamin C", value: "10%" },
-    ],
   },
   {
     id: "maca-martini",
@@ -113,34 +89,21 @@ const products = [
     imageColor: "#654321",
     imageUrl: "/images/products/maca-martini.jpg",
     features: [
-      { text: "Maca Root", color: "#DEB887" },
-      { text: "Cocoa", color: "#6F4E37" },
-      { text: "Coffee", color: "#3E2723" },
+      { text: "High antioxidant", color: "#DEB887" },
+      { text: "High Calcium", color: "#6F4E37" },
+      { text: "Caffeine", color: "#3E2723" },
     ],
     ingredients: [
-      "Carbonated Water",
-      "Maca Root Powder",
-      "Coffee Extract",
-      "Cocoa Powder",
-      "Natural Coffee Flavor",
-      "Natural Chocolate Flavor",
-      "Coconut Cream",
-      "Stevia Leaf",
-      "Himalayan Pink Salt",
+      "cocoa",
+      "coffee",
+      "non-alcoholic rum",
+      "milk",
+      "allulose",
+      "maca powder",
+      "lime",
     ],
     productBrief:
       "Creamy & Chocolaty to keep your spirits & mood up. Maca root, cocoa & coffee increases stamina & libido.",
-    nutritionFacts: [
-      { label: "Calories", value: "55" },
-      { label: "Total Fat", value: "1g" },
-      { label: "Sodium", value: "30mg" },
-      { label: "Total Carbohydrate", value: "16g" },
-      { label: "Dietary Fiber", value: "5g" },
-      { label: "Total Sugars", value: "5g" },
-      { label: "Includes Added Sugars", value: "0g" },
-      { label: "Protein", value: "1g" },
-      { label: "Vitamin C", value: "8%" },
-    ],
   },
 ];
 
@@ -289,7 +252,6 @@ async function main() {
         features: product.features,
         ingredients: product.ingredients,
         productBrief: product.productBrief,
-        nutritionFacts: product.nutritionFacts,
       },
       create: product,
     });

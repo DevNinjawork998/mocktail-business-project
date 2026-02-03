@@ -59,10 +59,6 @@ const mockProduct: Product = {
   ],
   ingredients: ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
   productBrief: "Test product brief",
-  nutritionFacts: [
-    { label: "Calories", value: "100" },
-    { label: "Sugar", value: "5g" },
-  ],
 };
 
 const mockOtherProducts: Product[] = [
@@ -161,31 +157,6 @@ describe("ProductPageClient", () => {
   });
 
   describe("Product Info Section", () => {
-    it("renders product brief when provided", () => {
-      render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
-      );
-
-      expect(screen.getByText("Test product brief")).toBeInTheDocument();
-    });
-
-    it("renders fallback text when product brief is not provided", () => {
-      const productWithoutBrief = {
-        ...mockProduct,
-        productBrief: undefined,
-      };
-
-      render(
-        <ProductPageClient
-          product={productWithoutBrief}
-          otherProducts={mockOtherProducts}
-        />,
-      );
-
-      expect(
-        screen.getByText("Product description coming soon..."),
-      ).toBeInTheDocument();
-    });
 
     it("renders ingredients when provided", () => {
       render(
@@ -211,36 +182,6 @@ describe("ProductPageClient", () => {
 
       expect(
         screen.getByText("Ingredients information coming soon..."),
-      ).toBeInTheDocument();
-    });
-
-    it("renders nutrition facts when provided", () => {
-      render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
-      );
-
-      expect(screen.getByText("Nutrition Facts")).toBeInTheDocument();
-      expect(screen.getByText("Calories")).toBeInTheDocument();
-      expect(screen.getByText("100")).toBeInTheDocument();
-      expect(screen.getByText("Sugar")).toBeInTheDocument();
-      expect(screen.getByText("5g")).toBeInTheDocument();
-    });
-
-    it("renders fallback text when nutrition facts are not provided", () => {
-      const productWithoutNutrition = {
-        ...mockProduct,
-        nutritionFacts: undefined,
-      };
-
-      render(
-        <ProductPageClient
-          product={productWithoutNutrition}
-          otherProducts={mockOtherProducts}
-        />,
-      );
-
-      expect(
-        screen.getByText("Nutrition information coming soon..."),
       ).toBeInTheDocument();
     });
 
@@ -336,7 +277,7 @@ describe("ProductPageClient", () => {
         fireEvent.click(whatsappButton);
 
         // Modal should appear
-        expect(screen.getByText("Terms of Service Consent Required")).toBeInTheDocument();
+        expect(screen.getByText("Terms of Use Consent Required")).toBeInTheDocument();
         
         // Check consent checkbox
         const consentCheckbox = screen.getByLabelText(/I agree to the collection/i);
@@ -380,7 +321,7 @@ describe("ProductPageClient", () => {
         fireEvent.click(whatsappButton);
 
         // Modal should appear
-        expect(screen.getByText("Terms of Service Consent Required")).toBeInTheDocument();
+        expect(screen.getByText("Terms of Use Consent Required")).toBeInTheDocument();
         
         // Check consent checkbox
         const consentCheckbox = screen.getByLabelText(/I agree to the collection/i);

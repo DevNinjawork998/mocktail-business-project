@@ -42,8 +42,9 @@ export const SectionTitle = styled.h2`
 
 export const List = styled.ul`
   list-style: disc inside;
-  padding-left: ${({ theme }) => theme.spacing.lg};
+  padding-left: ${({ theme }) => theme.spacing.xl};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-left: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const ListItem = styled.li`
@@ -51,4 +52,10 @@ export const ListItem = styled.li`
   line-height: 1.8;
   color: ${({ theme }) => theme.currentSemantic.foregroundMuted};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
+  padding-left: ${({ theme }) => theme.spacing.md};
+`;
+
+export const IndentedText = styled.span`
+  display: inline;
+  font-style: italic;
 `;

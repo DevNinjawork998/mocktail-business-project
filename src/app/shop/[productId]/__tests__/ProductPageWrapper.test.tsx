@@ -29,7 +29,6 @@ const mockProduct = {
   features: [],
   ingredients: null,
   productBrief: null,
-  nutritionFacts: null,
 };
 
 const mockOtherProducts = [mockProduct];

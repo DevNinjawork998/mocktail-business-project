@@ -69,7 +69,7 @@ describe("Footer", () => {
     // Privacy Policy appears in both "More" section and legal links, so use getAllByText
     const privacyLinks = screen.getAllByText("Privacy Policy");
     expect(privacyLinks.length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Terms of Service").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Terms of Use").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Shipping").length).toBeGreaterThan(0);
   });
 });
