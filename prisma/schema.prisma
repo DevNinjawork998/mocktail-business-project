@@ -111,3 +111,13 @@ model Ingredient {
 
   @@map("ingredients")
 }
+
+model Settings {
+  id            String   @id @default(cuid())
+  key           String   @unique // e.g., "landingPhotoUrl"
+  value         String?  // JSON string or simple value
+  updatedAt     DateTime @updatedAt
+  updatedById   String?  // Track who last updated
+
+  @@map("settings")
+}

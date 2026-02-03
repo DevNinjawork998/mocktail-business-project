@@ -16,19 +16,21 @@ let currentOptions: UploadThingOptions | undefined = undefined;
 
 jest.mock("@/lib/uploadthing", () => {
   return {
-    useUploadThing: jest.fn((endpoint: string, options?: UploadThingOptions) => {
+    useUploadThing: jest.fn((_endpoint: string, options?: UploadThingOptions) => {
       currentOptions = options;
-      // Reset mock implementation
+      // Reset mock implementation - returns a promise that resolves
+      // The component handles calling the callbacks
       mockStartUpload.mockImplementation(async (_files: File[]) => {
         mockIsUploading = true;
-        // Simulate async upload
-        await new Promise((resolve) => setTimeout(resolve, 10));
         mockIsUploading = false;
         
+        const result = [{ url: "https://example.com/image.jpg" }];
+        // Call the callback synchronously - the component's handleFileSelect
+        // will be wrapped in act by the test
         if (options?.onClientUploadComplete) {
-          options.onClientUploadComplete([{ url: "https://example.com/image.jpg" }]);
+          options.onClientUploadComplete(result);
         }
-        return [{ url: "https://example.com/image.jpg" }];
+        return result;
       });
       
       return {

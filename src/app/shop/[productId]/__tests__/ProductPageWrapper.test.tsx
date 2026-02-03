@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor } from "@/__tests__/test-utils";
+import { render, screen, waitFor, act } from "@/__tests__/test-utils";
 import ProductPageWrapper from "../ProductPageWrapper";
 import "@jest/globals";
 
@@ -38,8 +38,11 @@ describe("ProductPageWrapper", () => {
     jest.useFakeTimers();
   });
 
-  afterEach(() => {
-    jest.runOnlyPendingTimers();
+  afterEach(async () => {
+    // Wrap in act() to handle any pending state updates from timers
+    await act(async () => {
+      jest.runOnlyPendingTimers();
+    });
     jest.useRealTimers();
   });
 
@@ -57,8 +60,10 @@ describe("ProductPageWrapper", () => {
       <ProductPageWrapper product={mockProduct} otherProducts={mockOtherProducts} />
     );
 
-    // Fast-forward time
-    jest.advanceTimersByTime(500);
+    // Fast-forward time - wrap in act() to handle state updates
+    await act(async () => {
+      jest.advanceTimersByTime(500);
+    });
 
     await waitFor(() => {
       expect(screen.getByTestId("product-page-client")).toBeInTheDocument();
@@ -85,7 +90,10 @@ describe("ProductPageWrapper", () => {
       <ProductPageWrapper product={mockProduct} otherProducts={mockOtherProducts} />
     );
 
-    jest.advanceTimersByTime(500);
+    // Wrap in act() to handle state updates from timer
+    await act(async () => {
+      jest.advanceTimersByTime(500);
+    });
 
     await waitFor(() => {
       expect(screen.getByText("Product: Test Product")).toBeInTheDocument();
