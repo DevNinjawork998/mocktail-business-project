@@ -44,11 +44,14 @@ describe("HeroSlideshow", () => {
     });
   });
 
-  it("renders the image with priority prop", () => {
+  it("renders the image with priority prop", async () => {
     render(<HeroSlideshow />);
 
-    const image = screen.getByAltText("Mocktails On the Go - Fresh Mocktail");
-    expect(image).toHaveAttribute("data-priority", "true");
+    await waitFor(() => {
+      const image = screen.getByAltText("Mocktails On the Go - Fresh Mocktail");
+      expect(image).toBeInTheDocument();
+      expect(image).toHaveAttribute("data-priority", "true");
+    });
   });
 
   it("renders the adaptogen badge", () => {
