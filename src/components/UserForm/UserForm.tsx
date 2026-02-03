@@ -21,10 +21,10 @@ const userCreateSchema = z.object({
 });
 
 const userUpdateSchema = z.object({
-  email: z.string().email("Invalid email address").optional(),
-  name: z.string().min(1, "Name is required").optional(),
+  email: z.string().email("Invalid email address").optional().or(z.literal("")),
+  name: z.string().min(1, "Name is required").optional().or(z.literal("")),
   role: z.enum(["SUPERADMIN", "ADMIN", "EDITOR"]).optional(),
-  password: z.string().min(6, "Password must be at least 6 characters").optional(),
+  password: z.string().optional(),
 });
 
 type CreateFormData = z.infer<typeof userCreateSchema>;
@@ -52,6 +52,7 @@ export default function UserForm({ user, currentUserId }: UserFormProps) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<CreateFormData | UpdateFormData>({
     resolver: zodResolver(isEditing ? userUpdateSchema : userCreateSchema),
@@ -63,29 +64,56 @@ export default function UserForm({ user, currentUserId }: UserFormProps) {
     },
   });
 
+  const watchedRole = watch("role");
+
+  const onError = () => {
+    setError("Please fix the form errors before submitting");
+  };
+
   const onSubmit = async (data: CreateFormData | UpdateFormData) => {
     setIsSubmitting(true);
     setError(null);
 
     try {
       if (isEditing) {
-        const updateData: UserUpdateData = {
-          email: data.email,
-          name: data.name,
-          role: data.role,
-        };
+        const updateData: UserUpdateData = {};
+
+        // Always include name if provided (filter out empty strings)
+        if (data.name && data.name.trim().length > 0) {
+          updateData.name = data.name;
+        }
+
+        // Always include role when editing
+        const roleValue = data.role || watchedRole || user?.role || "EDITOR";
+        updateData.role = roleValue as "SUPERADMIN" | "ADMIN" | "EDITOR";
+
+        // Only include email if it's different
+        if (data.email && data.email !== user.email) {
+          updateData.email = data.email;
+        }
 
         // Only include password if user wants to change it
-        if (changePassword && data.password) {
+        if (changePassword) {
+          if (!data.password || data.password.trim().length === 0) {
+            setError("Password is required when changing password");
+            setIsSubmitting(false);
+            return;
+          }
+          if (data.password.trim().length < 6) {
+            setError("Password must be at least 6 characters");
+            setIsSubmitting(false);
+            return;
+          }
           updateData.password = data.password;
         }
 
         const result = await updateUser(user.id, updateData);
+
         if (result.success) {
           router.push("/dashboard/users");
           router.refresh();
         } else {
-          setError(result.error);
+          setError(result.error || "Failed to update user");
           setIsSubmitting(false);
         }
       } else {
@@ -112,7 +140,7 @@ export default function UserForm({ user, currentUserId }: UserFormProps) {
   };
 
   return (
-    <S.Form onSubmit={handleSubmit(onSubmit)}>
+    <S.Form onSubmit={handleSubmit(onSubmit, onError)}>
       {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
       <S.Section>
@@ -178,7 +206,10 @@ export default function UserForm({ user, currentUserId }: UserFormProps) {
                   <>
                     <S.Input
                       type="password"
-                      {...register("password")}
+                      {...register("password", {
+                        required: changePassword,
+                        minLength: changePassword ? 6 : undefined,
+                      })}
                       placeholder="New password"
                       $hasError={!!errors.password}
                     />
@@ -186,7 +217,7 @@ export default function UserForm({ user, currentUserId }: UserFormProps) {
                       <S.FieldError>{errors.password.message}</S.FieldError>
                     )}
                     <S.HelpText>
-                      Leave blank to keep current password
+                      Password must be at least 6 characters
                     </S.HelpText>
                   </>
                 )}
