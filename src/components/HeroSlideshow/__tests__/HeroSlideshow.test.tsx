@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "../../../__tests__/test-utils";
+import { render, screen, waitFor } from "../../../__tests__/test-utils";
 import HeroSlideshow from "../HeroSlideshow";
 
 // Mock Next.js Image component
@@ -21,16 +21,27 @@ jest.mock("next/image", () => ({
   },
 }));
 
+// Mock the settings action
+jest.mock("@/app/actions/settings", () => ({
+  getLandingPhotoUrl: jest.fn().mockResolvedValue({
+    success: true,
+    data: null, // Return null to use fallback URL
+  }),
+}));
+
 describe("HeroSlideshow", () => {
-  it("renders the hero image with correct src and alt", () => {
+  it("renders the hero image with correct src and alt", async () => {
     render(<HeroSlideshow />);
 
-    const image = screen.getByAltText("Mocktails On the Go - Fresh Mocktail");
-    expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute(
-      "src",
-      "/images/products/LandingPhoto.jpg",
-    );
+    await waitFor(() => {
+      const image = screen.getByAltText("Mocktails On the Go - Fresh Mocktail");
+      expect(image).toBeInTheDocument();
+      expect(image).toHaveAttribute(
+        "src",
+        process.env.NEXT_PUBLIC_LANDING_PHOTO_URL ||
+          "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLDgNsR5ihjkVF8eaqWlO3pXP4g9ZHb0cCNLnI",
+      );
+    });
   });
 
   it("renders the image with priority prop", () => {

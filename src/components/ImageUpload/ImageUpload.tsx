@@ -9,7 +9,8 @@ interface ImageUploadProps {
   value?: string;
   onChange: (url: string) => void;
   onUploadStart?: () => void;
-  endpoint: "productImage" | "ingredientImage";
+  onUploadComplete?: () => void;
+  endpoint: "productImage" | "ingredientImage" | "landingPhoto";
   label?: string;
 }
 
@@ -17,10 +18,12 @@ export default function ImageUpload({
   value,
   onChange,
   onUploadStart,
+  onUploadComplete,
   endpoint,
   label = "Image",
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -31,6 +34,8 @@ export default function ImageUpload({
       onClientUploadComplete: (res) => {
         console.log("Upload complete:", res);
         setIsUploading(false);
+        setUploadProgress(0);
+        onUploadComplete?.();
         if (res && Array.isArray(res) && res.length > 0 && res[0]?.url) {
           console.log("Setting image URL:", res[0].url);
           onChange(res[0].url);
@@ -41,7 +46,12 @@ export default function ImageUpload({
       onUploadError: (error: Error) => {
         console.error("Upload error:", error);
         setIsUploading(false);
+        setUploadProgress(0);
+        onUploadComplete?.();
         alert(`Upload failed: ${error.message}`);
+      },
+      onUploadProgress: (progress) => {
+        setUploadProgress(progress);
       },
     }
   );
@@ -110,7 +120,7 @@ export default function ImageUpload({
 
       {value ? (
         <S.PreviewContainer>
-          <S.ImageWrapper>
+          <S.ImageWrapper $isUploading={isUploading}>
             <Image
               src={value}
               alt="Uploaded image"
@@ -118,8 +128,20 @@ export default function ImageUpload({
               sizes="200px"
               style={{ objectFit: "cover" }}
             />
+            {isUploading && (
+              <S.UploadOverlay>
+                <S.ProgressBarContainer>
+                  <S.ProgressBar $progress={uploadProgress} />
+                </S.ProgressBarContainer>
+                <S.UploadingText>Uploading... {uploadProgress}%</S.UploadingText>
+              </S.UploadOverlay>
+            )}
           </S.ImageWrapper>
-          <S.RemoveButton type="button" onClick={handleRemove}>
+          <S.RemoveButton
+            type="button"
+            onClick={handleRemove}
+            disabled={isUploading}
+          >
             Remove Image
           </S.RemoveButton>
         </S.PreviewContainer>
@@ -162,8 +184,10 @@ export default function ImageUpload({
               >
                 {isUploading ? (
                   <>
-                    <S.Spinner />
-                    <S.UploadingText>Uploading...</S.UploadingText>
+                    <S.ProgressBarContainer>
+                      <S.ProgressBar $progress={uploadProgress} />
+                    </S.ProgressBarContainer>
+                    <S.UploadingText>Uploading... {uploadProgress}%</S.UploadingText>
                   </>
                 ) : (
                   <>

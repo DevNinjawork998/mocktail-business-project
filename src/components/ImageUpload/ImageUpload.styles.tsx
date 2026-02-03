@@ -10,18 +10,38 @@ const spin = keyframes`
 `;
 
 export const Spinner = styled.div`
-  width: 48px;
-  height: 48px;
-  border: 3px solid #451515;
-  border-top: 3px solid transparent;
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(69, 21, 21, 0.2);
+  border-top: 2px solid #451515;
   border-radius: 50%;
-  animation: ${spin} 1s linear infinite;
+  animation: ${spin} 1.5s linear infinite;
+  flex-shrink: 0;
 `;
 
 export const UploadingText = styled.p`
   color: #451515;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 500;
   margin: 0;
+  text-align: center;
+`;
+
+export const ProgressBarContainer = styled.div`
+  width: 80%;
+  max-width: 160px;
+  height: 8px;
+  background-color: rgba(69, 21, 21, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
+`;
+
+export const ProgressBar = styled.div<{ $progress: number }>`
+  height: 100%;
+  width: ${({ $progress }) => $progress}%;
+  background-color: #451515;
+  border-radius: 4px;
+  transition: width 0.2s ease-out;
 `;
 
 export const Container = styled.div`
@@ -44,13 +64,32 @@ export const PreviewContainer = styled.div`
   align-items: center;
 `;
 
-export const ImageWrapper = styled.div`
+export const ImageWrapper = styled.div<{ $isUploading?: boolean }>`
   position: relative;
   width: 200px;
   height: 200px;
   border-radius: ${({ theme }) => theme.radii.lg};
   overflow: hidden;
   border: 2px solid ${({ theme }) => theme.currentSemantic.border};
+  opacity: ${({ $isUploading }) => ($isUploading ? 0.8 : 1)};
+  transition: opacity 0.2s ease;
+`;
+
+export const UploadOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(1px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 10;
+  border-radius: ${({ theme }) => theme.radii.lg};
 `;
 
 export const RemoveButton = styled.button`
@@ -64,8 +103,13 @@ export const RemoveButton = styled.button`
   cursor: pointer;
   transition: background-color 0.2s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.semantic.dangerDark};
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `;
 
