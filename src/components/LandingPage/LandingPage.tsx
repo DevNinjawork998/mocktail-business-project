@@ -30,7 +30,7 @@ const LandingPage = () => {
               </S.Title>
 
               <S.Subtitle>
-                Mocktails Made for Movement. These aren't just mocktails. They're your mid-day reset, your pre & post-gym treat, your bring-to-the-party bottle. Healthy but full of tasty flavour.
+                Mocktails Made for Movement. These aren&apos;t just mocktails. They&apos;re your mid-day reset, your pre & post-gym treat, your bring-to-the-party bottle. Healthy but full of tasty flavour.
               </S.Subtitle>
             </S.ContentSection>
 

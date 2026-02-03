@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor, act } from "../../../__tests__/test-utils";
+import { render, screen, fireEvent, waitFor } from "../../../__tests__/test-utils";
 import UserForm from "../UserForm";
 import "@jest/globals";
 
