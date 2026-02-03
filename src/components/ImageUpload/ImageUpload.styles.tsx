@@ -1,4 +1,28 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const spin = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+export const Spinner = styled.div`
+  width: 48px;
+  height: 48px;
+  border: 3px solid #451515;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: ${spin} 1s linear infinite;
+`;
+
+export const UploadingText = styled.p`
+  color: #451515;
+  font-size: 0.875rem;
+  margin: 0;
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -51,19 +75,6 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
   width: 100%;
   transition: all 0.3s ease;
   position: relative;
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  & .spinner {
-    animation: spin 1s linear infinite;
-  }
   
   /* Ensure file inputs are accessible */
   & input[type="file"] {

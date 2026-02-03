@@ -162,19 +162,8 @@ export default function ImageUpload({
               >
                 {isUploading ? (
                   <>
-                    <div
-                      className="spinner"
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        border: "3px solid #451515",
-                        borderTop: "3px solid transparent",
-                        borderRadius: "50%",
-                      }}
-                    />
-                    <p style={{ color: "#451515", fontSize: "0.875rem" }}>
-                      Uploading...
-                    </p>
+                    <S.Spinner />
+                    <S.UploadingText>Uploading...</S.UploadingText>
                   </>
                 ) : (
                   <>
