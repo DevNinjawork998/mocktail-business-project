@@ -85,3 +85,5 @@ jobs:
           # These should be set in GitHub Secrets if they contain sensitive data
           NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          UPLOADTHING_TOKEN: ${{ secrets.UPLOADTHING_TOKEN }}
+          UPLOADTHING_SECRET: ${{ secrets.UPLOADTHING_SECRET }}

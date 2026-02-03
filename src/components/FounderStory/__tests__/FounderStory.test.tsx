@@ -71,16 +71,14 @@ describe("FounderStory", () => {
     render(<FounderStory />);
 
     expect(
-      screen.getByText(
-        '"Life\'s too short for boring drinks. Let\'s make every sip count."',
-      ),
+      screen.getByText('"Sip without guilt with our mocktails"'),
     ).toBeInTheDocument();
   });
 
   it("renders the quote author correctly", () => {
     render(<FounderStory />);
 
-    expect(screen.getByText("- Sarah, Founder")).toBeInTheDocument();
+    expect(screen.getByText("- Krishanthini, founder")).toBeInTheDocument();
   });
 
   it("CTA button has correct Instagram link", () => {

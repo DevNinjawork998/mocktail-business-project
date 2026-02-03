@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "qchbny9v2p.ufs.sh",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   turbopack: {

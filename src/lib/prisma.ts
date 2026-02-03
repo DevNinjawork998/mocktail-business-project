@@ -22,9 +22,9 @@ function createPrismaClient() {
       globalForPrisma.pool ??
       new Pool({
         connectionString: directPostgresUrl,
-        max: 10, // Maximum number of clients in the pool
-        idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-        connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+        max: parseInt(process.env.POSTGRES_POOL_MAX || "3", 10), // Reduced for hosted DB limits
+        idleTimeoutMillis: 5000, // Close idle clients after 5 seconds
+        connectionTimeoutMillis: 5000, // Return an error after 5 seconds if connection could not be established
       });
 
     if (!globalForPrisma.pool) {
@@ -49,9 +49,9 @@ function createPrismaClient() {
         globalForPrisma.pool ??
         new Pool({
           connectionString: databaseUrl,
-          max: 10, // Maximum number of clients in the pool
-          idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-          connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+          max: parseInt(process.env.POSTGRES_POOL_MAX || "3", 10), // Reduced for hosted DB limits
+          idleTimeoutMillis: 5000, // Close idle clients after 5 seconds
+          connectionTimeoutMillis: 5000, // Return an error after 5 seconds if connection could not be established
         });
 
       if (!globalForPrisma.pool) {

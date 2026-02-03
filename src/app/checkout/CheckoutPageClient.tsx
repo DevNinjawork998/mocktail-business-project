@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import { useForm } from "react-hook-form";
@@ -285,7 +285,7 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
             By completing your order, you acknowledge that you have read and
             agree to our{" "}
             <a
-              href="/disclaimer"
+              href="/terms-of-use"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -491,8 +491,8 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
                         I agree to the collection and processing of my personal data
                         for order processing and delivery purposes. I have read and
                         agree to the{" "}
-                        <ConsentLink href="/terms" target="_blank" rel="noopener noreferrer">
-                          Terms of Service
+                        <ConsentLink href="/terms-of-use" target="_blank" rel="noopener noreferrer">
+                          Terms of Use
                         </ConsentLink>
                         . *
                       </ConsentText>

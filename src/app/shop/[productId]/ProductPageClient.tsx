@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { Product } from "@/data/serverProductService";
 import {
   ProductPageContainer,
@@ -11,8 +11,6 @@ import {
   ProductDetailsSection,
   ProductTitle,
   ProductSubtitle,
-  ProductFeatures,
-  FeatureBadge,
   PriceSection,
   Price,
   PriceSubtext,
@@ -25,13 +23,8 @@ import {
   SidebarProductName,
   ProductInfoSection,
   ProductInfoLeft,
-  ProductInfoRight,
   ProductInfoTitle,
-  ProductInfoDescription,
   ProductInfoIngredients,
-  ProductInfoNutritionBox,
-  ProductInfoNutritionTitle,
-  ProductInfoNutritionTable,
   ProductInfoFeatureRow,
   ProductInfoFeatureIcon,
   ProductInfoFeatureLabel,
@@ -40,7 +33,6 @@ import {
   SidebarProductImageContainer,
   SidebarProductImageStyled,
   FeatureItemContainer,
-  NutritionFactValue,
   WhatsAppButton,
   WhatsAppIcon,
   ProductDisclaimerSection,
@@ -84,7 +76,7 @@ export default function ProductPageClient({
     setConsentGiven(false);
   };
 
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleOverlayClick = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       handleCloseModal();
     }
@@ -122,18 +114,77 @@ export default function ProductPageClient({
 
   // Data from Prisma database
   const ingredients = product.ingredients;
-  const nutritionFacts = product.nutritionFacts;
-  const productBrief = product.productBrief;
 
-  const features = [
+  // List of ingredient names and features that should not be shown
+  const excludedFeatures = [
+    "Cocoa",
+    "Coffee",
+    "Maca",
+    "Maca Root",
+    "Fresh Orange",
+    "Cranberry",
+    "Baobab",
+    "Ginger",
+    "Cinnamon",
+    "Ashwagandha",
+    "Paleo",
+    "Gluten Free",
+  ];
+
+  // Default features that should always be shown (excluding Paleo and Gluten Free)
+  // Exclude Vegan for Maca Martini since it contains milk
+  const baseDefaultFeatures = [
     { icon: "🌾", label: "High Fiber" },
     { icon: "🍬", label: "Less Sugar*" },
     { icon: "🌱", label: "Vegan" },
     { icon: "🥥", label: "Plant Powered" },
-    { icon: "🥚", label: "Paleo" },
-    { icon: "🚫🌾", label: "Gluten Free" },
     { icon: "🚫🌽", label: "GMO Free" },
+    { icon: "🍊", label: "Good Vit C" },
+    { icon: "⚡", label: "Good Iron" },
   ];
+  
+  // Remove Vegan if product contains milk (Maca Martini)
+  const hasMilk = ingredients?.some(
+    (ing) => ing.toLowerCase().includes("milk")
+  );
+  const defaultFeatures = hasMilk
+    ? baseDefaultFeatures.filter((f) => f.label !== "Vegan")
+    : baseDefaultFeatures;
+
+  // Map common feature texts to icons
+  const featureIconMap: Record<string, string> = {
+    "High Fiber": "🌾",
+    "Less Sugar": "🍬",
+    "Less sugar": "🍬",
+    "Vegan": "🌱",
+    "Plant Powered": "🥥",
+    "GMO Free": "🚫🌽",
+    "High antioxidant": "✨",
+    "High Calcium": "🥛",
+    "Caffeine": "☕",
+    "Good Antioxidant": "✨",
+    "Good Fiber": "🌾",
+    "Good Vit C": "🍊",
+    "Good Iron": "⚡",
+  };
+
+  // Filter out features that are ingredient names or excluded features
+  const productSpecificFeatures =
+    product.features && product.features.length > 0
+      ? product.features
+          .filter((f) => !excludedFeatures.includes(f.text))
+          .map((f) => ({
+            icon: featureIconMap[f.text] || "✨",
+            label: f.text,
+          }))
+      : [];
+
+  // Combine default features with product-specific features
+  // Remove duplicates based on label
+  const features = [...defaultFeatures, ...productSpecificFeatures].filter(
+    (feature, index, self) =>
+      index === self.findIndex((f) => f.label === feature.label),
+  );
 
   const priceNumber = Number(product.price.replace(/[^0-9.]/g, ""));
 
@@ -167,14 +218,6 @@ export default function ProductPageClient({
               <ProductTitle>{product.name}</ProductTitle>
               <ProductSubtitle>{product.subtitle}</ProductSubtitle>
             </div>
-
-            <ProductFeatures>
-              {product.features.map((feature, index) => (
-                <FeatureBadge key={index} $bgColor={feature.color}>
-                  {feature.text}
-                </FeatureBadge>
-              ))}
-            </ProductFeatures>
 
             <ProductDescriptionParser htmlContent={product.longDescription} />
 
@@ -233,9 +276,6 @@ export default function ProductPageClient({
       <ProductInfoSection>
         <ProductInfoLeft>
           <ProductInfoTitle>{product.name}</ProductInfoTitle>
-          <ProductInfoDescription>
-            {productBrief || "Product description coming soon..."}
-          </ProductInfoDescription>
           <ProductInfoIngredients>
             <strong>Ingredients:</strong>{" "}
             {ingredients && ingredients.length > 0
@@ -251,33 +291,6 @@ export default function ProductPageClient({
             ))}
           </ProductInfoFeatureRow>
         </ProductInfoLeft>
-        <ProductInfoRight>
-          <ProductInfoNutritionBox>
-            <ProductInfoNutritionTitle>
-              Nutrition Facts
-            </ProductInfoNutritionTitle>
-            <ProductInfoNutritionTable>
-              {nutritionFacts && nutritionFacts.length > 0 ? (
-                nutritionFacts.map((fact, idx) => (
-                  <React.Fragment key={idx}>
-                    <div>{fact.label}</div>
-                    <NutritionFactValue>{fact.value}</NutritionFactValue>
-                  </React.Fragment>
-                ))
-              ) : (
-                <div
-                  style={{
-                    gridColumn: "1 / -1",
-                    textAlign: "center",
-                    color: "#666",
-                  }}
-                >
-                  Nutrition information coming soon...
-                </div>
-              )}
-            </ProductInfoNutritionTable>
-          </ProductInfoNutritionBox>
-        </ProductInfoRight>
       </ProductInfoSection>
 
       <ProductDisclaimerSection>
@@ -285,7 +298,7 @@ export default function ProductPageClient({
           Individual results may vary. These statements have not been evaluated
           by health authorities. This product is not intended to diagnose,
           treat, cure, or prevent any disease. Please review our{" "}
-          <a href="/disclaimer" target="_blank" rel="noopener noreferrer">
+          <a href="/terms-of-use" target="_blank" rel="noopener noreferrer">
             full disclaimer
           </a>{" "}
           for more information. If you have allergies or medical conditions,
@@ -293,11 +306,11 @@ export default function ProductPageClient({
         </ProductDisclaimerText>
       </ProductDisclaimerSection>
 
-      {/* Terms of Service Consent Modal */}
+      {/* Terms of Use Consent Modal */}
       {showModal && (
         <ModalOverlay onClick={handleOverlayClick}>
           <ModalContainer>
-            <ModalTitle>Terms of Service Consent Required</ModalTitle>
+            <ModalTitle>Terms of Use Consent Required</ModalTitle>
             <ModalContent>
               <ModalContentText>
                 To proceed with your inquiry via WhatsApp, we need your consent to
@@ -322,12 +335,12 @@ export default function ProductPageClient({
                       I agree to the collection and processing of my personal data for
                       inquiry and communication purposes. I have read and agree to the{" "}
                       <ModalConsentLink
-                        href="/terms"
+                        href="/terms-of-use"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        Terms of Service
+                        Terms of Use
                       </ModalConsentLink>
                       . *
                     </ModalConsentText>

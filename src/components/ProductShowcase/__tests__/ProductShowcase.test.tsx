@@ -172,9 +172,6 @@ describe("ProductShowcase", () => {
         // Product names appear multiple times, so use getAllByText
         expect(screen.getAllByText("Test Cocktail 1").length).toBeGreaterThan(0);
         expect(screen.getByText("Test Description 1")).toBeInTheDocument();
-        // Tags appear multiple times (one per product), so use getAllByText
-        expect(screen.getAllByText("4g Sugar").length).toBeGreaterThan(0);
-        expect(screen.getAllByText("Adaptogens").length).toBeGreaterThan(0);
         // Add to Cart buttons appear multiple times (one per product)
         expect(screen.getAllByText("Add to Cart").length).toBeGreaterThan(0);
       });

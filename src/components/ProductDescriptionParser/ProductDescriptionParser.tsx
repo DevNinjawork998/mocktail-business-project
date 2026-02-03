@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import * as S from "./ProductDescriptionParser.styles";
 
 interface ProductDescriptionParserProps {
@@ -10,6 +9,7 @@ interface ProductDescriptionParserProps {
 interface ParsedSection {
   title: string;
   paragraphs: string[];
+  isList?: boolean;
 }
 
 export default function ProductDescriptionParser({
@@ -42,6 +42,13 @@ export default function ProductDescriptionParser({
           if (text) {
             currentSection.paragraphs.push(text);
           }
+        } else if (element.tagName === "UL" && currentSection) {
+          // Extract list items from ul
+          const listItems = Array.from(element.querySelectorAll("li"))
+            .map((li) => li.textContent?.trim() || "")
+            .filter((text) => text.length > 0);
+          currentSection.paragraphs.push(...listItems);
+          currentSection.isList = true;
         }
       }
     });
@@ -97,30 +104,43 @@ export default function ProductDescriptionParser({
           
           {section.paragraphs.length > 0 && (
             <S.ContentWrapper>
-              {section.paragraphs.map((paragraph, paraIndex) => {
-                // For longer paragraphs, break into key points for better readability
-                if (paragraph.length > 120) {
-                  const keyPoints = extractKeyPoints(paragraph);
-                  // Only use bullet points if we got meaningful splits
-                  if (keyPoints.length > 1) {
-                    return (
-                      <S.KeyPointsList key={paraIndex}>
-                        {keyPoints.map((point, pointIndex) => (
-                          <S.KeyPoint key={pointIndex}>
-                            <S.BulletIcon>•</S.BulletIcon>
-                            <S.KeyPointText>{point}.</S.KeyPointText>
-                          </S.KeyPoint>
-                        ))}
-                      </S.KeyPointsList>
-                    );
+              {section.isList ? (
+                // Render as bullet list if it came from a <ul>
+                <S.KeyPointsList>
+                  {section.paragraphs.map((item, itemIndex) => (
+                    <S.KeyPoint key={itemIndex}>
+                      <S.BulletIcon>•</S.BulletIcon>
+                      <S.KeyPointText>{item}</S.KeyPointText>
+                    </S.KeyPoint>
+                  ))}
+                </S.KeyPointsList>
+              ) : (
+                // Render as paragraphs
+                section.paragraphs.map((paragraph, paraIndex) => {
+                  // For longer paragraphs, break into key points for better readability
+                  if (paragraph.length > 120) {
+                    const keyPoints = extractKeyPoints(paragraph);
+                    // Only use bullet points if we got meaningful splits
+                    if (keyPoints.length > 1) {
+                      return (
+                        <S.KeyPointsList key={paraIndex}>
+                          {keyPoints.map((point, pointIndex) => (
+                            <S.KeyPoint key={pointIndex}>
+                              <S.BulletIcon>•</S.BulletIcon>
+                              <S.KeyPointText>{point}.</S.KeyPointText>
+                            </S.KeyPoint>
+                          ))}
+                        </S.KeyPointsList>
+                      );
+                    }
                   }
-                }
-                
-                // For shorter paragraphs or if splitting didn't work well, display as regular text
-                return (
-                  <S.Paragraph key={paraIndex}>{paragraph}</S.Paragraph>
-                );
-              })}
+                  
+                  // For shorter paragraphs or if splitting didn't work well, display as regular text
+                  return (
+                    <S.Paragraph key={paraIndex}>{paragraph}</S.Paragraph>
+                  );
+                })
+              )}
             </S.ContentWrapper>
           )}
         </S.Section>

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import * as S from "./LandingPage.styles";
 import RunningBanner from "../RunningBanner/RunningBanner";
@@ -10,7 +9,7 @@ const HeroSlideshow = dynamic(() => import("../HeroSlideshow/HeroSlideshow"), {
   ssr: false,
 });
 
-const LandingPage: React.FC = () => {
+const LandingPage = () => {
   return (
     <S.LandingSection>
       <RunningBanner />
@@ -31,7 +30,7 @@ const LandingPage: React.FC = () => {
               </S.Title>
 
               <S.Subtitle>
-                Crafted with the freshest fruits and powered by adaptogens. All the taste, none of the guilt. Low sugar. High vibes.
+                Mocktails Made for Movement. These aren&apos;t just mocktails. They&apos;re your mid-day reset, your pre & post-gym treat, your bring-to-the-party bottle. Healthy but full of tasty flavour.
               </S.Subtitle>
             </S.ContentSection>
 
@@ -44,7 +43,7 @@ const LandingPage: React.FC = () => {
                   </S.CTAContent>
                 </S.CTAButton>
               </Link>
-              <Link href="/shop">
+              <Link href="/ingredients">
                 <S.CTAButtonSecondary>
                   <S.CTAContentSecondary>
                     <span>Explore Flavors</span>
@@ -52,22 +51,6 @@ const LandingPage: React.FC = () => {
                 </S.CTAButtonSecondary>
               </Link>
             </S.CTAContainer>
-
-            {/* Stats/Features */}
-            <S.FeaturesGrid>
-              <S.FeatureCard>
-                <S.FeatureText>5g</S.FeatureText>
-                <S.FeatureText>Sugar or Less</S.FeatureText>
-              </S.FeatureCard>
-              <S.FeatureCard>
-                <S.FeatureText>100%</S.FeatureText>
-                <S.FeatureText>Fresh Fruit</S.FeatureText>
-              </S.FeatureCard>
-              <S.FeatureCard>
-                <S.FeatureText>0</S.FeatureText>
-                <S.FeatureText>Artificial</S.FeatureText>
-              </S.FeatureCard>
-            </S.FeaturesGrid>
           </S.LeftContent>
 
           {/* Right Content - Product Image */}

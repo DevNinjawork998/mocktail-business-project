@@ -27,10 +27,6 @@ export default async function EditProductPage({
     ...product,
     features: product.features as Array<{ text: string; color: string }>,
     ingredients: product.ingredients as string[] | null,
-    nutritionFacts: product.nutritionFacts as Array<{
-      label: string;
-      value: string;
-    }> | null,
   };
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import Link from "next/link";
 import Navigation from "@/components/Navigation/Navigation";
 import Footer from "@/components/Footer/Footer";
 import {
@@ -17,12 +17,26 @@ export default function ContactPage() {
       <ContentSection>
         <Title>Contact Us</Title>
         <Paragraph>
-          We&apos;d love to hear from you! Reach out to us on Instagram
-          @MocktailsOnTheGo or send us a message on WhatsApp.
+          We&apos;d love to hear from you! Reach out to us on{" "}
+          <Link
+            href="https://instagram.com/mocktailsonthego"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "inherit", textDecoration: "underline" }}
+          >
+            Instagram @MocktailsOnTheGo
+          </Link>{" "}
+          or send us a message on WhatsApp.
         </Paragraph>
         <Paragraph>
-          For business inquiries, partnerships, or press, please contact us
-          through our social media channels.
+          For business inquiries, partnerships, or press, please contact us at{" "}
+          <Link
+            href="mailto:info@mocktailsonthego.com"
+            style={{ color: "inherit", textDecoration: "underline" }}
+          >
+            info@mocktailsonthego.com
+          </Link>{" "}
+          or through our social media channels.
         </Paragraph>
       </ContentSection>
       <Footer />
