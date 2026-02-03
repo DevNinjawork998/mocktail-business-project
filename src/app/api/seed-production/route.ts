@@ -1,6 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// Get UploadThing URLs from environment variables, fallback to local paths
+const getImageUrl = (productId: string, defaultPath: string): string => {
+  const envKey = `NEXT_PUBLIC_${productId.toUpperCase().replace(/-/g, "_")}_IMAGE_URL`;
+  return process.env[envKey] || defaultPath;
+};
+
+// Check if a URL is from UploadThing (supports both utfs.io and ufs.sh domains)
+const isUploadThingUrl = (url: string | null): boolean => {
+  if (!url) return false;
+  return url.startsWith("https://utfs.io/") || url.includes(".ufs.sh/");
+};
+
 const products = [
   {
     id: "tequila-sundown",
@@ -18,7 +30,7 @@ const products = [
     price: "$35.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#8B4513",
-    imageUrl: "/images/products/tequila-sundown.jpg",
+    imageUrl: getImageUrl("tequila-sundown", "/images/products/tequila-sundown.jpg"),
     features: [
       { text: "Good Vit C", color: "#FF6B6B" },
       { text: "Good Iron", color: "#4ECDC4" },
@@ -42,7 +54,7 @@ const products = [
     price: "$35.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#2F4F4F",
-    imageUrl: "/images/products/dark-stormy.jpg",
+    imageUrl: getImageUrl("dark-stormy", "/images/products/dark-stormy.jpg"),
     features: [
       { text: "Less sugar", color: "#FF6B6B" },
       { text: "Good Antioxidant", color: "#4ECDC4" },
@@ -76,7 +88,7 @@ const products = [
     price: "$37.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#CD5C5C",
-    imageUrl: "/images/products/maca-martini.jpg",
+    imageUrl: getImageUrl("maca-martini", "/images/products/maca-martini.jpg"),
     features: [
       { text: "High antioxidant", color: "#FF6B6B" },
       { text: "High Calcium", color: "#4ECDC4" },
@@ -100,8 +112,31 @@ export async function POST() {
   try {
     console.log("Start seeding production database...");
 
+    // Get existing products to preserve UploadThing URLs
+    const existingProducts = await prisma.product.findMany({
+      where: {
+        id: {
+          in: products.map((p) => p.id),
+        },
+      },
+      select: {
+        id: true,
+        imageUrl: true,
+      },
+    });
+
+    const existingImageUrls = new Map(
+      existingProducts
+        .filter((p) => isUploadThingUrl(p.imageUrl))
+        .map((p) => [p.id, p.imageUrl!])
+    );
+
     const results = [];
     for (const product of products) {
+      // Preserve existing UploadThing URL if it exists, otherwise use seed data
+      const imageUrl =
+        existingImageUrls.get(product.id) || product.imageUrl;
+
       const result = await prisma.product.upsert({
         where: { id: product.id },
         update: {
@@ -112,15 +147,21 @@ export async function POST() {
           price: product.price,
           priceSubtext: product.priceSubtext,
           imageColor: product.imageColor,
-          imageUrl: product.imageUrl,
+          imageUrl: imageUrl,
           features: product.features,
           ingredients: product.ingredients,
           productBrief: product.productBrief,
         },
-        create: product,
+        create: {
+          ...product,
+          imageUrl: imageUrl,
+        },
       });
       results.push(result.id);
       console.log(`Created/Updated product with id: ${result.id}`);
+      if (existingImageUrls.has(product.id)) {
+        console.log(`  Preserved UploadThing URL: ${existingImageUrls.get(product.id)}`);
+      }
     }
 
     console.log("Production seeding finished.");

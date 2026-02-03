@@ -26,7 +26,7 @@ const products = [
     imageColor: "#FF6347",
     imageUrl: "/images/products/tequila-sundown.jpg",
     features: [
-      { text: "Good Vit C", color: "#FF6B6B" },
+      { text: "Good Vitamin C", color: "#FF6B6B" },
       { text: "Good Iron", color: "#DC143C" },
     ],
     ingredients: [
