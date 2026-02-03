@@ -33,10 +33,6 @@ const productSchema = z.object({
   features: z.array(z.object({ text: z.string(), color: z.string() })),
   ingredients: z.array(z.string()).optional().nullable(),
   productBrief: z.string().optional().nullable(),
-  nutritionFacts: z
-    .array(z.object({ label: z.string(), value: z.string() }))
-    .optional()
-    .nullable(),
 });
 
 type FormData = z.infer<typeof productSchema>;
@@ -55,7 +51,6 @@ interface ProductFormProps {
     features: Array<{ text: string; color: string }>;
     ingredients: string[] | null;
     productBrief: string | null;
-    nutritionFacts: Array<{ label: string; value: string }> | null;
   };
 }
 
@@ -105,7 +100,6 @@ export default function ProductForm({ product }: ProductFormProps) {
       features: product?.features || [{ text: "", color: "#451515" }],
       ingredients: product?.ingredients || [],
       productBrief: product?.productBrief || "",
-      nutritionFacts: product?.nutritionFacts || [],
     },
   });
 
@@ -114,12 +108,6 @@ export default function ProductForm({ product }: ProductFormProps) {
     append: appendFeature,
     remove: removeFeature,
   } = useFieldArray({ control, name: "features" });
-
-  const {
-    fields: nutritionFields,
-    append: appendNutrition,
-    remove: removeNutrition,
-  } = useFieldArray({ control, name: "nutritionFacts" });
 
   const {
     fields: paragraphFields,
@@ -191,8 +179,6 @@ export default function ProductForm({ product }: ProductFormProps) {
       features: data.features,
       ingredients: data.ingredients?.filter((i) => i.trim()) || null,
       productBrief: data.productBrief || null,
-      nutritionFacts:
-        data.nutritionFacts?.filter((n) => n.label && n.value) || null,
     };
 
     const result = product
@@ -394,36 +380,6 @@ export default function ProductForm({ product }: ProductFormProps) {
           <S.Label>Product Brief</S.Label>
           <S.TextArea {...register("productBrief")} rows={3} />
         </S.FormGroup>
-      </S.Section>
-
-      <S.Section>
-        <S.SectionTitle>Nutrition Facts</S.SectionTitle>
-
-        {nutritionFields.map((field, index) => (
-          <S.DynamicRow key={field.id}>
-            <S.Input
-              {...register(`nutritionFacts.${index}.label`)}
-              placeholder="Label (e.g., Calories)"
-            />
-            <S.Input
-              {...register(`nutritionFacts.${index}.value`)}
-              placeholder="Value (e.g., 45)"
-            />
-            <S.RemoveButton
-              type="button"
-              onClick={() => removeNutrition(index)}
-            >
-              ×
-            </S.RemoveButton>
-          </S.DynamicRow>
-        ))}
-
-        <S.AddButton
-          type="button"
-          onClick={() => appendNutrition({ label: "", value: "" })}
-        >
-          + Add Nutrition Fact
-        </S.AddButton>
       </S.Section>
 
       <S.ButtonGroup>

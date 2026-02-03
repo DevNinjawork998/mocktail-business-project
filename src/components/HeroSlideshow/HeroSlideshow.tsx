@@ -1,8 +1,7 @@
-import React from "react";
 import Image from "next/image";
 import * as S from "./HeroSlideshow.styles";
 
-const HeroSlideshow: React.FC = () => {
+const HeroSlideshow = () => {
   return (
     <S.ProductImageContainer>
       <S.ImageWrapper>
@@ -15,7 +14,7 @@ const HeroSlideshow: React.FC = () => {
         />
       </S.ImageWrapper>
       <S.Badge>🌿 Adaptogen Powered</S.Badge>
-      <S.BadgeBottom>🍊 Real Fruit Only</S.BadgeBottom>
+      <S.BadgeBottom>🍊 Wholesome Ingredients Only</S.BadgeBottom>
     </S.ProductImageContainer>
   );
 };

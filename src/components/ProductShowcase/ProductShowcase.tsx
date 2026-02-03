@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import * as S from "./ProductShowcase.styles";
 import { getAllProducts, Product } from "@/data/productService";
 
-const ProductShowcase: React.FC = () => {
+const ProductShowcase = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -75,10 +75,6 @@ const ProductShowcase: React.FC = () => {
               <S.ProductContent>
                 <S.ProductName>{product.name}</S.ProductName>
                 <S.ProductDescription>{product.description}</S.ProductDescription>
-                <S.ProductTags>
-                  <S.Tag>4g Sugar</S.Tag>
-                  <S.Tag>Adaptogens</S.Tag>
-                </S.ProductTags>
                 <S.AddToCartButton onClick={(e) => e.preventDefault()}>
                   Add to Cart
                 </S.AddToCartButton>

@@ -49,13 +49,13 @@ describe("HeroSlideshow", () => {
   it("renders the fruit badge", () => {
     render(<HeroSlideshow />);
 
-    expect(screen.getByText("🍊 Real Fruit Only")).toBeInTheDocument();
+    expect(screen.getByText("🍊 Wholesome Ingredients Only")).toBeInTheDocument();
   });
 
   it("renders both badges", () => {
     render(<HeroSlideshow />);
 
     expect(screen.getByText("🌿 Adaptogen Powered")).toBeInTheDocument();
-    expect(screen.getByText("🍊 Real Fruit Only")).toBeInTheDocument();
+    expect(screen.getByText("🍊 Wholesome Ingredients Only")).toBeInTheDocument();
   });
 });

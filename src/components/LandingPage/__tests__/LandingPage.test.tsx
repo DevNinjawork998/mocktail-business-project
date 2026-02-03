@@ -51,7 +51,7 @@ describe("LandingPage", () => {
     render(<LandingPage />);
     expect(
       screen.getByText(
-        /Crafted with the freshest fruits and powered by adaptogens/i,
+        /Mocktails Made for Movement/i,
       ),
     ).toBeInTheDocument();
   });
@@ -64,7 +64,7 @@ describe("LandingPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("CTA buttons link to shop page", () => {
+  it("CTA buttons link to correct pages", () => {
     render(<LandingPage />);
     const shopNowLink = screen.getByRole("link", { name: /Shop Now/i });
     const exploreFlavorsLink = screen.getByRole("link", {
@@ -72,18 +72,9 @@ describe("LandingPage", () => {
     });
 
     expect(shopNowLink).toHaveAttribute("href", "/shop");
-    expect(exploreFlavorsLink).toHaveAttribute("href", "/shop");
+    expect(exploreFlavorsLink).toHaveAttribute("href", "/ingredients");
   });
 
-  it("renders features grid", () => {
-    render(<LandingPage />);
-    expect(screen.getByText("5g")).toBeInTheDocument();
-    expect(screen.getByText("Sugar or Less")).toBeInTheDocument();
-    expect(screen.getByText("100%")).toBeInTheDocument();
-    expect(screen.getByText("Fresh Fruit")).toBeInTheDocument();
-    expect(screen.getByText("0")).toBeInTheDocument();
-    expect(screen.getByText("Artificial")).toBeInTheDocument();
-  });
 
   it("renders hero slideshow component", () => {
     render(<LandingPage />);

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import {
   FounderStorySection,
@@ -17,7 +16,7 @@ import {
   CTAButton,
 } from "./FounderStory.styles";
 
-const FounderStory: React.FC = () => {
+const FounderStory = () => {
   return (
     <FounderStorySection>
       <Container>
@@ -105,10 +104,9 @@ const FounderStory: React.FC = () => {
 
             <QuoteBox>
               <Quote>
-                &quot;Life&apos;s too short for boring drinks. Let&apos;s make
-                every sip count.&quot;
+                &quot;Sip without guilt with our mocktails&quot;
               </Quote>
-              <QuoteAuthor>- Sarah, Founder</QuoteAuthor>
+              <QuoteAuthor>- Krishanthini, founder</QuoteAuthor>
             </QuoteBox>
           </ContentContainer>
         </ContentGrid>

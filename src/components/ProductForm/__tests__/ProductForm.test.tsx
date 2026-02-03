@@ -62,7 +62,6 @@ const mockProduct = {
   features: [{ text: "Feature 1", color: "#FF0000" }],
   ingredients: ["Ingredient 1", "Ingredient 2"],
   productBrief: "Test brief",
-  nutritionFacts: [{ label: "Calories", value: "100" }],
 };
 
 // Helper to get form inputs by name attribute
@@ -93,7 +92,6 @@ describe("ProductForm", () => {
       expect(screen.getByText("Image")).toBeInTheDocument();
       expect(screen.getByText("Features")).toBeInTheDocument();
       expect(screen.getByText("Additional Information")).toBeInTheDocument();
-      expect(screen.getByText("Nutrition Facts")).toBeInTheDocument();
     });
 
     it("renders required field labels", () => {
@@ -248,39 +246,30 @@ describe("ProductForm", () => {
       expect(updatedFeatures.length).toBe(initialFeatures.length + 1);
     });
 
-    it("adds new nutrition fact field", () => {
+    it("removes feature field", () => {
       render(<ProductForm />);
 
-      const addNutritionButton = screen.getByText("+ Add Nutrition Fact");
+      // Get initial count of feature fields
+      const initialFeatureFields = screen.getAllByPlaceholderText("Feature text");
+      const initialCount = initialFeatureFields.length;
 
-      // Initially no nutrition fields
-      expect(screen.queryByPlaceholderText("Label (e.g., Calories)")).not.toBeInTheDocument();
+      // Add a feature
+      const addFeatureButton = screen.getByText("+ Add Feature");
+      fireEvent.click(addFeatureButton);
 
-      fireEvent.click(addNutritionButton);
+      // Should have one more feature field now
+      const afterAddFields = screen.getAllByPlaceholderText("Feature text");
+      expect(afterAddFields.length).toBe(initialCount + 1);
 
-      expect(screen.getByPlaceholderText("Label (e.g., Calories)")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Value (e.g., 45)")).toBeInTheDocument();
-    });
-
-    it("removes nutrition fact field", () => {
-      render(<ProductForm />);
-
-      // Add a nutrition fact
-      const addNutritionButton = screen.getByText("+ Add Nutrition Fact");
-      fireEvent.click(addNutritionButton);
-
-      expect(screen.getByPlaceholderText("Label (e.g., Calories)")).toBeInTheDocument();
-
-      // Remove it
-      const removeButton = screen.getAllByText("×").find(btn => {
-        const parent = btn.closest("div");
-        return parent?.querySelector('input[placeholder="Label (e.g., Calories)"]');
-      });
+      // Remove the last added feature
+      const removeButtons = screen.getAllByText("×");
+      const lastRemoveButton = removeButtons[removeButtons.length - 1];
       
-      if (removeButton) {
-        fireEvent.click(removeButton);
-        expect(screen.queryByPlaceholderText("Label (e.g., Calories)")).not.toBeInTheDocument();
-      }
+      fireEvent.click(lastRemoveButton);
+      
+      // Should be back to initial count
+      const afterRemoveFields = screen.getAllByPlaceholderText("Feature text");
+      expect(afterRemoveFields.length).toBe(initialCount);
     });
   });
 
@@ -329,7 +318,6 @@ describe("ProductForm", () => {
         ...mockProduct,
         ingredients: null,
         productBrief: null,
-        nutritionFacts: null,
         imageUrl: null,
       };
 
@@ -352,13 +340,6 @@ describe("ProductForm", () => {
       render(<ProductForm product={productWithComplexHtml} />);
 
       expect(screen.getByDisplayValue("Section Title")).toBeInTheDocument();
-    });
-
-    it("renders with product that has existing nutrition facts", () => {
-      render(<ProductForm product={mockProduct} />);
-
-      expect(screen.getByDisplayValue("Calories")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("100")).toBeInTheDocument();
     });
 
     it("renders with product that has existing features", () => {
