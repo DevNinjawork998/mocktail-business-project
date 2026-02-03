@@ -25,6 +25,14 @@ const customJestConfig = {
     "!src/**/*.d.ts",
     "!src/**/*.stories.{js,jsx,ts,tsx}",
     "!src/**/*.styles.{js,jsx,ts,tsx}",
+    // Exclude re-export index files
+    "!src/**/index.ts",
+    // Exclude infrastructure files
+    "!src/lib/prisma.ts",
+    "!src/theme/index.ts",
+    "!src/theme/*-provider.tsx",
+    "!src/theme/styled-theme-provider.tsx",
+    "!src/theme/theme-provider.tsx",
     // Exclude Next.js app router files that cause coverage instrumentation issues
     "!src/app/**/page.{ts,tsx}",
     "!src/app/**/layout.{ts,tsx}",
