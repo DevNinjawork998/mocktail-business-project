@@ -52,8 +52,8 @@ const products = [
     imageUrl: "/images/products/dark-stormy.jpg",
     features: [
       { text: "Less sugar", color: "#9B7653" },
-      { text: "Good Antioxidant", color: "#CD853F" },
-      { text: "Good Fiber", color: "#D2691E" },
+      { text: "Antioxidant", color: "#CD853F" },
+      { text: "Fiber", color: "#D2691E" },
     ],
     ingredients: [
       "Ginger",

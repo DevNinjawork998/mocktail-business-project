@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import CartIcon from "@/components/CartIcon/CartIcon";
 import {
   NavContainer,
@@ -12,6 +13,7 @@ import {
   MobileMenuButton,
   LogoContainer,
   Logo,
+  LogoImage,
   LogoText,
   LogoAccent,
   MobileMenu,
@@ -75,6 +77,16 @@ const Navigation: React.FC = () => {
           <LogoContainer>
             <Link href="/" aria-label="Go to home page">
               <Logo>
+                <LogoImage>
+                  <Image
+                    src="/images/MOTG%20logo.png"
+                    alt="Mocktails On the Go"
+                    width={40}
+                    height={40}
+                    priority
+                    style={{ objectFit: "contain" }}
+                  />
+                </LogoImage>
                 <LogoText>
                   Mocktails <LogoAccent>On the Go</LogoAccent>
                 </LogoText>

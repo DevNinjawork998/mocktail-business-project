@@ -50,8 +50,8 @@ const products = [
       "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGL9LVbzkKUo2NbcLsEyGnV6TeMA1KkvQU5hzmg",
     features: [
       { text: "Less sugar", color: "#FF6B6B" },
-      { text: "Good Antioxidant", color: "#4ECDC4" },
-      { text: "Good Fiber", color: "#45B7D1" },
+      { text: "Antioxidant", color: "#4ECDC4" },
+      { text: "Fiber", color: "#45B7D1" },
     ],
     ingredients: [
       "Ginger",
