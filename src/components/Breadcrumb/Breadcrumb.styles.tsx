@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const BreadcrumbContainer = styled.nav`
   padding: 12px 0;
-  border-top: 1px solid #E5E5E5;
-  border-bottom: 1px solid #E5E5E5;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
   background-color: ${({ theme }) => theme.currentSemantic.background};
   position: relative;
   z-index: 40;
@@ -60,12 +60,12 @@ export const BreadcrumbLink = styled.div`
   &:hover {
     color: #3a1111;
   }
-  
+
   svg {
     color: #451515;
     color: #3a1111;
   }
-  
+
   svg {
     color: #451515;
   }
@@ -79,19 +79,19 @@ export const BreadcrumbCurrent = styled.span`
 `;
 
 export const BreadcrumbSeparator = styled.span`
-  color: #A0A0A0;
-  color: #A0A0A0;
+  color: #a0a0a0;
+  color: #a0a0a0;
   font-size: 0.875rem;
   display: flex;
   align-items: center;
-  
+
   svg {
-    color: #A0A0A0;
+    color: #a0a0a0;
   }
   display: flex;
   align-items: center;
-  
+
   svg {
-    color: #A0A0A0;
+    color: #a0a0a0;
   }
 `;

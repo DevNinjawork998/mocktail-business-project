@@ -31,8 +31,10 @@ export const NavItem = styled.div<{ $isActive?: boolean }>`
     display: flex;
     align-items: center;
     gap: ${({ theme }) => theme.spacing.md};
-    padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.xl};
-    color: ${({ $isActive }) => ($isActive ? "white" : "rgba(255, 255, 255, 0.7)")};
+    padding: ${({ theme }) => theme.spacing.md}
+      ${({ theme }) => theme.spacing.xl};
+    color: ${({ $isActive }) =>
+      $isActive ? "white" : "rgba(255, 255, 255, 0.7)"};
     text-decoration: none;
     font-weight: ${({ $isActive }) => ($isActive ? "600" : "400")};
     background-color: ${({ $isActive }) =>

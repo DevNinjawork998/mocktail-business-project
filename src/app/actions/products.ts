@@ -19,7 +19,7 @@ function extractFileKeyFromUrl(url: string): string | null {
   if (!url.startsWith("https://utfs.io/")) {
     return null;
   }
-  
+
   try {
     const urlParts = url.split("/");
     const fileKey = urlParts[urlParts.length - 1];
@@ -32,7 +32,9 @@ function extractFileKeyFromUrl(url: string): string | null {
 /**
  * Delete file from UploadThing if URL is an UploadThing URL
  */
-async function deleteUploadThingFile(imageUrl: string | null | undefined): Promise<void> {
+async function deleteUploadThingFile(
+  imageUrl: string | null | undefined,
+): Promise<void> {
   if (!imageUrl) {
     return;
   }
@@ -68,7 +70,7 @@ const productSchema = z.object({
 export type ProductFormData = z.infer<typeof productSchema>;
 
 export async function createProduct(
-  data: ProductFormData
+  data: ProductFormData,
 ): Promise<ActionResult<{ id: string }>> {
   const session = await auth();
   if (!session?.user || !getEditorRoles().includes(session.user.role)) {
@@ -100,7 +102,7 @@ export async function createProduct(
 
 export async function updateProduct(
   id: string,
-  data: ProductFormData
+  data: ProductFormData,
 ): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user || !getEditorRoles().includes(session.user.role)) {
@@ -109,7 +111,7 @@ export async function updateProduct(
 
   try {
     const validated = productSchema.parse(data);
-    
+
     // Get the current product to check if we need to delete the old image
     const currentProduct = await prisma.product.findUnique({
       where: { id },

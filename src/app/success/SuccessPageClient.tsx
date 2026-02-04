@@ -52,7 +52,9 @@ const SuccessPageClient: React.FC = () => {
       </S.Confetti>
       <S.CocktailEmoji>🍹</S.CocktailEmoji>
       <S.SuccessIconStyled>✓</S.SuccessIconStyled>
-      <S.SuccessTitleStyled>Cheers! Your Order is Shaking Things Up!</S.SuccessTitleStyled>
+      <S.SuccessTitleStyled>
+        Cheers! Your Order is Shaking Things Up!
+      </S.SuccessTitleStyled>
       <S.SuccessMessageStyled>
         Thank you for being the life of the party!{" "}
         <span role="img" aria-label="cheers">
@@ -99,8 +101,8 @@ const SuccessPageClient: React.FC = () => {
         </S.SecondaryButton>
       </S.ActionButtons>
       <S.SocialShare>
-        Share your cocktail excitement! Tag us <b>@CocktailCo</b> on Instagram
-        🍹
+        Share your cocktail excitement! Tag us <b>@mocktailsonthego_motg</b> on
+        Instagram 🍹
       </S.SocialShare>
     </S.SuccessContainerStyled>
   );

@@ -3,7 +3,7 @@
 /**
  * Script to create the Settings table in the database
  * Run with: npx tsx scripts/create-settings-table.ts
- * 
+ *
  * Note: Requires DATABASE_URL, POSTGRES_URL, DIRECT_URL, or PRISMA_DATABASE_URL
  * to be set in your environment or .env.local file
  */

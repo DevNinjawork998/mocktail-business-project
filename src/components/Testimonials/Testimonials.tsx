@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, MouseEvent, TouchEvent } from "react";
 import {
   TestimonialsSection,
   Container,
@@ -8,7 +8,7 @@ import {
   SectionTitle,
   SectionSubtitle,
   TestimonialsContainer,
-  TestimonialsGrid,
+  CarouselTrack,
   TestimonialCard,
   TestimonialContent,
   TestimonialText,
@@ -16,80 +16,78 @@ import {
   CustomerAvatar,
   CustomerInfo,
   CustomerName,
-  CustomerTitle,
   RatingStars,
   Star,
-  NavigationDots,
-  Dot,
   BackgroundDecoration,
   DecorativeCircle,
 } from "./Testimonials.styles";
 
-// Sample testimonials data
+// Testimonials data
 const testimonials = [
   {
     id: 1,
-    text: "Great tasting cocktail! Truffle Shuffle. Feels guilt free. Love it so much though there's a bittersweet moment.",
-    customerName: "Jenny",
-    customerTitle: "Truffle Zombie Butler",
-    customerInitial: "J",
+    text: "Halal mocktails & so healthy. Tried Tequila Sundown & Maca Martini sedap sangat!! 😍",
+    customerName: "yasmeenn",
+    customerInitial: "Y",
     avatarColor: "#FF6B6B",
     rating: 5,
   },
   {
     id: 2,
-    text: "I was a gift for my daughter and she was super pleased!!! Everything it taste. I do want to continue to purchase in the future!!",
-    customerName: "Kat",
-    customerTitle: "Truffle Zombie Butler",
+    text: "My favourite flavour of the 3 is Tequila Sundown 😊. As for Dark & Stormy, I like how it gives my throat a nice warm hug with the ginger kick",
+    customerName: "KM",
     customerInitial: "K",
     avatarColor: "#4ECDC4",
-    rating: 5,
-  },
-  {
-    id: 3,
-    text: "The bottle really good. Tried same before too, gave the Taste! Zombie & Truffle Zombie Combo it is my go to.",
-    customerName: "Jay",
-    customerTitle: "Truffle Zombie Butler",
-    customerInitial: "J",
-    avatarColor: "#45B7D1",
-    rating: 5,
-  },
-  {
-    id: 4,
-    text: "Love it - extremely fresh and delicious truffle taste that feels like it my go to drink for a night out. It is my go to myself and friends!",
-    customerName: "Melissa C",
-    customerTitle: "Truffle Zombie Butler",
-    customerInitial: "M",
-    avatarColor: "#96CEB4",
-    rating: 5,
-  },
-  {
-    id: 5,
-    text: "Amazing flavors that transport you to cocktail paradise. The premium ingredients really show in every sip!",
-    customerName: "Alex R",
-    customerTitle: "Cocktail Enthusiast",
-    customerInitial: "A",
-    avatarColor: "#FECA57",
-    rating: 5,
-  },
-  {
-    id: 6,
-    text: "Best cocktail experience I've had! The balance of flavors is perfect and the quality is unmatched.",
-    customerName: "Sarah M",
-    customerTitle: "Mixology Expert",
-    customerInitial: "S",
-    avatarColor: "#FF9FF3",
     rating: 5,
   },
 ];
 
 const Testimonials: React.FC = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = Math.ceil(testimonials.length / 3);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
-  const getVisibleTestimonials = () => {
-    const startIndex = currentSlide * 3;
-    return testimonials.slice(startIndex, startIndex + 3);
+  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    if (!carouselRef.current) return;
+    setIsDragging(true);
+    setIsPaused(true);
+    setStartX(e.pageX - carouselRef.current.offsetLeft);
+    setScrollLeft(carouselRef.current.scrollLeft);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setIsPaused(false);
+  };
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!isDragging || !carouselRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    const walk = (x - startX) * 2;
+    carouselRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    if (!carouselRef.current) return;
+    setIsDragging(true);
+    setIsPaused(true);
+    setStartX(e.touches[0].pageX - carouselRef.current.offsetLeft);
+    setScrollLeft(carouselRef.current.scrollLeft);
+  };
+
+  const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+    if (!isDragging || !carouselRef.current) return;
+    const x = e.touches[0].pageX - carouselRef.current.offsetLeft;
+    const walk = (x - startX) * 2;
+    carouselRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    setIsPaused(false);
   };
 
   const renderStars = (rating: number) => {
@@ -97,6 +95,9 @@ const Testimonials: React.FC = () => {
       <Star key={index}>{index < rating ? "★" : "☆"}</Star>
     ));
   };
+
+  // Duplicate testimonials for seamless loop
+  const duplicatedTestimonials = [...testimonials, ...testimonials];
 
   return (
     <TestimonialsSection>
@@ -120,9 +121,24 @@ const Testimonials: React.FC = () => {
         </SectionHeader>
 
         <TestimonialsContainer>
-          <TestimonialsGrid>
-            {getVisibleTestimonials().map((testimonial) => (
-              <TestimonialCard key={testimonial.id}>
+          <CarouselTrack
+            ref={carouselRef}
+            $isPaused={isPaused}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => {
+              if (!isDragging) {
+                setIsPaused(false);
+              }
+            }}
+          >
+            {duplicatedTestimonials.map((testimonial, index) => (
+              <TestimonialCard key={`${testimonial.id}-${index}`}>
                 <TestimonialContent>
                   <RatingStars>{renderStars(testimonial.rating)}</RatingStars>
                   <TestimonialText>{testimonial.text}</TestimonialText>
@@ -134,23 +150,11 @@ const Testimonials: React.FC = () => {
                   </CustomerAvatar>
                   <CustomerInfo>
                     <CustomerName>{testimonial.customerName}</CustomerName>
-                    <CustomerTitle>{testimonial.customerTitle}</CustomerTitle>
                   </CustomerInfo>
                 </TestimonialFooter>
               </TestimonialCard>
             ))}
-          </TestimonialsGrid>
-
-          <NavigationDots>
-            {Array.from({ length: totalSlides }, (_, index) => (
-              <Dot
-                key={index}
-                $active={index === currentSlide}
-                onClick={() => setCurrentSlide(index)}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </NavigationDots>
+          </CarouselTrack>
         </TestimonialsContainer>
       </Container>
     </TestimonialsSection>

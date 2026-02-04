@@ -23,7 +23,10 @@ const userUpdateSchema = z.object({
   email: z.string().email("Invalid email address").optional(),
   name: z.string().min(1, "Name is required").optional(),
   role: z.enum(["SUPERADMIN", "ADMIN", "EDITOR"]).optional(),
-  password: z.string().min(6, "Password must be at least 6 characters").optional(),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .optional(),
 });
 
 export type UserCreateData = z.infer<typeof userCreateSchema>;
@@ -32,16 +35,20 @@ export type UserUpdateData = z.infer<typeof userUpdateSchema>;
 /**
  * Get all users (SUPERADMIN only)
  */
-export async function getUsers(): Promise<ActionResult<Array<{
-  id: string;
-  email: string;
-  name: string | null;
-  role: string;
-  image: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  hasOAuthAccount: boolean;
-}>>> {
+export async function getUsers(): Promise<
+  ActionResult<
+    Array<{
+      id: string;
+      email: string;
+      name: string | null;
+      role: string;
+      image: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+      hasOAuthAccount: boolean;
+    }>
+  >
+> {
   const session = await auth();
   if (!session?.user || !canManageUsers(session.user.role)) {
     return { success: false, error: "Unauthorized" };
@@ -77,7 +84,7 @@ export async function getUsers(): Promise<ActionResult<Array<{
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       hasOAuthAccount: user.accounts.some(
-        (account) => account.provider !== "credentials"
+        (account) => account.provider !== "credentials",
       ),
     }));
 
@@ -92,7 +99,7 @@ export async function getUsers(): Promise<ActionResult<Array<{
  * Create a new user (SUPERADMIN only)
  */
 export async function createUser(
-  data: UserCreateData
+  data: UserCreateData,
 ): Promise<ActionResult<{ id: string }>> {
   const session = await auth();
   if (!session?.user || !canManageUsers(session.user.role)) {
@@ -140,7 +147,7 @@ export async function createUser(
  */
 export async function updateUser(
   id: string,
-  data: UserUpdateData
+  data: UserUpdateData,
 ): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user || !canManageUsers(session.user.role)) {

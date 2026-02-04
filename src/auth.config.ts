@@ -78,7 +78,7 @@ export default {
       try {
         // Dynamic import to avoid edge runtime issues
         const { prisma } = await import("@/lib/prisma");
-        
+
         // Check if user exists in database BEFORE allowing sign-in
         const existingUser = await prisma.user.findUnique({
           where: { email: user.email },
@@ -88,7 +88,7 @@ export default {
         // User must be onboarded by SUPERADMIN first
         if (!existingUser) {
           console.warn(
-            `OAuth login denied: User ${user.email} not found in database. Please contact admin to be onboarded.`
+            `OAuth login denied: User ${user.email} not found in database. Please contact admin to be onboarded.`,
           );
           return false; // Deny sign-in - user must be created by SUPERADMIN first
         }

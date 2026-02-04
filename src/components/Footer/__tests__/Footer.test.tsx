@@ -12,7 +12,10 @@ describe("Footer", () => {
     const whatsappLink = screen.getByLabelText("Contact us on WhatsApp");
 
     expect(instagramLink).toHaveAttribute("href");
-    expect(instagramLink).toHaveAttribute("aria-label", "Follow us on Instagram");
+    expect(instagramLink).toHaveAttribute(
+      "aria-label",
+      "Follow us on Instagram",
+    );
     expect(instagramLink).toHaveAttribute("target", "_blank");
     expect(instagramLink).toHaveAttribute("rel", "noopener noreferrer");
 
@@ -22,7 +25,10 @@ describe("Footer", () => {
     expect(tiktokLink).toHaveAttribute("rel", "noopener noreferrer");
 
     expect(whatsappLink).toHaveAttribute("href");
-    expect(whatsappLink).toHaveAttribute("aria-label", "Contact us on WhatsApp");
+    expect(whatsappLink).toHaveAttribute(
+      "aria-label",
+      "Contact us on WhatsApp",
+    );
     expect(whatsappLink).toHaveAttribute("target", "_blank");
     expect(whatsappLink).toHaveAttribute("rel", "noopener noreferrer");
   });

@@ -56,15 +56,19 @@ const ProductShowcase = () => {
 
         <S.ProductsGrid>
           {products.map((product) => (
-            <S.ProductCard key={product.id} href={`/shop/${product.id}`} as={Link}>
+            <S.ProductCard
+              key={product.id}
+              href={`/shop/${product.id}`}
+              as={Link}
+            >
               <S.ProductImage>
                 {product.imageUrl ? (
-                  <Image 
-                    src={product.imageUrl} 
+                  <Image
+                    src={product.imageUrl}
                     alt={product.name}
                     fill
                     sizes="(max-width: 768px) 200px, 300px"
-                    style={{ objectFit: "contain" }}
+                    style={{ objectFit: "cover", objectPosition: "center" }}
                   />
                 ) : (
                   <S.ProductImagePlaceholder $bgColor={product.imageColor}>
@@ -74,7 +78,9 @@ const ProductShowcase = () => {
               </S.ProductImage>
               <S.ProductContent>
                 <S.ProductName>{product.name}</S.ProductName>
-                <S.ProductDescription>{product.description}</S.ProductDescription>
+                <S.ProductDescription>
+                  {product.description}
+                </S.ProductDescription>
                 <S.AddToCartButton onClick={(e) => e.preventDefault()}>
                   Add to Cart
                 </S.AddToCartButton>

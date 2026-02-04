@@ -7,7 +7,8 @@ export const PageContainer = styled.div`
 `;
 
 export const ContentSection = styled.section`
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   max-width: 800px;
   margin: 0 auto;
   min-height: 60vh;

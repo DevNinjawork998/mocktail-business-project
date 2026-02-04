@@ -20,7 +20,7 @@ export const SectionTitle = styled.h3`
   color: ${({ theme }) => theme.colors.chocolateKisses.dark};
   margin: 0;
   line-height: 1.4;
-  
+
   ${media.md} {
     font-size: 1.375rem;
   }
@@ -37,7 +37,7 @@ export const Paragraph = styled.p`
   line-height: 1.7;
   color: ${({ theme }) => theme.currentSemantic.text};
   margin: 0;
-  
+
   ${media.md} {
     font-size: 1.0625rem;
   }
@@ -63,7 +63,7 @@ export const KeyPoint = styled.li`
   font-size: 1rem;
   line-height: 1.7;
   color: ${({ theme }) => theme.currentSemantic.text};
-  
+
   ${media.md} {
     font-size: 1.0625rem;
   }

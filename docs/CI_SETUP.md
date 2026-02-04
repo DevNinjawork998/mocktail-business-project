@@ -47,6 +47,7 @@ The project includes two main workflows:
 ### Environment Variables
 
 Tests use mock environment variables:
+
 - `DATABASE_URL: "file:./dev.db"` - SQLite for Prisma generate
 - `NODE_ENV: "test"` - Test environment
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "pk_test_dummy_key_for_ci"` - Mock Stripe key
@@ -58,6 +59,7 @@ Tests use mock environment variables:
 ### Issue: Prisma Client Not Generated
 
 **Solution**: Ensure the Prisma setup step runs before type checking:
+
 ```yaml
 - name: Setup Prisma for CI
   run: |
@@ -74,6 +76,7 @@ Tests use mock environment variables:
 ### Issue: Tests Failing Due to Missing Environment Variables
 
 **Solution**: Add required environment variables to the test step:
+
 ```yaml
 - name: Run tests
   run: npm run test:ci
@@ -86,6 +89,7 @@ Tests use mock environment variables:
 ### Issue: Type Checking Failing
 
 **Solution**: Ensure Prisma Client is generated before type checking:
+
 1. Prisma setup step must run first
 2. Prisma generate must complete successfully
 3. DATABASE_URL must be set (even if dummy)
@@ -121,11 +125,13 @@ DATABASE_URL="file:./dev.db" NODE_ENV="test" \
 ## Workflow Triggers
 
 ### CI Workflow
+
 - **Triggers**: Push to `main`, `master`, `develop` branches
 - **Triggers**: Pull requests to `main`, `master`, `develop` branches
 - **Purpose**: Validate code quality before merge
 
 ### Vercel Deployment Workflow
+
 - **Triggers**: Push to `main` or `master` branches only
 - **Requires**: Quality checks job must pass first
 - **Purpose**: Deploy validated code to production
@@ -139,6 +145,7 @@ For Vercel deployment, these secrets must be set:
 3. `VERCEL_PROJECT_ID` - Find in Vercel Dashboard → Project Settings → General
 
 Optional (for build check):
+
 - `DATABASE_URL` - Production database URL
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - Stripe public key
 
@@ -159,21 +166,25 @@ Optional (for build check):
 ## Troubleshooting
 
 ### Workflow Not Running
+
 - Check that workflow files are in `.github/workflows/`
 - Verify branch names match workflow triggers
 - Check GitHub Actions is enabled in repository settings
 
 ### Tests Failing in CI but Passing Locally
+
 - Compare environment variables
 - Check Node.js version matches (CI uses Node 20)
 - Verify all dependencies are in `package.json` (not just `package-lock.json`)
 
 ### Prisma Generate Failing
+
 - Ensure schema file exists
 - Check DATABASE_URL is set
 - Verify schema syntax is correct
 
 ### Build Failing
+
 - Check all environment variables are set
 - Verify Prisma Client is generated
 - Review build logs for specific errors

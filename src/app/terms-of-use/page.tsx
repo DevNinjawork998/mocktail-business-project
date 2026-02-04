@@ -20,8 +20,9 @@ export default function TermsOfUsePage() {
           <S.SectionTitle>Health Claims Disclaimer</S.SectionTitle>
           <S.Paragraph>
             The statements made on this website regarding our products have not
-            been evaluated by health authorities. Our products are not intended to diagnose,
-            treat, cure, or prevent any disease or medical condition.
+            been evaluated by health authorities. Our products are not intended
+            to diagnose, treat, cure, or prevent any disease or medical
+            condition.
           </S.Paragraph>
           <S.Paragraph>
             Any health-related information provided on this website is for
@@ -40,9 +41,7 @@ export default function TermsOfUsePage() {
             current, or error-free. Product formulations may change, and
             information may be updated without notice.
           </S.Paragraph>
-          <S.Paragraph>
-            We recommend that you:
-          </S.Paragraph>
+          <S.Paragraph>We recommend that you:</S.Paragraph>
           <S.List>
             <S.ListItem>
               Review product labels and ingredient lists before consumption

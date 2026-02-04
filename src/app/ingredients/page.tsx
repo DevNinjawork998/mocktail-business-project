@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef, type MouseEvent, type TouchEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  type MouseEvent,
+  type TouchEvent,
+} from "react";
 import Image from "next/image";
 import Navigation from "@/components/Navigation/Navigation";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
@@ -143,7 +149,7 @@ export default function IngredientsPage() {
       </HeroSection>
 
       <IngredientsSection>
-        {/* Featured Ingredient */} 
+        {/* Featured Ingredient */}
         {/* Running Carousel of Ingredient Cards */}
         <CarouselContainer>
           <CarouselTrack
@@ -163,33 +169,18 @@ export default function IngredientsPage() {
             }}
           >
             {/* Duplicate ingredients for seamless loop */}
-            {[...otherIngredients, ...otherIngredients].map((ingredient, index) => {
-              const isFlipped = flippedCards.has(`${ingredient.id}-${index}`);
-              
-              return (
-                <CarouselCardWrapper key={`${ingredient.id}-${index}`}>
-                  <FlipCardContainer>
-                    <FlipCard
-                      $isFlipped={isFlipped}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setFlippedCards((prev) => {
-                          const newSet = new Set(prev);
-                          const cardId = `${ingredient.id}-${index}`;
-                          if (newSet.has(cardId)) {
-                            newSet.delete(cardId);
-                          } else {
-                            newSet.add(cardId);
-                          }
-                          return newSet;
-                        });
-                      }}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
+            {[...otherIngredients, ...otherIngredients].map(
+              (ingredient, index) => {
+                const isFlipped = flippedCards.has(`${ingredient.id}-${index}`);
+
+                return (
+                  <CarouselCardWrapper key={`${ingredient.id}-${index}`}>
+                    <FlipCardContainer>
+                      <FlipCard
+                        $isFlipped={isFlipped}
+                        onClick={(e) => {
                           e.preventDefault();
+                          e.stopPropagation();
                           setFlippedCards((prev) => {
                             const newSet = new Set(prev);
                             const cardId = `${ingredient.id}-${index}`;
@@ -200,41 +191,68 @@ export default function IngredientsPage() {
                             }
                             return newSet;
                           });
-                        }
-                      }}
-                    >
-                      <CardFront>
-                        <IngredientCard>
-                          {ingredient.imageUrl && !imageErrors.has(ingredient.id) ? (
-                            <IngredientImage>
-                              <Image
-                                src={ingredient.imageUrl}
-                                alt={ingredient.name}
-                                fill
-                                sizes="(max-width: 768px) 150px, 200px"
-                                style={{ objectFit: "cover", pointerEvents: "none" }}
-                                onError={() => {
-                                  setImageErrors((prev) => new Set(prev).add(ingredient.id));
-                                }}
-                              />
-                            </IngredientImage>
-                          ) : (
-                            <IngredientIcon>{ingredient.icon}</IngredientIcon>
-                          )}
-                          <IngredientName>{ingredient.name}</IngredientName>
-                          <IngredientSubtitle>{ingredient.subtitle}</IngredientSubtitle>
-                        </IngredientCard>
-                      </CardFront>
-                      <CardBack>
-                        <BackTitle>{ingredient.name}</BackTitle>
-                        <BackSubtitle>{ingredient.subtitle}</BackSubtitle>
-                        <IngredientDescription>{ingredient.description}</IngredientDescription>
-                      </CardBack>
-                    </FlipCard>
-                  </FlipCardContainer>
-                </CarouselCardWrapper>
-              );
-            })}
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setFlippedCards((prev) => {
+                              const newSet = new Set(prev);
+                              const cardId = `${ingredient.id}-${index}`;
+                              if (newSet.has(cardId)) {
+                                newSet.delete(cardId);
+                              } else {
+                                newSet.add(cardId);
+                              }
+                              return newSet;
+                            });
+                          }
+                        }}
+                      >
+                        <CardFront>
+                          <IngredientCard>
+                            {ingredient.imageUrl &&
+                            !imageErrors.has(ingredient.id) ? (
+                              <IngredientImage>
+                                <Image
+                                  src={ingredient.imageUrl}
+                                  alt={ingredient.name}
+                                  fill
+                                  sizes="(max-width: 768px) 150px, 200px"
+                                  style={{
+                                    objectFit: "cover",
+                                    pointerEvents: "none",
+                                  }}
+                                  onError={() => {
+                                    setImageErrors((prev) =>
+                                      new Set(prev).add(ingredient.id),
+                                    );
+                                  }}
+                                />
+                              </IngredientImage>
+                            ) : (
+                              <IngredientIcon>{ingredient.icon}</IngredientIcon>
+                            )}
+                            <IngredientName>{ingredient.name}</IngredientName>
+                            <IngredientSubtitle>
+                              {ingredient.subtitle}
+                            </IngredientSubtitle>
+                          </IngredientCard>
+                        </CardFront>
+                        <CardBack>
+                          <BackTitle>{ingredient.name}</BackTitle>
+                          <BackSubtitle>{ingredient.subtitle}</BackSubtitle>
+                          <IngredientDescription>
+                            {ingredient.description}
+                          </IngredientDescription>
+                        </CardBack>
+                      </FlipCard>
+                    </FlipCardContainer>
+                  </CarouselCardWrapper>
+                );
+              },
+            )}
           </CarouselTrack>
         </CarouselContainer>
       </IngredientsSection>

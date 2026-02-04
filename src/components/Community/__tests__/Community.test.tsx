@@ -59,7 +59,7 @@ describe("Community", () => {
       fireEvent.click(firstPhoto);
 
       expect(mockWindowOpen).toHaveBeenCalledWith(
-        "https://www.instagram.com/explore/tags/MocktailsOnTheGo/",
+        "https://www.instagram.com/mocktailsonthego_motg?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
         "_blank",
       );
     }
@@ -80,7 +80,7 @@ describe("Community", () => {
       fireEvent.click(ctaButton);
 
       expect(mockWindowOpen).toHaveBeenCalledWith(
-        "https://www.instagram.com/explore/tags/MocktailsOnTheGo/",
+        "https://www.instagram.com/mocktailsonthego_motg?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
         "_blank",
       );
     }

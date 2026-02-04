@@ -23,6 +23,9 @@ export default async function UsersPage() {
   }
 
   return (
-    <UsersListClient users={result.data || []} currentUserId={session.user.id} />
+    <UsersListClient
+      users={result.data || []}
+      currentUserId={session.user.id}
+    />
   );
 }

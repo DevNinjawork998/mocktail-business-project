@@ -10,27 +10,26 @@ import dynamic from "next/dynamic";
 // Dynamically import sections for better performance
 const ProductShowcase = dynamic(
   () => import("@/components/ProductShowcase/ProductShowcase"),
-  { ssr: false }
+  { ssr: false },
 );
 
 const HealthBenefits = dynamic(
   () => import("@/components/HealthBenefits/HealthBenefits"),
-  { ssr: false }
+  { ssr: false },
 );
 
 const WhyMocktails = dynamic(
   () => import("@/components/WhyMocktails/WhyMocktails"),
-  { ssr: false }
+  { ssr: false },
 );
 
-const CTABanner = dynamic(
-  () => import("@/components/CTABanner/CTABanner"),
-  { ssr: false }
-);
+const CTABanner = dynamic(() => import("@/components/CTABanner/CTABanner"), {
+  ssr: false,
+});
 
 const FounderStory = dynamic(
   () => import("@/components/FounderStory/FounderStory"),
-  { ssr: false }
+  { ssr: false },
 );
 
 export default function Home() {

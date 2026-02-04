@@ -4,17 +4,21 @@ import Link from "next/link";
 
 export const ShopContainer = styled.div`
   min-height: 100vh;
-  background: #D4AAB3;
+  background: #d4aab3;
   padding: ${({ theme }) => theme.spacing["2xl"]};
   ${({ theme }) => theme.spacing.md};
-  padding-top: calc(4rem + ${({ theme }) => theme.spacing["2xl"]}); /* Account for fixed navigation bar + existing padding */
+  padding-top: calc(
+    4rem + ${({ theme }) => theme.spacing["2xl"]}
+  ); /* Account for fixed navigation bar + existing padding */
   position: relative;
   overflow: hidden;
 
   ${media.lg} {
     padding: ${({ theme }) => theme.spacing["4xl"]};
     ${({ theme }) => theme.spacing.xl};
-    padding-top: calc(4rem + ${({ theme }) => theme.spacing["4xl"]}); /* Account for fixed navigation bar + existing padding */
+    padding-top: calc(
+      4rem + ${({ theme }) => theme.spacing["4xl"]}
+    ); /* Account for fixed navigation bar + existing padding */
   }
 `;
 
@@ -113,7 +117,7 @@ export const ProductCard = styled(Link)`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 
+  box-shadow:
     0 4px 6px -1px ${({ theme }) => theme.colors.mauvelous.base}12,
     0 2px 4px -1px ${({ theme }) => theme.colors.mauvelous.base}06;
   position: relative;
@@ -139,7 +143,7 @@ export const ProductCard = styled(Link)`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 
+  box-shadow:
     0 4px 6px -1px ${({ theme }) => theme.colors.mauvelous.base}12,
     0 2px 4px -1px ${({ theme }) => theme.colors.mauvelous.base}06;
   position: relative;
@@ -163,11 +167,11 @@ export const ProductCard = styled(Link)`
 
   &:hover {
     transform: translateY(-6px) scale(1.02);
-    box-shadow: 
+    box-shadow:
       0 20px 25px -5px ${({ theme }) => theme.colors.mauvelous.base}25,
       0 10px 10px -5px ${({ theme }) => theme.colors.royalOrange.base}20;
     transform: translateY(-6px) scale(1.02);
-    box-shadow: 
+    box-shadow:
       0 20px 25px -5px ${({ theme }) => theme.colors.mauvelous.base}25,
       0 10px 10px -5px ${({ theme }) => theme.colors.royalOrange.base}20;
     border-color: ${({ theme }) => theme.colors.royalOrange.base};
@@ -195,48 +199,24 @@ export const ProductCard = styled(Link)`
 `;
 
 export const ProductImageContainer = styled.div`
-  background: linear-gradient(
-    135deg,
-    ${({ theme }) => theme.colors.mauvelous.light}10 0%,
-    ${({ theme }) => theme.currentSemantic.backgroundSecondary} 50%,
-    ${({ theme }) => theme.colors.royalOrange.light}10 100%
-  );
-  background: linear-gradient(
-    135deg,
-    ${({ theme }) => theme.colors.mauvelous.light}10 0%,
-    ${({ theme }) => theme.currentSemantic.backgroundSecondary} 50%,
-    ${({ theme }) => theme.colors.royalOrange.light}10 100%
-  );
+  background: transparent;
   border-radius: ${({ theme }) => theme.radii.lg};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 3 / 4;
-  aspect-ratio: 3 / 4;
   position: relative;
   overflow: hidden;
-  padding: ${({ theme }) => theme.spacing.lg};
-  transition: background 0.4s ease;
+  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.lg};
+  height: 350px;
+  width: 100%;
 
-  ${ProductCard}:hover & {
-    background: linear-gradient(
-      135deg,
-      ${({ theme }) => theme.colors.mauvelous.light}18 0%,
-      ${({ theme }) => theme.currentSemantic.backgroundSecondary} 50%,
-      ${({ theme }) => theme.colors.royalOrange.light}18 100%
-    );
-  }
-  padding: ${({ theme }) => theme.spacing.lg};
-  transition: background 0.4s ease;
-
-  ${ProductCard}:hover & {
-    background: linear-gradient(
-      135deg,
-      ${({ theme }) => theme.colors.mauvelous.light}18 0%,
-      ${({ theme }) => theme.currentSemantic.backgroundSecondary} 50%,
-      ${({ theme }) => theme.colors.royalOrange.light}18 100%
-    );
+  /* Standardize image wrapper - fixed dimensions for consistent sizing */
+  > div {
+    position: relative;
+    width: 200px;
+    height: 280px;
+    margin: 0 auto;
   }
 `;
 
@@ -244,11 +224,7 @@ export const ProductImage = styled.div<{ $bgColor: string }>`
   width: 100%;
   height: 100%;
   max-width: 200px;
-  max-height: 300px;
-  width: 100%;
-  height: 100%;
-  max-width: 200px;
-  max-height: 300px;
+  max-height: 280px;
   background: ${({ $bgColor }) => $bgColor};
   border-radius: ${({ theme }) => theme.radii.md};
   display: flex;
@@ -257,9 +233,9 @@ export const ProductImage = styled.div<{ $bgColor: string }>`
   color: white;
   font-weight: bold;
   font-size: 0.875rem;
-  font-size: 0.875rem;
   text-align: center;
   box-shadow: ${({ theme }) => theme.shadows.md};
+  margin: 0 auto;
 `;
 
 export const ProductName = styled.h3`

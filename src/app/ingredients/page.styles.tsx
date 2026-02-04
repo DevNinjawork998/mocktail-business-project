@@ -3,7 +3,6 @@ import styled, { keyframes } from "styled-components";
 export const PageContainer = styled.div`
   min-height: 100vh;
   background-color: ${({ theme }) => theme.currentSemantic.background};
-  padding-top: 4rem; /* Account for fixed navigation bar */
 `;
 
 export const HeroSection = styled.section`
@@ -12,7 +11,8 @@ export const HeroSection = styled.section`
     ${({ theme }) => theme.colors.caramel.light} 0%,
     ${({ theme }) => theme.colors.mauvelous.light} 100%
   );
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   text-align: center;
 `;
 
@@ -44,7 +44,8 @@ export const HeroSubtitle = styled.p`
 `;
 
 export const IngredientsSection = styled.section`
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   max-width: 1400px;
   margin: 0 auto;
 `;
@@ -115,10 +116,11 @@ export const CarouselTrack = styled.div<{ $isPaused?: boolean }>`
   gap: ${({ theme }) => theme.spacing.xl};
   width: fit-content;
   animation: ${scrollAnimation} 40s linear infinite;
-  animation-play-state: ${({ $isPaused }) => ($isPaused ? "paused" : "running")};
+  animation-play-state: ${({ $isPaused }) =>
+    $isPaused ? "paused" : "running"};
   cursor: grab;
   user-select: none;
-  
+
   &:active {
     cursor: grabbing;
   }
@@ -127,7 +129,7 @@ export const CarouselTrack = styled.div<{ $isPaused?: boolean }>`
 export const CarouselCardWrapper = styled.div`
   flex-shrink: 0;
   width: 280px;
-  
+
   ${({ theme }) => `
     @media (min-width: ${theme.breakpoints.sm}) {
       width: 300px;
@@ -147,7 +149,8 @@ export const FlipCard = styled.div<{ $isFlipped: boolean }>`
   height: 100%;
   transition: transform 0.6s;
   transform-style: preserve-3d;
-  transform: ${({ $isFlipped }) => ($isFlipped ? "rotateY(180deg)" : "rotateY(0)")};
+  transform: ${({ $isFlipped }) =>
+    $isFlipped ? "rotateY(180deg)" : "rotateY(0)"};
   cursor: pointer;
 `;
 
@@ -164,11 +167,15 @@ export const CardFace = styled.div`
 export const CardFront = styled(CardFace)`
   background-color: ${({ theme }) => theme.currentSemantic.surface};
   border: 1px solid ${({ theme }) => theme.currentSemantic.borderLight};
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.3s ease;
-  
+
   &:hover {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow:
+      0 12px 24px rgba(0, 0, 0, 0.15),
+      0 6px 12px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -185,7 +192,9 @@ export const CardBack = styled(CardFace)`
   justify-content: center;
   align-items: center;
   padding: ${({ theme }) => theme.spacing.xl};
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.15);
   transition: box-shadow 0.3s ease;
 `;
 

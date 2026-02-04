@@ -16,7 +16,9 @@ export interface Product {
   nutritionFacts?: Array<{ label: string; value: string }>; // Array of nutrition facts
 }
 
-type PrismaProduct = Awaited<ReturnType<typeof prisma.product.findMany>>[number];
+type PrismaProduct = Awaited<
+  ReturnType<typeof prisma.product.findMany>
+>[number];
 
 export async function getAllProducts(): Promise<Product[]> {
   try {

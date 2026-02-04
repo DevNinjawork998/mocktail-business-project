@@ -28,33 +28,30 @@ export default function ImageUpload({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Use UploadThing hook for auto-upload functionality
-  const { startUpload, isUploading: utIsUploading } = useUploadThing(
-    endpoint,
-    {
-      onClientUploadComplete: (res) => {
-        console.log("Upload complete:", res);
-        setIsUploading(false);
-        setUploadProgress(0);
-        onUploadComplete?.();
-        if (res && Array.isArray(res) && res.length > 0 && res[0]?.url) {
-          console.log("Setting image URL:", res[0].url);
-          onChange(res[0].url);
-        } else {
-          console.error("Invalid upload response:", res);
-        }
-      },
-      onUploadError: (error: Error) => {
-        console.error("Upload error:", error);
-        setIsUploading(false);
-        setUploadProgress(0);
-        onUploadComplete?.();
-        alert(`Upload failed: ${error.message}`);
-      },
-      onUploadProgress: (progress) => {
-        setUploadProgress(progress);
-      },
-    }
-  );
+  const { startUpload, isUploading: utIsUploading } = useUploadThing(endpoint, {
+    onClientUploadComplete: (res) => {
+      console.log("Upload complete:", res);
+      setIsUploading(false);
+      setUploadProgress(0);
+      onUploadComplete?.();
+      if (res && Array.isArray(res) && res.length > 0 && res[0]?.url) {
+        console.log("Setting image URL:", res[0].url);
+        onChange(res[0].url);
+      } else {
+        console.error("Invalid upload response:", res);
+      }
+    },
+    onUploadError: (error: Error) => {
+      console.error("Upload error:", error);
+      setIsUploading(false);
+      setUploadProgress(0);
+      onUploadComplete?.();
+      alert(`Upload failed: ${error.message}`);
+    },
+    onUploadProgress: (progress) => {
+      setUploadProgress(progress);
+    },
+  });
 
   // Only render on the client to avoid SSR issues
   useEffect(() => {
@@ -74,7 +71,7 @@ export default function ImageUpload({
   };
 
   const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const files = event.target.files;
     if (!files || files.length === 0) {
@@ -113,7 +110,6 @@ export default function ImageUpload({
     event.preventDefault();
   };
 
-
   return (
     <S.Container>
       <S.Label>{label}</S.Label>
@@ -133,7 +129,9 @@ export default function ImageUpload({
                 <S.ProgressBarContainer>
                   <S.ProgressBar $progress={uploadProgress} />
                 </S.ProgressBarContainer>
-                <S.UploadingText>Uploading... {uploadProgress}%</S.UploadingText>
+                <S.UploadingText>
+                  Uploading... {uploadProgress}%
+                </S.UploadingText>
               </S.UploadOverlay>
             )}
           </S.ImageWrapper>
@@ -148,7 +146,9 @@ export default function ImageUpload({
       ) : (
         <>
           {!isMounted ? (
-            <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
+            <div
+              style={{ padding: "2rem", textAlign: "center", color: "#666" }}
+            >
               Loading upload component...
             </div>
           ) : (
@@ -187,7 +187,9 @@ export default function ImageUpload({
                     <S.ProgressBarContainer>
                       <S.ProgressBar $progress={uploadProgress} />
                     </S.ProgressBarContainer>
-                    <S.UploadingText>Uploading... {uploadProgress}%</S.UploadingText>
+                    <S.UploadingText>
+                      Uploading... {uploadProgress}%
+                    </S.UploadingText>
                   </>
                 ) : (
                   <>

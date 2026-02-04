@@ -22,7 +22,8 @@ describe("ProductDescriptionParser", () => {
     });
 
     it("renders paragraphs correctly", () => {
-      const html = "<h3>Title</h3><p>First paragraph.</p><p>Second paragraph.</p>";
+      const html =
+        "<h3>Title</h3><p>First paragraph.</p><p>Second paragraph.</p>";
       render(<ProductDescriptionParser htmlContent={html} />);
       expect(screen.getByText("First paragraph.")).toBeInTheDocument();
       expect(screen.getByText("Second paragraph.")).toBeInTheDocument();
@@ -45,14 +46,18 @@ describe("ProductDescriptionParser", () => {
 
   describe("Parsing Logic", () => {
     it("parses HTML with h3 title and paragraphs correctly", () => {
-      const html = "<h3>Stamina & Libido Boost</h3><p>Maca root increases stamina.</p>";
+      const html =
+        "<h3>Stamina & Libido Boost</h3><p>Maca root increases stamina.</p>";
       render(<ProductDescriptionParser htmlContent={html} />);
       expect(screen.getByText("Stamina & Libido Boost")).toBeInTheDocument();
-      expect(screen.getByText("Maca root increases stamina.")).toBeInTheDocument();
+      expect(
+        screen.getByText("Maca root increases stamina."),
+      ).toBeInTheDocument();
     });
 
     it("handles HTML with only paragraphs (no title)", () => {
-      const html = "<p>Standalone paragraph one.</p><p>Standalone paragraph two.</p>";
+      const html =
+        "<p>Standalone paragraph one.</p><p>Standalone paragraph two.</p>";
       render(<ProductDescriptionParser htmlContent={html} />);
       expect(screen.getByText("Standalone paragraph one.")).toBeInTheDocument();
       expect(screen.getByText("Standalone paragraph two.")).toBeInTheDocument();
@@ -72,7 +77,8 @@ describe("ProductDescriptionParser", () => {
     });
 
     it("extracts text content correctly from nested elements", () => {
-      const html = "<h3>Main Title</h3><p><strong>Bold</strong> and <em>italic</em> text.</p>";
+      const html =
+        "<h3>Main Title</h3><p><strong>Bold</strong> and <em>italic</em> text.</p>";
       render(<ProductDescriptionParser htmlContent={html} />);
       expect(screen.getByText("Main Title")).toBeInTheDocument();
       expect(screen.getByText("Bold and italic text.")).toBeInTheDocument();
@@ -113,7 +119,8 @@ describe("ProductDescriptionParser", () => {
     });
 
     it("filters out empty paragraphs", () => {
-      const html = "<h3>Title</h3><p>Valid content.</p><p></p><p>   </p><p>More content.</p>";
+      const html =
+        "<h3>Title</h3><p>Valid content.</p><p></p><p>   </p><p>More content.</p>";
       render(<ProductDescriptionParser htmlContent={html} />);
 
       expect(screen.getByText("Valid content.")).toBeInTheDocument();
@@ -128,11 +135,14 @@ describe("ProductDescriptionParser", () => {
       // When tags have whitespace only, the component renders empty sections
       // but doesn't show "No description available" because sections were found
       // The component should render without crashing
-      expect(screen.queryByText("No description available.")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("No description available."),
+      ).not.toBeInTheDocument();
     });
 
     it("handles HTML with mixed content (h3, p, div)", () => {
-      const html = "<h3>Title</h3><div>Ignored div content</div><p>Paragraph content.</p>";
+      const html =
+        "<h3>Title</h3><div>Ignored div content</div><p>Paragraph content.</p>";
       render(<ProductDescriptionParser htmlContent={html} />);
 
       expect(screen.getByText("Title")).toBeInTheDocument();
@@ -142,11 +152,16 @@ describe("ProductDescriptionParser", () => {
     });
 
     it("handles special characters in content", () => {
-      const html = "<h3>Title with &amp; special chars</h3><p>Content with \"quotes\" and 'apostrophes'.</p>";
+      const html =
+        "<h3>Title with &amp; special chars</h3><p>Content with \"quotes\" and 'apostrophes'.</p>";
       render(<ProductDescriptionParser htmlContent={html} />);
 
-      expect(screen.getByText("Title with & special chars")).toBeInTheDocument();
-      expect(screen.getByText("Content with \"quotes\" and 'apostrophes'.")).toBeInTheDocument();
+      expect(
+        screen.getByText("Title with & special chars"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Content with \"quotes\" and 'apostrophes'."),
+      ).toBeInTheDocument();
     });
 
     it("handles very long paragraphs that need splitting", () => {
@@ -170,7 +185,9 @@ describe("ProductDescriptionParser", () => {
       const html = "<p>Orphan paragraph without title.</p>";
       render(<ProductDescriptionParser htmlContent={html} />);
 
-      expect(screen.getByText("Orphan paragraph without title.")).toBeInTheDocument();
+      expect(
+        screen.getByText("Orphan paragraph without title."),
+      ).toBeInTheDocument();
     });
 
     it("handles multiple h3 tags with paragraphs in between", () => {
@@ -203,7 +220,10 @@ describe("ProductDescriptionParser", () => {
       expect(screen.getByText("Stamina & Libido Boost")).toBeInTheDocument();
       // The long paragraphs should be rendered (either as bullets or regular text)
       // Check that the component doesn't crash and renders content
-      expect(screen.getByRole("heading", { level: 3 }) || screen.getByText("Stamina & Libido Boost")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { level: 3 }) ||
+          screen.getByText("Stamina & Libido Boost"),
+      ).toBeInTheDocument();
     });
   });
 });

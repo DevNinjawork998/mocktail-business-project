@@ -62,11 +62,15 @@ const mockIngredient = {
 
 // Helper to get form inputs by name attribute
 const getInputByName = (name: string) => {
-  return document.querySelector(`input[name="${name}"], select[name="${name}"]`) as HTMLInputElement | HTMLSelectElement;
+  return document.querySelector(
+    `input[name="${name}"], select[name="${name}"]`,
+  ) as HTMLInputElement | HTMLSelectElement;
 };
 
 const getTextAreaByName = (name: string) => {
-  return document.querySelector(`textarea[name="${name}"]`) as HTMLTextAreaElement;
+  return document.querySelector(
+    `textarea[name="${name}"]`,
+  ) as HTMLTextAreaElement;
 };
 
 describe("IngredientForm", () => {
@@ -129,7 +133,10 @@ describe("IngredientForm", () => {
 
   describe("Form Submission", () => {
     it("calls createIngredient for new ingredient", async () => {
-      mockCreateIngredient.mockResolvedValue({ success: true, data: { id: "new-id" } });
+      mockCreateIngredient.mockResolvedValue({
+        success: true,
+        data: { id: "new-id" },
+      });
 
       render(<IngredientForm />);
 
@@ -144,7 +151,9 @@ describe("IngredientForm", () => {
       fireEvent.change(nameInput, { target: { value: "New Ingredient" } });
       fireEvent.change(iconInput, { target: { value: "🍋" } });
       fireEvent.change(subtitleInput, { target: { value: "New Subtitle" } });
-      fireEvent.change(descriptionTextarea, { target: { value: "New Description" } });
+      fireEvent.change(descriptionTextarea, {
+        target: { value: "New Description" },
+      });
       fireEvent.change(typeSelect, { target: { value: "Fruit" } });
       fireEvent.change(orderInput, { target: { value: "5" } });
 
@@ -173,13 +182,16 @@ describe("IngredientForm", () => {
       await waitFor(() => {
         expect(mockUpdateIngredient).toHaveBeenCalledWith(
           "test-ingredient-id",
-          expect.any(Object)
+          expect.any(Object),
         );
       });
     });
 
     it("redirects on success", async () => {
-      mockCreateIngredient.mockResolvedValue({ success: true, data: { id: "new-id" } });
+      mockCreateIngredient.mockResolvedValue({
+        success: true,
+        data: { id: "new-id" },
+      });
 
       render(<IngredientForm />);
 
@@ -193,7 +205,9 @@ describe("IngredientForm", () => {
       fireEvent.change(nameInput, { target: { value: "New Ingredient" } });
       fireEvent.change(iconInput, { target: { value: "🍋" } });
       fireEvent.change(subtitleInput, { target: { value: "New Subtitle" } });
-      fireEvent.change(descriptionTextarea, { target: { value: "New Description" } });
+      fireEvent.change(descriptionTextarea, {
+        target: { value: "New Description" },
+      });
       fireEvent.change(typeSelect, { target: { value: "Fruit" } });
 
       const submitButton = screen.getByText("Create Ingredient");
@@ -206,7 +220,10 @@ describe("IngredientForm", () => {
     });
 
     it("handles submission errors", async () => {
-      mockCreateIngredient.mockResolvedValue({ success: false, error: "Failed to create" });
+      mockCreateIngredient.mockResolvedValue({
+        success: false,
+        error: "Failed to create",
+      });
 
       render(<IngredientForm />);
 
@@ -220,7 +237,9 @@ describe("IngredientForm", () => {
       fireEvent.change(nameInput, { target: { value: "New Ingredient" } });
       fireEvent.change(iconInput, { target: { value: "🍋" } });
       fireEvent.change(subtitleInput, { target: { value: "New Subtitle" } });
-      fireEvent.change(descriptionTextarea, { target: { value: "New Description" } });
+      fireEvent.change(descriptionTextarea, {
+        target: { value: "New Description" },
+      });
       fireEvent.change(typeSelect, { target: { value: "Fruit" } });
 
       const submitButton = screen.getByText("Create Ingredient");
@@ -233,7 +252,10 @@ describe("IngredientForm", () => {
 
     it("disables submit button while submitting", async () => {
       mockCreateIngredient.mockImplementation(
-        () => new Promise((resolve) => setTimeout(() => resolve({ success: true }), 1000))
+        () =>
+          new Promise((resolve) =>
+            setTimeout(() => resolve({ success: true }), 1000),
+          ),
       );
 
       render(<IngredientForm />);
@@ -248,7 +270,9 @@ describe("IngredientForm", () => {
       fireEvent.change(nameInput, { target: { value: "New Ingredient" } });
       fireEvent.change(iconInput, { target: { value: "🍋" } });
       fireEvent.change(subtitleInput, { target: { value: "New Subtitle" } });
-      fireEvent.change(descriptionTextarea, { target: { value: "New Description" } });
+      fireEvent.change(descriptionTextarea, {
+        target: { value: "New Description" },
+      });
       fireEvent.change(typeSelect, { target: { value: "Fruit" } });
 
       const submitButton = screen.getByText("Create Ingredient");

@@ -103,9 +103,7 @@ const FounderStory = () => {
             </CTAButton>
 
             <QuoteBox>
-              <Quote>
-                &quot;Sip without guilt with our mocktails&quot;
-              </Quote>
+              <Quote>&quot;Sip without guilt with our mocktails&quot;</Quote>
               <QuoteAuthor>- Krishanthini, founder</QuoteAuthor>
             </QuoteBox>
           </ContentContainer>

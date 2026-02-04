@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, act, waitFor } from "../../../__tests__/test-utils";
+import {
+  render,
+  screen,
+  fireEvent,
+  act,
+  waitFor,
+} from "../../../__tests__/test-utils";
 import ImageUpload from "../ImageUpload";
 import "@jest/globals";
 
@@ -16,28 +22,30 @@ let currentOptions: UploadThingOptions | undefined = undefined;
 
 jest.mock("@/lib/uploadthing", () => {
   return {
-    useUploadThing: jest.fn((_endpoint: string, options?: UploadThingOptions) => {
-      currentOptions = options;
-      // Reset mock implementation - returns a promise that resolves
-      // The component handles calling the callbacks
-      mockStartUpload.mockImplementation(async (_files: File[]) => {
-        mockIsUploading = true;
-        mockIsUploading = false;
-        
-        const result = [{ url: "https://example.com/image.jpg" }];
-        // Call the callback synchronously - the component's handleFileSelect
-        // will be wrapped in act by the test
-        if (options?.onClientUploadComplete) {
-          options.onClientUploadComplete(result);
-        }
-        return result;
-      });
-      
-      return {
-        startUpload: mockStartUpload,
-        isUploading: mockIsUploading,
-      };
-    }),
+    useUploadThing: jest.fn(
+      (_endpoint: string, options?: UploadThingOptions) => {
+        currentOptions = options;
+        // Reset mock implementation - returns a promise that resolves
+        // The component handles calling the callbacks
+        mockStartUpload.mockImplementation(async (_files: File[]) => {
+          mockIsUploading = true;
+          mockIsUploading = false;
+
+          const result = [{ url: "https://example.com/image.jpg" }];
+          // Call the callback synchronously - the component's handleFileSelect
+          // will be wrapped in act by the test
+          if (options?.onClientUploadComplete) {
+            options.onClientUploadComplete(result);
+          }
+          return result;
+        });
+
+        return {
+          startUpload: mockStartUpload,
+          isUploading: mockIsUploading,
+        };
+      },
+    ),
   };
 });
 
@@ -80,7 +88,7 @@ describe("ImageUpload", () => {
           onChange={mockOnChange}
           endpoint="productImage"
           label="Product Image"
-        />
+        />,
       );
       expect(screen.getByText("Product Image")).toBeInTheDocument();
     });
@@ -93,7 +101,9 @@ describe("ImageUpload", () => {
     it("shows upload dropzone when no image value", () => {
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
       // The dropzone should show "Choose a file or drag and drop" text
-      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
+      expect(
+        screen.getByText("Choose a file or drag and drop"),
+      ).toBeInTheDocument();
     });
 
     it("shows image preview when value provided", () => {
@@ -102,12 +112,12 @@ describe("ImageUpload", () => {
           value="https://example.com/test.jpg"
           onChange={mockOnChange}
           endpoint="productImage"
-        />
+        />,
       );
       expect(screen.getByTestId("uploaded-image")).toBeInTheDocument();
       expect(screen.getByTestId("uploaded-image")).toHaveAttribute(
         "src",
-        "https://example.com/test.jpg"
+        "https://example.com/test.jpg",
       );
     });
 
@@ -117,7 +127,7 @@ describe("ImageUpload", () => {
           value="https://example.com/test.jpg"
           onChange={mockOnChange}
           endpoint="productImage"
-        />
+        />,
       );
       expect(screen.getByText("Remove Image")).toBeInTheDocument();
     });
@@ -128,9 +138,11 @@ describe("ImageUpload", () => {
           value="https://example.com/test.jpg"
           onChange={mockOnChange}
           endpoint="productImage"
-        />
+        />,
       );
-      expect(screen.queryByText("Choose a file or drag and drop")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("Choose a file or drag and drop"),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -138,11 +150,13 @@ describe("ImageUpload", () => {
     it("calls onChange with URL when upload completes", async () => {
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
 
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(
+        'input[type="file"]',
+      ) as HTMLInputElement;
       expect(fileInput).toBeInTheDocument();
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      
+
       await act(async () => {
         fireEvent.change(fileInput, { target: { files: [file] } });
         await waitFor(() => {
@@ -151,7 +165,9 @@ describe("ImageUpload", () => {
       });
 
       await waitFor(() => {
-        expect(mockOnChange).toHaveBeenCalledWith("https://example.com/image.jpg");
+        expect(mockOnChange).toHaveBeenCalledWith(
+          "https://example.com/image.jpg",
+        );
       });
     });
 
@@ -169,17 +185,22 @@ describe("ImageUpload", () => {
         return [];
       });
 
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      const fileInput = document.querySelector(
+        'input[type="file"]',
+      ) as HTMLInputElement;
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
-      
+
       await act(async () => {
         fireEvent.change(fileInput, { target: { files: [file] } });
       });
 
       // Wait for the error callback to be called
-      await waitFor(() => {
-        expect(alertSpy).toHaveBeenCalledWith("Upload failed: Upload failed");
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(alertSpy).toHaveBeenCalledWith("Upload failed: Upload failed");
+        },
+        { timeout: 1000 },
+      );
     });
   });
 
@@ -191,7 +212,7 @@ describe("ImageUpload", () => {
           value={imageUrl}
           onChange={mockOnChange}
           endpoint="productImage"
-        />
+        />,
       );
 
       const image = screen.getByTestId("uploaded-image");
@@ -204,7 +225,7 @@ describe("ImageUpload", () => {
           value="https://example.com/test.jpg"
           onChange={mockOnChange}
           endpoint="productImage"
-        />
+        />,
       );
 
       const removeButton = screen.getByText("Remove Image");
@@ -219,7 +240,7 @@ describe("ImageUpload", () => {
           value="https://example.com/test.jpg"
           onChange={mockOnChange}
           endpoint="productImage"
-        />
+        />,
       );
 
       const image = screen.getByTestId("uploaded-image");
@@ -234,19 +255,25 @@ describe("ImageUpload", () => {
           onChange={mockOnChange}
           endpoint="productImage"
           label="Custom Label"
-        />
+        />,
       );
       expect(screen.getByText("Custom Label")).toBeInTheDocument();
     });
 
     it("accepts productImage endpoint", () => {
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
-      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
+      expect(
+        screen.getByText("Choose a file or drag and drop"),
+      ).toBeInTheDocument();
     });
 
     it("accepts ingredientImage endpoint", () => {
-      render(<ImageUpload onChange={mockOnChange} endpoint="ingredientImage" />);
-      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
+      render(
+        <ImageUpload onChange={mockOnChange} endpoint="ingredientImage" />,
+      );
+      expect(
+        screen.getByText("Choose a file or drag and drop"),
+      ).toBeInTheDocument();
     });
   });
 
@@ -254,7 +281,9 @@ describe("ImageUpload", () => {
     it("handles drop event and triggers upload", async () => {
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
 
-      const dropzone = screen.getByText("Choose a file or drag and drop").closest("div");
+      const dropzone = screen
+        .getByText("Choose a file or drag and drop")
+        .closest("div");
       expect(dropzone).toBeInTheDocument();
 
       const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
@@ -278,7 +307,9 @@ describe("ImageUpload", () => {
     it("handles dragOver event without error", () => {
       render(<ImageUpload onChange={mockOnChange} endpoint="productImage" />);
 
-      const dropzone = screen.getByText("Choose a file or drag and drop").closest("div");
+      const dropzone = screen
+        .getByText("Choose a file or drag and drop")
+        .closest("div");
       expect(dropzone).toBeInTheDocument();
 
       // Should not throw
@@ -291,9 +322,15 @@ describe("ImageUpload", () => {
   describe("Edge Cases", () => {
     it("handles empty string value as no image", () => {
       render(
-        <ImageUpload value="" onChange={mockOnChange} endpoint="productImage" />
+        <ImageUpload
+          value=""
+          onChange={mockOnChange}
+          endpoint="productImage"
+        />,
       );
-      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
+      expect(
+        screen.getByText("Choose a file or drag and drop"),
+      ).toBeInTheDocument();
       expect(screen.queryByTestId("uploaded-image")).not.toBeInTheDocument();
     });
 
@@ -303,9 +340,11 @@ describe("ImageUpload", () => {
           value={undefined}
           onChange={mockOnChange}
           endpoint="productImage"
-        />
+        />,
       );
-      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
+      expect(
+        screen.getByText("Choose a file or drag and drop"),
+      ).toBeInTheDocument();
     });
 
     it("switches from preview to dropzone when image is removed", () => {
@@ -314,35 +353,49 @@ describe("ImageUpload", () => {
           value="https://example.com/test.jpg"
           onChange={mockOnChange}
           endpoint="productImage"
-        />
+        />,
       );
 
       expect(screen.getByTestId("uploaded-image")).toBeInTheDocument();
 
       rerender(
-        <ImageUpload value="" onChange={mockOnChange} endpoint="productImage" />
+        <ImageUpload
+          value=""
+          onChange={mockOnChange}
+          endpoint="productImage"
+        />,
       );
 
       expect(screen.queryByTestId("uploaded-image")).not.toBeInTheDocument();
-      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
+      expect(
+        screen.getByText("Choose a file or drag and drop"),
+      ).toBeInTheDocument();
     });
 
     it("switches from dropzone to preview when image is uploaded", () => {
       const { rerender } = render(
-        <ImageUpload value="" onChange={mockOnChange} endpoint="productImage" />
+        <ImageUpload
+          value=""
+          onChange={mockOnChange}
+          endpoint="productImage"
+        />,
       );
 
-      expect(screen.getByText("Choose a file or drag and drop")).toBeInTheDocument();
+      expect(
+        screen.getByText("Choose a file or drag and drop"),
+      ).toBeInTheDocument();
 
       rerender(
         <ImageUpload
           value="https://example.com/new-image.jpg"
           onChange={mockOnChange}
           endpoint="productImage"
-        />
+        />,
       );
 
-      expect(screen.queryByText("Choose a file or drag and drop")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("Choose a file or drag and drop"),
+      ).not.toBeInTheDocument();
       expect(screen.getByTestId("uploaded-image")).toBeInTheDocument();
     });
   });

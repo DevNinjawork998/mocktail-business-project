@@ -39,22 +39,26 @@ export const MainContent = styled.div`
 `;
 
 export const ProductImageSection = styled.div`
-  background: ${({ theme }) => theme.colors.caramel.light};
+  background: transparent;
   border-radius: ${({ theme }) => theme.radii.xl};
   padding: ${({ theme }) => theme.spacing["3xl"]};
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
+  min-height: 500px;
 
   ${media.md} {
-    min-height: 500px;
+    min-height: 700px;
+  }
+
+  ${media.lg} {
+    min-height: 800px;
   }
 `;
 
 export const ProductImagePlaceholder = styled.div<{ $bgColor: string }>`
-  width: 200px;
-  height: 300px;
+  width: 300px;
+  height: 450px;
   background: ${({ $bgColor }) => $bgColor};
   border-radius: ${({ theme }) => theme.radii.lg};
   display: flex;
@@ -67,9 +71,15 @@ export const ProductImagePlaceholder = styled.div<{ $bgColor: string }>`
   box-shadow: ${({ theme }) => theme.shadows.xl};
 
   ${media.md} {
-    width: 250px;
-    height: 350px;
+    width: 400px;
+    height: 600px;
     font-size: 1.25rem;
+  }
+
+  ${media.lg} {
+    width: 450px;
+    height: 675px;
+    font-size: 1.5rem;
   }
 `;
 
@@ -95,7 +105,6 @@ export const ProductSubtitle = styled.p`
   color: ${({ theme }) => theme.currentSemantic.textSecondary};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
-
 
 export const ProductDescription = styled.div`
   color: ${({ theme }) => theme.currentSemantic.text};
@@ -188,7 +197,8 @@ export const AddToCartButton = styled.button`
 export const WhatsAppButton = styled.button`
   background: #25d366;
   color: white;
-  padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing["2xl"]};
+  padding: ${({ theme }) => theme.spacing.lg}
+    ${({ theme }) => theme.spacing["2xl"]};
   border-radius: ${({ theme }) => theme.radii.full};
   border: none;
   font-weight: bold;
@@ -320,7 +330,6 @@ export const IngredientItem = styled.li`
   margin-bottom: 0.5rem;
   font-size: 1.05rem;
 `;
-
 
 export const ProductBriefSection = styled.section`
   margin: 2rem auto 0 auto;
@@ -457,13 +466,27 @@ export const QuantityInput = styled.input`
 
 export const ProductImageContainer = styled.div`
   position: relative;
-  width: 250px;
-  height: 350px;
+  width: 300px;
+  height: 450px;
+  transition: transform 0.3s ease;
+
+  ${media.md} {
+    width: 400px;
+    height: 600px;
+  }
+
+  ${media.lg} {
+    width: 450px;
+    height: 675px;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 export const ProductImage = styled(Image)`
-  object-fit: cover;
-  border-radius: 12px;
+  object-fit: contain;
 `;
 
 export const SidebarProductImageContainer = styled.div`
@@ -866,5 +889,81 @@ export const ModalCancelButton = styled.button`
   &:hover {
     background: ${({ theme }) => theme.currentSemantic.backgroundSecondary};
     border-color: ${({ theme }) => theme.currentSemantic.primary};
+  }
+`;
+
+export const ImageZoomOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: ${({ theme }) => theme.spacing.xl};
+  cursor: pointer;
+  animation: fadeIn 0.3s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+export const ImageZoomContainer = styled.div`
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  animation: zoomIn 0.3s ease;
+
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+`;
+
+export const ImageZoomImage = styled(Image)`
+  object-fit: contain;
+  border-radius: ${({ theme }) => theme.radii.lg};
+`;
+
+export const ImageZoomCloseButton = styled.button`
+  position: absolute;
+  top: ${({ theme }) => theme.spacing.xl};
+  right: ${({ theme }) => theme.spacing.xl};
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 2001;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
   }
 `;

@@ -1,10 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
-import path from "path";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
-// Use SQLite adapter for development seeding
-const dbPath = path.join(__dirname, "dev.db");
-const adapter = new PrismaLibSql({ url: `file:${dbPath}` });
+// Use PostgreSQL adapter for development seeding
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 const products = [
@@ -24,17 +26,15 @@ const products = [
     price: "$35.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#FF6347",
-    imageUrl: "/images/products/tequila-sundown.jpg",
+    imageUrl:
+      "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLO6VqBvKnPKYEgeG0tm78wrchLAJHQUl5RDZB",
     features: [
       { text: "Good Vitamin C", color: "#FF6B6B" },
       { text: "Good Iron", color: "#DC143C" },
     ],
-    ingredients: [
-      "Orange juice",
-      "cranberry",
-      "peach",
-      "carbonated water",
-    ],
+    ingredients: ["Orange juice", "cranberry", "peach", "carbonated water"],
+    productBrief:
+      "A refreshing, tart and citrusy mocktail with orange and cranberry. High in antioxidants and vitamin C for gut health and immunity support.",
   },
   {
     id: "dark-stormy",
@@ -50,7 +50,8 @@ const products = [
     price: "$35.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#8B4513",
-    imageUrl: "/images/products/dark-stormy.jpg",
+    imageUrl:
+      "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGL9LVbzkKUo2NbcLsEyGnV6TeMA1KkvQU5hzmg",
     features: [
       { text: "Less sugar", color: "#9B7653" },
       { text: "Good Antioxidant", color: "#CD853F" },
@@ -85,21 +86,14 @@ const products = [
     price: "$37.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#654321",
-    imageUrl: "/images/products/maca-martini.jpg",
+    imageUrl:
+      "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGL3uSvvjZSIC7hAszGimOtgLuxFbKZRQVjwy2N",
     features: [
-      { text: "High antioxidant", color: "#DEB887" },
-      { text: "High Calcium", color: "#6F4E37" },
+      { text: "Antioxidant", color: "#DEB887" },
+      { text: "Calcium", color: "#6F4E37" },
       { text: "Caffeine", color: "#3E2723" },
     ],
-    ingredients: [
-      "cocoa",
-      "coffee",
-      "non-alcoholic rum",
-      "milk",
-      "allulose",
-      "maca powder",
-      "lime",
-    ],
+    ingredients: ["tea", "apple juice", "cinnamon", "star anise"],
     productBrief:
       "Creamy & Chocolaty to keep your spirits & mood up. Maca root, cocoa & coffee increases stamina & libido.",
   },

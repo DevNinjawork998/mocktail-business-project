@@ -18,7 +18,7 @@ export default function SettingsClient({
 }: SettingsClientProps) {
   const router = useRouter();
   const [landingPhotoUrl, setLandingPhotoUrl] = useState<string | null>(
-    initialLandingPhotoUrl
+    initialLandingPhotoUrl,
   );
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);

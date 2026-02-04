@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const WhyMocktailsSection = styled.section`
   background-color: ${({ theme }) => theme.colors.caramel.base};
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   position: relative;
 
   ${({ theme }) => `
@@ -70,7 +71,8 @@ export const BenefitsGrid = styled.div`
 export const BenefitCard = styled.div`
   background-color: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: ${({ theme }) => theme.radii.xl};
-  padding: ${({ theme }) => theme.spacing["2xl"]} ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing["2xl"]}
+    ${({ theme }) => theme.spacing.xl};
   text-align: center;
   transition: all 0.3s ease;
   box-shadow: ${({ theme }) => theme.shadows.sm};

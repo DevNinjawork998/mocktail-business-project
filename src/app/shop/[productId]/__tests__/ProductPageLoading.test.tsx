@@ -30,8 +30,12 @@ jest.mock("../page.styles", () => ({
   LoadingButtonGroup: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="loading-button-group">{children}</div>
   ),
-  LoadingQuantitySelector: () => <div data-testid="loading-quantity-selector" />,
-  LoadingAddToCartButton: () => <div data-testid="loading-add-to-cart-button" />,
+  LoadingQuantitySelector: () => (
+    <div data-testid="loading-quantity-selector" />
+  ),
+  LoadingAddToCartButton: () => (
+    <div data-testid="loading-add-to-cart-button" />
+  ),
   LoadingSidebar: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="loading-sidebar">{children}</div>
   ),
@@ -59,7 +63,9 @@ describe("ProductPageLoading", () => {
     expect(screen.getByTestId("loading-price-subtext")).toBeInTheDocument();
     expect(screen.getByTestId("loading-button-group")).toBeInTheDocument();
     expect(screen.getByTestId("loading-quantity-selector")).toBeInTheDocument();
-    expect(screen.getByTestId("loading-add-to-cart-button")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("loading-add-to-cart-button"),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("loading-sidebar")).toBeInTheDocument();
     expect(screen.getByTestId("loading-sidebar-title")).toBeInTheDocument();
     expect(screen.getByTestId("loading-sidebar-grid")).toBeInTheDocument();

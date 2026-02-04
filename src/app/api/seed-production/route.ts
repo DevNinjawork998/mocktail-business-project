@@ -1,12 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// Get UploadThing URLs from environment variables, fallback to local paths
-const getImageUrl = (productId: string, defaultPath: string): string => {
-  const envKey = `NEXT_PUBLIC_${productId.toUpperCase().replace(/-/g, "_")}_IMAGE_URL`;
-  return process.env[envKey] || defaultPath;
-};
-
 // Check if a URL is from UploadThing (supports both utfs.io and ufs.sh domains)
 const isUploadThingUrl = (url: string | null): boolean => {
   if (!url) return false;
@@ -30,17 +24,15 @@ const products = [
     price: "$35.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#8B4513",
-    imageUrl: getImageUrl("tequila-sundown", "/images/products/tequila-sundown.jpg"),
+    imageUrl:
+      "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLO6VqBvKnPKYEgeG0tm78wrchLAJHQUl5RDZB",
     features: [
       { text: "Good Vit C", color: "#FF6B6B" },
       { text: "Good Iron", color: "#4ECDC4" },
     ],
-    ingredients: [
-      "Orange juice",
-      "cranberry",
-      "peach",
-      "carbonated water",
-    ],
+    ingredients: ["Orange juice", "cranberry", "peach", "carbonated water"],
+    productBrief:
+      "A refreshing, tart and citrusy mocktail with orange and cranberry. High in antioxidants and vitamin C for gut health and immunity support.",
   },
   {
     id: "dark-stormy",
@@ -54,7 +46,8 @@ const products = [
     price: "$35.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#2F4F4F",
-    imageUrl: getImageUrl("dark-stormy", "/images/products/dark-stormy.jpg"),
+    imageUrl:
+      "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGL9LVbzkKUo2NbcLsEyGnV6TeMA1KkvQU5hzmg",
     features: [
       { text: "Less sugar", color: "#FF6B6B" },
       { text: "Good Antioxidant", color: "#4ECDC4" },
@@ -88,21 +81,14 @@ const products = [
     price: "$37.99",
     priceSubtext: "12 cans delivered one time",
     imageColor: "#CD5C5C",
-    imageUrl: getImageUrl("maca-martini", "/images/products/maca-martini.jpg"),
+    imageUrl:
+      "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGL3uSvvjZSIC7hAszGimOtgLuxFbKZRQVjwy2N", // Upload via admin to get UploadThing URL
     features: [
-      { text: "High antioxidant", color: "#FF6B6B" },
-      { text: "High Calcium", color: "#4ECDC4" },
+      { text: "Antioxidant", color: "#FF6B6B" },
+      { text: "Calcium", color: "#4ECDC4" },
       { text: "Caffeine", color: "#45B7D1" },
     ],
-    ingredients: [
-      "cocoa",
-      "coffee",
-      "non-alcoholic rum",
-      "milk",
-      "allulose",
-      "maca powder",
-      "lime",
-    ],
+    ingredients: ["tea", "apple juice", "cinnamon", "star anise"],
     productBrief:
       "The Maca Martini combines the rich, earthy flavors of maca root with decadent coffee and chocolate notes for a sophisticated blend that offers both indulgence and wellness.",
   },
@@ -128,14 +114,13 @@ export async function POST() {
     const existingImageUrls = new Map(
       existingProducts
         .filter((p) => isUploadThingUrl(p.imageUrl))
-        .map((p) => [p.id, p.imageUrl!])
+        .map((p) => [p.id, p.imageUrl!]),
     );
 
     const results = [];
     for (const product of products) {
       // Preserve existing UploadThing URL if it exists, otherwise use seed data
-      const imageUrl =
-        existingImageUrls.get(product.id) || product.imageUrl;
+      const imageUrl = existingImageUrls.get(product.id) || product.imageUrl;
 
       const result = await prisma.product.upsert({
         where: { id: product.id },
@@ -160,7 +145,9 @@ export async function POST() {
       results.push(result.id);
       console.log(`Created/Updated product with id: ${result.id}`);
       if (existingImageUrls.has(product.id)) {
-        console.log(`  Preserved UploadThing URL: ${existingImageUrls.get(product.id)}`);
+        console.log(
+          `  Preserved UploadThing URL: ${existingImageUrls.get(product.id)}`,
+        );
       }
     }
 

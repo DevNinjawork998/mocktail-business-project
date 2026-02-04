@@ -144,7 +144,7 @@ describe("featureFlags", () => {
       // For true server-side testing, we'd need a different test environment
       // This test verifies the function works correctly when window is defined
       const flags = getAllFeatureFlags();
-      
+
       // When window is defined (client-side), getAllFeatureFlags returns empty object
       expect(flags).toEqual({});
     });
@@ -171,7 +171,7 @@ describe("featureFlags", () => {
 
     it("handles feature names with different cases", () => {
       process.env.NEXT_PUBLIC_ENABLE_TESTFEATURE = "true";
-      
+
       expect(isFeatureEnabled("testfeature")).toBe(true);
       expect(isFeatureEnabled("TESTFEATURE")).toBe(true);
       expect(isFeatureEnabled("TestFeature")).toBe(true);
@@ -179,7 +179,7 @@ describe("featureFlags", () => {
 
     it("handles undefined environment variables correctly", () => {
       delete process.env.NEXT_PUBLIC_ENABLE_UNKNOWNFEATURE;
-      
+
       // Should default to true
       expect(isFeatureEnabled("unknownfeature")).toBe(true);
     });
@@ -190,7 +190,7 @@ describe("featureFlags", () => {
       // Note: In jsdom, window is always defined, so getAllFeatureFlags returns {}
       // Cache clearing is tested through isFeatureEnabled which uses getFeatureFlagsConfig
       clearFeatureFlagsCache();
-      
+
       // Verify cache is cleared by checking that isFeatureEnabled still works
       const result = isFeatureEnabled("stripe");
       expect(typeof result).toBe("boolean");

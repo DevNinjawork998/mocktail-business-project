@@ -43,9 +43,7 @@ describe("SuccessPageClient", () => {
   });
 
   it("renders success message", () => {
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     expect(
       screen.getByText(/Thank you for being the life of the party!/),
@@ -66,9 +64,7 @@ describe("SuccessPageClient", () => {
   });
 
   it("renders success icon", () => {
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     expect(screen.getByText("✓")).toBeInTheDocument();
   });
@@ -76,25 +72,19 @@ describe("SuccessPageClient", () => {
   it("displays order details when session_id is present", () => {
     mockSearchParams.set("session_id", "test-session-123");
 
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     expect(screen.getByText("Your Cocktail Order Code:")).toBeInTheDocument();
     expect(screen.getByText("test-session-123")).toBeInTheDocument();
     expect(
-      screen.getByText(
-        /Please save this order code for your records/,
-      ),
+      screen.getByText(/Please save this order code for your records/),
     ).toBeInTheDocument();
   });
 
   it("does not display order details when session_id is not present", () => {
     mockSearchParams.delete("session_id");
 
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     expect(
       screen.queryByText("Your Cocktail Order Code:"),
@@ -102,9 +92,7 @@ describe("SuccessPageClient", () => {
   });
 
   it("renders next steps section", () => {
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     expect(screen.getByText("What happens next?")).toBeInTheDocument();
     expect(
@@ -119,23 +107,21 @@ describe("SuccessPageClient", () => {
       screen.getByText(/We'll contact you to arrange delivery or pickup/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Your cocktails will be delivered within 3–7 business days/),
+      screen.getByText(
+        /Your cocktails will be delivered within 3–7 business days/,
+      ),
     ).toBeInTheDocument();
   });
 
   it("renders action buttons", () => {
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     expect(screen.getByText("Continue Shopping")).toBeInTheDocument();
     expect(screen.getByText("Back to Home")).toBeInTheDocument();
   });
 
   it("navigates to shop when Continue Shopping button is clicked", () => {
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     const continueShoppingButton = screen.getByText("Continue Shopping");
     fireEvent.click(continueShoppingButton);
@@ -144,9 +130,7 @@ describe("SuccessPageClient", () => {
   });
 
   it("navigates to home when Back to Home button is clicked", () => {
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     const backToHomeButton = screen.getByText("Back to Home");
     fireEvent.click(backToHomeButton);
@@ -155,33 +139,27 @@ describe("SuccessPageClient", () => {
   });
 
   it("clears cart on mount", () => {
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     expect(mockClearCart).toHaveBeenCalled();
   });
 
   it("renders social share text", () => {
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     expect(
       screen.getByText(/Share your cocktail excitement! Tag us/),
     ).toBeInTheDocument();
-    expect(screen.getByText("@CocktailCo")).toBeInTheDocument();
+    expect(screen.getByText("@mocktailsonthego_motg")).toBeInTheDocument();
   });
 
   it("generates confetti on mount", () => {
-    render(
-      <SuccessPageClient />,
-    );
+    render(<SuccessPageClient />);
 
     // Confetti emojis should be rendered
     const confettiEmojis = ["🍹", "🍸", "🍾", "🎉", "✨", "🍋", "🍊", "🍒"];
-    const foundEmojis = confettiEmojis.filter((emoji) =>
-      screen.queryAllByText(emoji).length > 0,
+    const foundEmojis = confettiEmojis.filter(
+      (emoji) => screen.queryAllByText(emoji).length > 0,
     );
     // At least some confetti emojis should be present
     expect(foundEmojis.length).toBeGreaterThan(0);

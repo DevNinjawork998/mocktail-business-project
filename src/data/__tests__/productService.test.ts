@@ -1,4 +1,8 @@
-import { getAllProducts, getProductById, getOtherProducts } from "../productService";
+import {
+  getAllProducts,
+  getProductById,
+  getOtherProducts,
+} from "../productService";
 import "@jest/globals";
 
 // Mock fetch globally
@@ -39,7 +43,7 @@ describe("productService", () => {
           headers: {
             "Content-Type": "application/json",
           },
-        })
+        }),
       );
     });
 
@@ -53,7 +57,9 @@ describe("productService", () => {
     });
 
     it("handles network errors", async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
+      (global.fetch as jest.Mock).mockRejectedValueOnce(
+        new Error("Network error"),
+      );
 
       await expect(getAllProducts()).rejects.toThrow("Network error");
     });
@@ -73,7 +79,7 @@ describe("productService", () => {
         expect.stringContaining("/api/products/test-id"),
         expect.objectContaining({
           method: "GET",
-        })
+        }),
       );
     });
 
@@ -94,7 +100,9 @@ describe("productService", () => {
         status: 500,
       });
 
-      await expect(getProductById("test-id")).rejects.toThrow("HTTP error! status: 500");
+      await expect(getProductById("test-id")).rejects.toThrow(
+        "HTTP error! status: 500",
+      );
     });
   });
 
@@ -113,9 +121,13 @@ describe("productService", () => {
     });
 
     it("handles errors from getAllProducts", async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
+      (global.fetch as jest.Mock).mockRejectedValueOnce(
+        new Error("Network error"),
+      );
 
-      await expect(getOtherProducts("test-id")).rejects.toThrow("Network error");
+      await expect(getOtherProducts("test-id")).rejects.toThrow(
+        "Network error",
+      );
     });
   });
 });

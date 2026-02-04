@@ -10,7 +10,11 @@ jest.mock("../../../components/Navigation/Navigation", () => {
 });
 
 jest.mock("../../../components/Breadcrumb/Breadcrumb", () => {
-  return function MockBreadcrumb({ items }: { items: Array<{ label: string }> }) {
+  return function MockBreadcrumb({
+    items,
+  }: {
+    items: Array<{ label: string }>;
+  }) {
     return (
       <div data-testid="breadcrumb">
         {items.map((item) => (
