@@ -46,7 +46,7 @@ export const AddButton = styled.span`
 export const EmptyState = styled.div`
   text-align: center;
   padding: ${({ theme }) => theme.spacing["3xl"]};
-  background-color: white;
+  background-color: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: ${({ theme }) => theme.radii.xl};
   box-shadow: ${({ theme }) => theme.shadows.sm};
 `;
@@ -70,7 +70,7 @@ export const EmptyText = styled.p`
 
 export const Table = styled.table`
   width: 100%;
-  background-color: white;
+  background-color: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: ${({ theme }) => theme.radii.xl};
   box-shadow: ${({ theme }) => theme.shadows.sm};
   border-collapse: collapse;

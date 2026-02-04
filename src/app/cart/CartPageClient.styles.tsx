@@ -5,7 +5,7 @@ export const CartContainer = styled.div`
   margin: 0 auto;
   padding: 2rem;
   min-height: 60vh;
-  background: white;
+  background: ${({ theme }) => theme.currentSemantic.background};
 
   @media (max-width: 768px) {
     padding: 1rem;
@@ -289,7 +289,7 @@ export const CheckoutButton = styled.button`
 `;
 
 export const CartPageBackground = styled.div`
-  background: white;
+  background: ${({ theme }) => theme.currentSemantic.background};
   min-height: 100vh;
   width: 100vw;
   padding-top: 4rem; /* Account for fixed navigation bar */

@@ -15,7 +15,7 @@ export const ErrorMessage = styled.div`
 `;
 
 export const Section = styled.section`
-  background-color: white;
+  background-color: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: ${({ theme }) => theme.radii.xl};
   padding: ${({ theme }) => theme.spacing.xl};
   box-shadow: ${({ theme }) => theme.shadows.sm};

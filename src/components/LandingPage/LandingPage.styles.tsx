@@ -561,7 +561,7 @@ export const Badge = styled.div`
   display: inline-flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.xs};
-  background-color: white;
+  background-color: ${({ theme }) => theme.currentSemantic.surface};
   padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.radii.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
