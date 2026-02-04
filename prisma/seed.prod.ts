@@ -31,12 +31,9 @@ const products = [
       { text: "Good Vit C", color: "#FF6B6B" },
       { text: "Good Iron", color: "#DC143C" },
     ],
-    ingredients: [
-      "Orange juice",
-      "cranberry",
-      "peach",
-      "carbonated water",
-    ],
+    ingredients: ["Orange juice", "cranberry", "peach", "carbonated water"],
+    productBrief:
+      "A refreshing, tart and citrusy mocktail with orange and cranberry. High in antioxidants and vitamin C for gut health and immunity support.",
   },
   {
     id: "dark-stormy",
@@ -89,19 +86,11 @@ const products = [
     imageColor: "#654321",
     imageUrl: "/images/products/maca-martini.jpg",
     features: [
-      { text: "High antioxidant", color: "#DEB887" },
-      { text: "High Calcium", color: "#6F4E37" },
+      { text: "Antioxidant", color: "#DEB887" },
+      { text: "Calcium", color: "#6F4E37" },
       { text: "Caffeine", color: "#3E2723" },
     ],
-    ingredients: [
-      "cocoa",
-      "coffee",
-      "non-alcoholic rum",
-      "milk",
-      "allulose",
-      "maca powder",
-      "lime",
-    ],
+    ingredients: ["tea", "apple juice", "cinnamon", "star anise"],
     productBrief:
       "Creamy & Chocolaty to keep your spirits & mood up. Maca root, cocoa & coffee increases stamina & libido.",
   },

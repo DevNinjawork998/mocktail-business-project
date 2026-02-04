@@ -77,13 +77,17 @@ async function ensureSettingsTableExists(): Promise<boolean> {
 /**
  * Get the landing photo URL from settings
  */
-export async function getLandingPhotoUrl(): Promise<ActionResult<string | null>> {
+export async function getLandingPhotoUrl(): Promise<
+  ActionResult<string | null>
+> {
   try {
     // Check if settings table exists by trying to access it
     // If the table doesn't exist yet, return null (fallback to env/default)
-    const setting = await prisma.settings.findUnique({
-      where: { key: SETTINGS_KEY_LANDING_PHOTO },
-    }).catch(() => null);
+    const setting = await prisma.settings
+      .findUnique({
+        where: { key: SETTINGS_KEY_LANDING_PHOTO },
+      })
+      .catch(() => null);
 
     if (setting === null) {
       // Table might not exist or no setting found - return null to use fallback
@@ -108,7 +112,7 @@ export async function getLandingPhotoUrl(): Promise<ActionResult<string | null>>
  * Update the landing photo URL in settings
  */
 export async function updateLandingPhotoUrl(
-  url: string
+  url: string,
 ): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user || !getEditorRoles().includes(session.user.role)) {

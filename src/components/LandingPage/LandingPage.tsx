@@ -21,7 +21,7 @@ const LandingPage = () => {
         <S.MainGrid>
           {/* Left Content */}
           <S.LeftContent>
-            <S.Badge>✨ Fresh. Functional. Delicious.</S.Badge>
+            <S.Badge>Fresh. Functional. Delicious.</S.Badge>
             <S.ContentSection>
               <S.Title>
                 Mocktails that fuel
@@ -30,7 +30,9 @@ const LandingPage = () => {
               </S.Title>
 
               <S.Subtitle>
-                Mocktails Made for Movement. These aren&apos;t just mocktails. They&apos;re your mid-day reset, your pre & post-gym treat, your bring-to-the-party bottle. Healthy but full of tasty flavour.
+                Mocktails Made for Movement. These aren&apos;t just mocktails.
+                They&apos;re your mid-day reset, your pre & post-gym treat, your
+                bring-to-the-party bottle. Healthy but full of tasty flavour.
               </S.Subtitle>
             </S.ContentSection>
 
@@ -46,7 +48,7 @@ const LandingPage = () => {
               <Link href="/ingredients">
                 <S.CTAButtonSecondary>
                   <S.CTAContentSecondary>
-                    <span>Explore Flavors</span>
+                    <span>Explore Ingredients</span>
                   </S.CTAContentSecondary>
                 </S.CTAButtonSecondary>
               </Link>

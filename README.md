@@ -229,6 +229,7 @@ This project includes automated CI/CD pipelines using GitHub Actions:
 **Setup Instructions**: See [docs/VERCEL_DEPLOYMENT.md](docs/VERCEL_DEPLOYMENT.md#step-5-github-actions-cicd-setup) for detailed setup guide.
 
 **Required GitHub Secrets**:
+
 - `VERCEL_TOKEN` - Vercel authentication token
 - `VERCEL_ORG_ID` - Vercel organization ID
 - `VERCEL_PROJECT_ID` - Vercel project ID

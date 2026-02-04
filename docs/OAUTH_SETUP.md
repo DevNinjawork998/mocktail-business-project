@@ -5,6 +5,7 @@ This guide will help you set up Google and Apple OAuth authentication for the ad
 ## Overview
 
 The application supports three authentication methods:
+
 1. **Credentials** - Email/password login (always available)
 2. **Google OAuth** - Sign in with Google account
 3. **Apple OAuth** - Sign in with Apple ID
@@ -32,12 +33,14 @@ OAuth providers are optional. If not configured, only credentials login will be 
 ### 2. Add to Environment Variables
 
 Add to `.env.development.local`:
+
 ```env
 GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
 Add to production environment variables (Vercel/your hosting):
+
 ```env
 GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-google-client-secret
@@ -81,6 +84,7 @@ jwt encode \
 ```
 
 Or use an online tool like [jwt.io](https://jwt.io/) with:
+
 - Algorithm: ES256
 - Header: `{"alg":"ES256","kid":"YOUR_KEY_ID"}`
 - Payload: `{"iss":"YOUR_TEAM_ID","iat":TIMESTAMP,"exp":TIMESTAMP+15768000,"aud":"https://appleid.apple.com"}`
@@ -89,12 +93,14 @@ Or use an online tool like [jwt.io](https://jwt.io/) with:
 ### 3. Add to Environment Variables
 
 Add to `.env.development.local`:
+
 ```env
 APPLE_ID=your-service-id (e.g., com.yourcompany.app)
 APPLE_SECRET=your-generated-jwt-secret
 ```
 
 Add to production environment variables:
+
 ```env
 APPLE_ID=your-service-id
 APPLE_SECRET=your-generated-jwt-secret
@@ -103,6 +109,7 @@ APPLE_SECRET=your-generated-jwt-secret
 ## User Roles
 
 When users sign in via OAuth:
+
 - **New users** are automatically created with `EDITOR` role
 - **Existing users** keep their current role
 - To upgrade a user to `ADMIN`, update the database directly or use the seed script
@@ -123,6 +130,7 @@ const user = await prisma.user.update({
 ## Testing OAuth
 
 1. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -140,21 +148,25 @@ const user = await prisma.user.update({
 ## Troubleshooting
 
 ### OAuth buttons not showing
+
 - Check that environment variables are set correctly
 - Restart the development server after adding env vars
 - Verify the provider credentials are valid
 
 ### "Invalid redirect URI" error
+
 - Ensure redirect URIs in OAuth provider settings match exactly:
   - Development: `http://localhost:3000/api/auth/callback/{provider}`
   - Production: `https://yourdomain.com/api/auth/callback/{provider}`
 
 ### Apple Sign In not working
+
 - Verify the JWT secret is correctly generated
 - Check that the Service ID is enabled for "Sign in with Apple"
 - Ensure the key hasn't expired (they last 6 months)
 
 ### User created but can't access admin routes
+
 - OAuth users default to `EDITOR` role
 - Upgrade the user to `ADMIN` role in the database
 - Or modify the signIn callback in `auth.config.ts` to assign ADMIN role based on email domain
@@ -170,6 +182,7 @@ const user = await prisma.user.update({
 ## Account Linking
 
 The system supports account linking:
+
 - If a user signs in with OAuth using an email that already has a credentials account, the accounts will be linked
 - Users can sign in with either method after linking
 - This is enabled via `allowDangerousEmailAccountLinking: true` in the provider config

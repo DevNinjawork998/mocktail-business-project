@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const ShowcaseSection = styled.section`
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   background: linear-gradient(
     135deg,
     ${({ theme }) => theme.colors.mauvelous.light}25 0%,
@@ -20,21 +21,22 @@ export const ShowcaseSection = styled.section`
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(
-      circle at 20% 50%,
-      ${({ theme }) => theme.colors.mauvelous.base}15 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 80% 50%,
-      ${({ theme }) => theme.colors.royalOrange.base}15 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 50% 20%,
-      ${({ theme }) => theme.colors.caramel.base}10 0%,
-      transparent 50%
-    );
+    background:
+      radial-gradient(
+        circle at 20% 50%,
+        ${({ theme }) => theme.colors.mauvelous.base}15 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        circle at 80% 50%,
+        ${({ theme }) => theme.colors.royalOrange.base}15 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        circle at 50% 20%,
+        ${({ theme }) => theme.colors.caramel.base}10 0%,
+        transparent 50%
+      );
     pointer-events: none;
   }
 `;
@@ -123,7 +125,7 @@ export const ProductCard = styled.a`
   border-radius: ${({ theme }) => theme.radii.xl};
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
+  box-shadow:
     0 4px 6px -1px ${({ theme }) => theme.colors.mauvelous.base}15,
     0 2px 4px -1px ${({ theme }) => theme.colors.mauvelous.base}08;
   text-decoration: none;
@@ -164,7 +166,7 @@ export const ProductCard = styled.a`
 
   &:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 
+    box-shadow:
       0 20px 25px -5px ${({ theme }) => theme.colors.mauvelous.base}30,
       0 10px 10px -5px ${({ theme }) => theme.colors.royalOrange.base}25;
     border-color: ${({ theme }) => theme.colors.royalOrange.base};
@@ -182,10 +184,10 @@ export const ProductCard = styled.a`
 
   &:nth-child(1) {
     border-color: ${({ theme }) => theme.colors.mauvelous.base}40;
-    
+
     &:hover {
       border-color: ${({ theme }) => theme.colors.mauvelous.base};
-      box-shadow: 
+      box-shadow:
         0 20px 25px -5px ${({ theme }) => theme.colors.mauvelous.base}25,
         0 10px 10px -5px ${({ theme }) => theme.colors.mauvelous.base}15;
     }
@@ -193,21 +195,23 @@ export const ProductCard = styled.a`
 
   &:nth-child(2) {
     border-color: ${({ theme }) => theme.colors.bittersweetShimmer.base}40;
-    
+
     &:hover {
       border-color: ${({ theme }) => theme.colors.bittersweetShimmer.base};
-      box-shadow: 
-        0 20px 25px -5px ${({ theme }) => theme.colors.bittersweetShimmer.base}25,
-        0 10px 10px -5px ${({ theme }) => theme.colors.bittersweetShimmer.base}15;
+      box-shadow:
+        0 20px 25px -5px
+          ${({ theme }) => theme.colors.bittersweetShimmer.base}25,
+        0 10px 10px -5px
+          ${({ theme }) => theme.colors.bittersweetShimmer.base}15;
     }
   }
 
   &:nth-child(3) {
     border-color: ${({ theme }) => theme.colors.royalOrange.base}40;
-    
+
     &:hover {
       border-color: ${({ theme }) => theme.colors.royalOrange.base};
-      box-shadow: 
+      box-shadow:
         0 20px 25px -5px ${({ theme }) => theme.colors.royalOrange.base}25,
         0 10px 10px -5px ${({ theme }) => theme.colors.royalOrange.base}15;
     }
@@ -215,10 +219,10 @@ export const ProductCard = styled.a`
 
   &:nth-child(4) {
     border-color: ${({ theme }) => theme.colors.caramel.base}40;
-    
+
     &:hover {
       border-color: ${({ theme }) => theme.colors.caramel.base};
-      box-shadow: 
+      box-shadow:
         0 20px 25px -5px ${({ theme }) => theme.colors.caramel.base}25,
         0 10px 10px -5px ${({ theme }) => theme.colors.caramel.base}15;
     }
@@ -254,11 +258,12 @@ export const ProductImage = styled.div`
     pointer-events: none;
     transition: opacity 0.4s ease;
   }
-  
+
   img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center;
     position: relative;
     z-index: 1;
     transition: transform 0.4s ease;

@@ -51,6 +51,10 @@ import {
   ModalButtonGroup,
   ModalProceedButton,
   ModalCancelButton,
+  ImageZoomOverlay,
+  ImageZoomContainer,
+  ImageZoomImage,
+  ImageZoomCloseButton,
 } from "./page.styles";
 import { formatCurrency } from "@/app/lib/stripe";
 import ProductDescriptionParser from "@/components/ProductDescriptionParser/ProductDescriptionParser";
@@ -66,6 +70,7 @@ export default function ProductPageClient({
 }: ProductPageClientProps) {
   const [showModal, setShowModal] = useState(false);
   const [consentGiven, setConsentGiven] = useState(false);
+  const [showImageZoom, setShowImageZoom] = useState(false);
 
   const handleWhatsAppInquiry = () => {
     setShowModal(true);
@@ -92,7 +97,7 @@ export default function ProductPageClient({
       const message = `Hey, I am interested in your ${product.name}. How can I order it?`;
 
       // WhatsApp phone number with country code
-      const phoneNumber = "60146491165";
+      const phoneNumber = "60129104201";
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
         message,
       )}`;
@@ -133,8 +138,9 @@ export default function ProductPageClient({
 
   // Default features that should always be shown (excluding Paleo and Gluten Free)
   // Exclude Vegan for Maca Martini since it contains milk
+  // Exclude Good Vit C for Maca Martini
   const baseDefaultFeatures = [
-    { icon: "🌾", label: "High Fiber" },
+    { icon: "🌾", label: "Fiber" },
     { icon: "🍬", label: "Less Sugar*" },
     { icon: "🌱", label: "Vegan" },
     { icon: "🥥", label: "Plant Powered" },
@@ -142,26 +148,35 @@ export default function ProductPageClient({
     { icon: "🍊", label: "Good Vit C" },
     { icon: "⚡", label: "Good Iron" },
   ];
-  
+
   // Remove Vegan if product contains milk (Maca Martini)
-  const hasMilk = ingredients?.some(
-    (ing) => ing.toLowerCase().includes("milk")
+  const hasMilk = ingredients?.some((ing) =>
+    ing.toLowerCase().includes("milk"),
   );
-  const defaultFeatures = hasMilk
-    ? baseDefaultFeatures.filter((f) => f.label !== "Vegan")
-    : baseDefaultFeatures;
+
+  // Remove Good Vit C for Maca Martini
+  const isMacaMartini = product.id === "maca-martini";
+
+  const defaultFeatures = baseDefaultFeatures.filter((f) => {
+    if (hasMilk && f.label === "Vegan") return false;
+    if (isMacaMartini && f.label === "Good Vit C") return false;
+    return true;
+  });
 
   // Map common feature texts to icons
   const featureIconMap: Record<string, string> = {
     "High Fiber": "🌾",
+    Fiber: "🌾",
     "Less Sugar": "🍬",
     "Less sugar": "🍬",
-    "Vegan": "🌱",
+    Vegan: "🌱",
     "Plant Powered": "🥥",
     "GMO Free": "🚫🌽",
     "High antioxidant": "✨",
+    Antioxidant: "✨",
     "High Calcium": "🥛",
-    "Caffeine": "☕",
+    Calcium: "🥛",
+    Caffeine: "☕",
     "Good Antioxidant": "✨",
     "Good Fiber": "🌾",
     "Good Vit C": "🍊",
@@ -169,19 +184,48 @@ export default function ProductPageClient({
   };
 
   // Filter out features that are ingredient names or excluded features
+  // Also normalize feature labels (replace "High Fiber" -> "Fiber", etc.)
+  const normalizeFeatureLabel = (label: string): string => {
+    if (label === "High Fiber") return "Fiber";
+    if (label === "High antioxidant") return "Antioxidant";
+    if (label === "High Calcium") return "Calcium";
+    // Normalize "Less sugar" to "Less Sugar*" to match default feature
+    if (label === "Less sugar" || label === "Less Sugar") return "Less Sugar*";
+    return label;
+  };
+
   const productSpecificFeatures =
     product.features && product.features.length > 0
       ? product.features
           .filter((f) => !excludedFeatures.includes(f.text))
-          .map((f) => ({
-            icon: featureIconMap[f.text] || "✨",
-            label: f.text,
-          }))
+          .map((f) => {
+            const normalizedLabel = normalizeFeatureLabel(f.text);
+            return {
+              icon:
+                featureIconMap[normalizedLabel] ||
+                featureIconMap[f.text] ||
+                "✨",
+              label: normalizedLabel,
+            };
+          })
       : [];
+
+  // Check if product has its own "Less sugar" or "Less Sugar" feature
+  const hasProductLessSugar = productSpecificFeatures.some(
+    (f) =>
+      f.label === "Less Sugar*" ||
+      f.label === "Less sugar" ||
+      f.label === "Less Sugar",
+  );
+
+  // Remove "Less Sugar*" from default features if product already has it
+  const finalDefaultFeatures = hasProductLessSugar
+    ? defaultFeatures.filter((f) => f.label !== "Less Sugar*")
+    : defaultFeatures;
 
   // Combine default features with product-specific features
   // Remove duplicates based on label
-  const features = [...defaultFeatures, ...productSpecificFeatures].filter(
+  const features = [...finalDefaultFeatures, ...productSpecificFeatures].filter(
     (feature, index, self) =>
       index === self.findIndex((f) => f.label === feature.label),
   );
@@ -194,16 +238,18 @@ export default function ProductPageClient({
         <MainContent>
           <ProductImageSection>
             {product.imageUrl ? (
-              <ProductImageContainer>
+              <ProductImageContainer
+                onClick={() => setShowImageZoom(true)}
+                style={{ cursor: "pointer" }}
+              >
                 <ProductImage
                   src={product.imageUrl}
                   alt={product.name}
                   fill
                   style={{
-                    objectFit: "cover",
-                    borderRadius: "12px",
+                    objectFit: "contain",
                   }}
-                  sizes="(max-width: 768px) 200px, 250px"
+                  sizes="(max-width: 768px) 300px, (max-width: 1024px) 400px, 450px"
                 />
               </ProductImageContainer>
             ) : (
@@ -279,7 +325,9 @@ export default function ProductPageClient({
           <ProductInfoIngredients>
             <strong>Ingredients:</strong>{" "}
             {ingredients && ingredients.length > 0
-              ? ingredients.join(", ")
+              ? ingredients.length > 1
+                ? `${ingredients.slice(0, -1).join(", ")}, and ${ingredients[ingredients.length - 1]}`
+                : ingredients[0]
               : "Ingredients information coming soon..."}
           </ProductInfoIngredients>
           <ProductInfoFeatureRow>
@@ -299,12 +347,43 @@ export default function ProductPageClient({
           by health authorities. This product is not intended to diagnose,
           treat, cure, or prevent any disease. Please review our{" "}
           <a href="/terms-of-use" target="_blank" rel="noopener noreferrer">
-            full disclaimer
+            terms of use
           </a>{" "}
           for more information. If you have allergies or medical conditions,
           please consult with a healthcare professional before consuming.
         </ProductDisclaimerText>
       </ProductDisclaimerSection>
+
+      {/* Image Zoom Modal */}
+      {showImageZoom && product.imageUrl && (
+        <ImageZoomOverlay onClick={() => setShowImageZoom(false)}>
+          <ImageZoomContainer onClick={(e) => e.stopPropagation()}>
+            <ImageZoomCloseButton onClick={() => setShowImageZoom(false)}>
+              ×
+            </ImageZoomCloseButton>
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                height: "100%",
+                minWidth: "300px",
+                minHeight: "400px",
+                maxWidth: "90vw",
+                maxHeight: "90vh",
+              }}
+            >
+              <ImageZoomImage
+                src={product.imageUrl}
+                alt={product.name}
+                fill
+                style={{ objectFit: "contain" }}
+                sizes="90vw"
+                priority
+              />
+            </div>
+          </ImageZoomContainer>
+        </ImageZoomOverlay>
+      )}
 
       {/* Terms of Use Consent Modal */}
       {showModal && (
@@ -313,14 +392,15 @@ export default function ProductPageClient({
             <ModalTitle>Terms of Use Consent Required</ModalTitle>
             <ModalContent>
               <ModalContentText>
-                To proceed with your inquiry via WhatsApp, we need your consent to
-                collect and process your personal data for inquiry and communication
-                purposes.
+                To proceed with your inquiry via WhatsApp, we need your consent
+                to collect and process your personal data for inquiry and
+                communication purposes.
               </ModalContentText>
               <ModalContentText>
-                By clicking &quot;Proceed to WhatsApp&quot;, you will be sharing your interest in
-                this product with us. We will use this information to respond to your
-                inquiry and provide you with product information and ordering details.
+                By clicking &quot;Proceed to WhatsApp&quot;, you will be sharing
+                your interest in this product with us. We will use this
+                information to respond to your inquiry and provide you with
+                product information and ordering details.
               </ModalContentText>
               <ModalConsentSection>
                 <ModalConsentCheckboxWrapper>
@@ -332,8 +412,9 @@ export default function ProductPageClient({
                   />
                   <ModalConsentLabel htmlFor="productTermsConsent">
                     <ModalConsentText>
-                      I agree to the collection and processing of my personal data for
-                      inquiry and communication purposes. I have read and agree to the{" "}
+                      I agree to the collection and processing of my personal
+                      data for inquiry and communication purposes. I have read
+                      and agree to the{" "}
                       <ModalConsentLink
                         href="/terms-of-use"
                         target="_blank"

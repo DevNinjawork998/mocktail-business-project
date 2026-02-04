@@ -194,7 +194,6 @@ To enable Vercel deployment via GitHub Actions, you need to set up the following
 1. **Go to your GitHub repository** → Settings → Secrets and variables → Actions
 
 2. **Add the following secrets**:
-
    - `VERCEL_TOKEN`: Your Vercel authentication token
      - Get it from: https://vercel.com/account/tokens
      - Create a new token with full access
@@ -225,13 +224,14 @@ To enable Vercel deployment via GitHub Actions, you need to set up the following
 ### Manual Setup Steps
 
 1. **Get Vercel Credentials**:
+
    ```bash
    # Install Vercel CLI if not already installed
    npm install -g vercel
-   
+
    # Login to Vercel
    vercel login
-   
+
    # Link your project (if not already linked)
    vercel link
    ```
@@ -248,11 +248,13 @@ To enable Vercel deployment via GitHub Actions, you need to set up the following
 ### Testing the Workflow
 
 1. **Create a test branch**:
+
    ```bash
    git checkout -b test-ci
    ```
 
 2. **Make a small change** and commit:
+
    ```bash
    git add .
    git commit -m "Test CI workflow"

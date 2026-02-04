@@ -61,7 +61,8 @@ const HealthBenefits = () => {
       <Section>
         <Headline>Real Ingredients. Real Results.</Headline>
         <Intro>
-          We source the finest fruits from sustainable farms. No concentrates, no shortcuts.
+          We source the finest fruits from sustainable farms. No concentrates,
+          no shortcuts.
         </Intro>
         <div style={{ textAlign: "center", padding: "2rem" }}>
           Loading ingredients...
@@ -70,18 +71,20 @@ const HealthBenefits = () => {
     );
   }
 
-  const fallbackImageUrl = "https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=400&h=300&fit=crop&q=80";
+  const fallbackImageUrl =
+    "https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=400&h=300&fit=crop&q=80";
 
   return (
     <Section>
       <Headline>Real Ingredients. Real Results.</Headline>
       <Intro>
-        We source the finest fruits from sustainable farms. No concentrates, no shortcuts.
+        We source the finest fruits from sustainable farms. No concentrates, no
+        shortcuts.
       </Intro>
       <IngredientsGrid>
         {ingredients.map((ingredient) => {
           const isFlipped = flippedCards.has(ingredient.id);
-          
+
           return (
             <FlipCardContainer key={ingredient.id}>
               <FlipCard
@@ -130,13 +133,17 @@ const HealthBenefits = () => {
                         sizes="(max-width: 768px) 200px, 300px"
                         style={{ objectFit: "cover", pointerEvents: "none" }}
                         onError={() => {
-                          setImageErrors((prev) => new Set(prev).add(ingredient.id));
+                          setImageErrors((prev) =>
+                            new Set(prev).add(ingredient.id),
+                          );
                         }}
                       />
                     </IngredientImage>
                     <IngredientContent>
                       <IngredientName>{ingredient.name}</IngredientName>
-                      <IngredientSubtitle>{ingredient.subtitle}</IngredientSubtitle>
+                      <IngredientSubtitle>
+                        {ingredient.subtitle}
+                      </IngredientSubtitle>
                     </IngredientContent>
                   </IngredientCard>
                 </CardFront>

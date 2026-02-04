@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 // Styled Components
 export const NavContainer = styled.nav`
-  background-color: ${({ theme }) => theme.currentSemantic.background};
+  background-color: ${({ theme }) => theme.colors.royalOrange.base};
   border-bottom: 1px solid ${({ theme }) => theme.currentSemantic.border};
   position: fixed;
   top: 0;
@@ -25,7 +25,7 @@ export const NavContent = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.spacing.lg};
   height: 4rem;
-  
+
   ${({ theme }) => `
     @media (max-width: ${theme.breakpoints.md}) {
       display: flex;
@@ -52,21 +52,21 @@ export const DesktopNavLinks = styled.div`
 `;
 
 export const NavLink = styled.div`
-  color: ${({ theme }) => theme.currentSemantic.foreground};
+  color: white;
   font-weight: 500;
   transition: color 0.2s ease;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.semantic.secondary};
+    color: ${({ theme }) => theme.colors.caramel.base};
   }
 `;
 
 export const MobileMenuButton = styled.button`
   display: none;
   padding: ${({ theme }) => theme.spacing.sm};
-  color: ${({ theme }) => theme.currentSemantic.foreground};
+  color: white;
   transition: color 0.2s ease;
   background: none;
   border: none;
@@ -74,7 +74,7 @@ export const MobileMenuButton = styled.button`
   z-index: 10;
 
   &:hover {
-    color: ${({ theme }) => theme.semantic.secondary};
+    color: ${({ theme }) => theme.colors.caramel.base};
   }
 
   ${({ theme }) => `
@@ -98,7 +98,7 @@ export const MobileMenuButton = styled.button`
 export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
-  
+
   ${({ theme }) => `
     @media (max-width: ${theme.breakpoints.md}) {
       flex: 1;
@@ -123,19 +123,19 @@ export const Logo = styled.div`
 export const LogoText = styled.div`
   font-size: 1.25rem;
   font-weight: 600;
-  color: ${({ theme }) => theme.semantic.primary};
+  color: white;
   white-space: nowrap;
 `;
 
 export const LogoAccent = styled.span`
-  color: ${({ theme }) => theme.colors.royalOrange.base};
+  color: ${({ theme }) => theme.colors.caramel.base};
 `;
 
 export const CartIconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   ${({ theme }) => `
     @media (max-width: ${theme.breakpoints.md}) {
       order: 3;
@@ -158,7 +158,7 @@ export const DesktopRightNav = styled.div`
 `;
 
 export const ThemeButton = styled.button`
-  color: ${({ theme }) => theme.currentSemantic.foreground};
+  color: white;
   transition: color 0.2s ease;
   font-size: 0.875rem;
   background: none;
@@ -166,18 +166,18 @@ export const ThemeButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.semantic.secondary};
+    color: ${({ theme }) => theme.colors.caramel.base};
   }
 `;
 
 export const IconButton = styled.a`
-  color: ${({ theme }) => theme.currentSemantic.foreground};
+  color: white;
   transition: color 0.2s ease;
   text-decoration: none;
   position: relative;
 
   &:hover {
-    color: ${({ theme }) => theme.semantic.secondary};
+    color: ${({ theme }) => theme.colors.caramel.base};
   }
 `;
 
@@ -237,7 +237,7 @@ export const MobileMenuLinks = styled.div`
 `;
 
 export const MobileNavLink = styled.div`
-  color: ${({ theme }) => theme.currentSemantic.foreground};
+  color: white;
   font-weight: 500;
   padding: ${({ theme }) => theme.spacing.sm} 0;
   transition: color 0.2s ease;
@@ -245,6 +245,6 @@ export const MobileNavLink = styled.div`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.semantic.secondary};
+    color: ${({ theme }) => theme.colors.caramel.base};
   }
 `;

@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor, act } from "../../../__tests__/test-utils";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "../../../__tests__/test-utils";
 import HealthBenefits from "../HealthBenefits";
 import "@jest/globals";
 
@@ -32,7 +38,8 @@ const mockIngredients = [
     icon: "ashwagandha",
     imageUrl: "/images/ingredients/ashwagandha.jpg",
     subtitle: "Stress Relief",
-    description: "Ashwagandha is a powerful adaptogen that helps reduce stress and anxiety.",
+    description:
+      "Ashwagandha is a powerful adaptogen that helps reduce stress and anxiety.",
     type: "adaptogen",
     order: 1,
   },
@@ -71,11 +78,11 @@ describe("HealthBenefits", () => {
     await act(async () => {
       render(<HealthBenefits />);
     });
-    expect(screen.getByText(/Real Ingredients. Real Results./i)).toBeInTheDocument();
     expect(
-      screen.getByText(
-        /We source the finest fruits from sustainable farms/i,
-      ),
+      screen.getByText(/Real Ingredients. Real Results./i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/We source the finest fruits from sustainable farms/i),
     ).toBeInTheDocument();
   });
 
@@ -247,10 +254,14 @@ describe("HealthBenefits", () => {
     });
 
     await waitFor(() => {
-      expect(screen.queryByText(/Loading ingredients.../i)).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/Loading ingredients.../i),
+      ).not.toBeInTheDocument();
     });
 
     // Should still show headline and intro
-    expect(screen.getByText(/Real Ingredients. Real Results./i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Real Ingredients. Real Results./i),
+    ).toBeInTheDocument();
   });
 });

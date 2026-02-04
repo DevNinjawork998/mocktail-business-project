@@ -1,6 +1,12 @@
 "use client";
 import React from "react";
-import { BannerContainer, BannerContent, BannerText, ImageWrapper, BannerImage } from "./RunningBanner.styles";
+import {
+  BannerContainer,
+  BannerContent,
+  BannerText,
+  ImageWrapper,
+  BannerImage,
+} from "./RunningBanner.styles";
 import { bannerData } from "@/data/bannerData";
 
 const RunningBanner: React.FC = () => {

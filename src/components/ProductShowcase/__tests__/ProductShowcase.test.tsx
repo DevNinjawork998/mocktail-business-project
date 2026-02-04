@@ -119,9 +119,7 @@ describe("ProductShowcase", () => {
       render(<ProductShowcase />);
 
       expect(screen.getByText("Loading products...")).toBeInTheDocument();
-      expect(
-        screen.getByText("Our Signature Collection"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Our Signature Collection")).toBeInTheDocument();
       expect(
         screen.getByText(
           "Each flavor is thoughtfully crafted with premium ingredients and functional adaptogens.",
@@ -155,10 +153,18 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Product names appear multiple times (in placeholder and product name), so use getAllByText
-        expect(screen.getAllByText("Test Cocktail 1").length).toBeGreaterThan(0);
-        expect(screen.getAllByText("Test Cocktail 2").length).toBeGreaterThan(0);
-        expect(screen.getAllByText("Test Cocktail 3").length).toBeGreaterThan(0);
-        expect(screen.getAllByText("Test Cocktail 4").length).toBeGreaterThan(0);
+        expect(screen.getAllByText("Test Cocktail 1").length).toBeGreaterThan(
+          0,
+        );
+        expect(screen.getAllByText("Test Cocktail 2").length).toBeGreaterThan(
+          0,
+        );
+        expect(screen.getAllByText("Test Cocktail 3").length).toBeGreaterThan(
+          0,
+        );
+        expect(screen.getAllByText("Test Cocktail 4").length).toBeGreaterThan(
+          0,
+        );
         expect(screen.queryByText("Test Cocktail 5")).not.toBeInTheDocument();
       });
     });
@@ -170,7 +176,9 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Product names appear multiple times, so use getAllByText
-        expect(screen.getAllByText("Test Cocktail 1").length).toBeGreaterThan(0);
+        expect(screen.getAllByText("Test Cocktail 1").length).toBeGreaterThan(
+          0,
+        );
         expect(screen.getByText("Test Description 1")).toBeInTheDocument();
         // Add to Cart buttons appear multiple times (one per product)
         expect(screen.getAllByText("Add to Cart").length).toBeGreaterThan(0);
@@ -196,7 +204,9 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Product name appears multiple times (in placeholder and product name), so use getAllByText
-        expect(screen.getAllByText("Test Cocktail 2").length).toBeGreaterThan(0);
+        expect(screen.getAllByText("Test Cocktail 2").length).toBeGreaterThan(
+          0,
+        );
       });
     });
 

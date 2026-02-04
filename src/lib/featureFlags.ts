@@ -26,7 +26,12 @@ function getFeatureFlagsConfig(): FeatureFlagsConfig {
       const { readFileSync } = require("fs");
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { join } = require("path");
-      const configPath = join(process.cwd(), "src", "config", "featureFlags.json");
+      const configPath = join(
+        process.cwd(),
+        "src",
+        "config",
+        "featureFlags.json",
+      );
       const fileContent = readFileSync(configPath, "utf-8");
       cachedConfig = JSON.parse(fileContent) as FeatureFlagsConfig;
       return cachedConfig;

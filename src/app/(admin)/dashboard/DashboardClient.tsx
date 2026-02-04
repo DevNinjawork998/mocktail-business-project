@@ -59,7 +59,9 @@ export default function DashboardClient({
 
         <S.ActivityList>
           {recentProducts.length === 0 ? (
-            <S.EmptyState>No products yet. Create your first product!</S.EmptyState>
+            <S.EmptyState>
+              No products yet. Create your first product!
+            </S.EmptyState>
           ) : (
             recentProducts.map((product) => (
               <S.ActivityItem key={product.id}>

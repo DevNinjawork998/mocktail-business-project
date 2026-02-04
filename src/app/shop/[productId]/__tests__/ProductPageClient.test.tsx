@@ -1,5 +1,10 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "../../../../__tests__/test-utils";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+} from "../../../../__tests__/test-utils";
 import ProductPageClient from "../ProductPageClient";
 import { Product } from "@/data/serverProductService";
 
@@ -36,7 +41,9 @@ jest.mock("next/image", () => ({
 
 // Mock formatCurrency
 jest.mock("@/app/lib/stripe", () => ({
-  formatCurrency: jest.fn((amount: number) => `RM ${(amount / 100).toFixed(2)}`),
+  formatCurrency: jest.fn(
+    (amount: number) => `RM ${(amount / 100).toFixed(2)}`,
+  ),
 }));
 
 // Mock window.open
@@ -95,7 +102,10 @@ describe("ProductPageClient", () => {
   describe("Rendering", () => {
     it("renders product name and subtitle", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       // Product name appears multiple times (title and in ProductInfoSection)
@@ -105,7 +115,10 @@ describe("ProductPageClient", () => {
 
     it("renders product image when imageUrl is provided", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       const image = screen.getByAltText("Test Cocktail");
@@ -132,7 +145,10 @@ describe("ProductPageClient", () => {
 
     it("renders product features", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       expect(screen.getByText("Feature 1")).toBeInTheDocument();
@@ -141,7 +157,10 @@ describe("ProductPageClient", () => {
 
     it("renders product price and subtext", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       expect(screen.getByText("Premium quality")).toBeInTheDocument();
@@ -149,7 +168,10 @@ describe("ProductPageClient", () => {
 
     it("renders product long description", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       expect(screen.getByText("Test Long Description")).toBeInTheDocument();
@@ -157,14 +179,18 @@ describe("ProductPageClient", () => {
   });
 
   describe("Product Info Section", () => {
-
     it("renders ingredients when provided", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       expect(screen.getByText(/Ingredients:/)).toBeInTheDocument();
-      expect(screen.getByText(/Ingredient 1, Ingredient 2, Ingredient 3/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Ingredient 1, Ingredient 2, and Ingredient 3/),
+      ).toBeInTheDocument();
     });
 
     it("renders fallback text when ingredients are not provided", () => {
@@ -187,11 +213,14 @@ describe("ProductPageClient", () => {
 
     it("renders feature icons", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       expect(screen.getByText("🌾")).toBeInTheDocument();
-      expect(screen.getByText("High Fiber")).toBeInTheDocument();
+      expect(screen.getByText("Fiber")).toBeInTheDocument();
       expect(screen.getByText("🍬")).toBeInTheDocument();
       expect(screen.getByText("Less Sugar*")).toBeInTheDocument();
       expect(screen.getByText("🌱")).toBeInTheDocument();
@@ -202,7 +231,10 @@ describe("ProductPageClient", () => {
   describe("Sidebar", () => {
     it("renders sidebar title", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       expect(screen.getByText("Our Flavors")).toBeInTheDocument();
@@ -210,7 +242,10 @@ describe("ProductPageClient", () => {
 
     it("renders other products in sidebar", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       // Product names might appear multiple times, so use getAllByText
@@ -220,7 +255,10 @@ describe("ProductPageClient", () => {
 
     it("renders sidebar product links correctly", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       // Product name might appear multiple times, get the first one and find its link
@@ -231,7 +269,10 @@ describe("ProductPageClient", () => {
 
     it("renders sidebar product images when imageUrl is provided", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       const image = screen.getByAltText("Other Cocktail 2");
@@ -241,7 +282,10 @@ describe("ProductPageClient", () => {
 
     it("renders placeholder for sidebar products without imageUrl", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       // Product name might appear multiple times, so use getAllByText
@@ -252,7 +296,10 @@ describe("ProductPageClient", () => {
   describe("WhatsApp Button", () => {
     it("renders WhatsApp button", () => {
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
       expect(
@@ -264,25 +311,32 @@ describe("ProductPageClient", () => {
       const consoleErrorSpy = jest
         .spyOn(console, "error")
         .mockImplementation(() => {});
-      
+
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
-      const whatsappButton = screen.getByText(
-        "Send a text through WhatsApp",
-      ).closest("button");
+      const whatsappButton = screen
+        .getByText("Send a text through WhatsApp")
+        .closest("button");
 
       if (whatsappButton) {
         fireEvent.click(whatsappButton);
 
         // Modal should appear
-        expect(screen.getByText("Terms of Use Consent Required")).toBeInTheDocument();
-        
+        expect(
+          screen.getByText("Terms of Use Consent Required"),
+        ).toBeInTheDocument();
+
         // Check consent checkbox
-        const consentCheckbox = screen.getByLabelText(/I agree to the collection/i);
+        const consentCheckbox = screen.getByLabelText(
+          /I agree to the collection/i,
+        );
         fireEvent.click(consentCheckbox);
-        
+
         // Click proceed button
         const proceedButton = screen.getByText("Proceed to WhatsApp");
         fireEvent.click(proceedButton);
@@ -292,12 +346,12 @@ describe("ProductPageClient", () => {
           expect(mockWindowOpen).toHaveBeenCalled();
         });
         const callArgs = mockWindowOpen.mock.calls[0];
-        expect(callArgs[0]).toContain("wa.me/60146491165");
+        expect(callArgs[0]).toContain("wa.me/60129104201");
         // URL is encoded, so check for encoded version
         expect(callArgs[0]).toContain("Test%20Cocktail");
         expect(callArgs[1]).toBe("_blank");
       }
-      
+
       consoleErrorSpy.mockRestore();
     });
 
@@ -310,23 +364,30 @@ describe("ProductPageClient", () => {
       mockWindowOpen.mockReturnValueOnce(null);
 
       render(
-        <ProductPageClient product={mockProduct} otherProducts={mockOtherProducts} />,
+        <ProductPageClient
+          product={mockProduct}
+          otherProducts={mockOtherProducts}
+        />,
       );
 
-      const whatsappButton = screen.getByText(
-        "Send a text through WhatsApp",
-      ).closest("button");
+      const whatsappButton = screen
+        .getByText("Send a text through WhatsApp")
+        .closest("button");
 
       if (whatsappButton) {
         fireEvent.click(whatsappButton);
 
         // Modal should appear
-        expect(screen.getByText("Terms of Use Consent Required")).toBeInTheDocument();
-        
+        expect(
+          screen.getByText("Terms of Use Consent Required"),
+        ).toBeInTheDocument();
+
         // Check consent checkbox
-        const consentCheckbox = screen.getByLabelText(/I agree to the collection/i);
+        const consentCheckbox = screen.getByLabelText(
+          /I agree to the collection/i,
+        );
         fireEvent.click(consentCheckbox);
-        
+
         // Click proceed button
         const proceedButton = screen.getByText("Proceed to WhatsApp");
         fireEvent.click(proceedButton);

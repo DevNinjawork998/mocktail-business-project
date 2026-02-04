@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
 export const FounderStorySection = styled.section`
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
-  background-color: ${({ theme }) => theme.currentSemantic.background};
-  
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
+  background-color: #d4aab3;
+
   ${({ theme }) => `
     @media (min-width: ${theme.breakpoints.md}) {
       padding: ${theme.spacing["4xl"]} ${theme.spacing.xl};
@@ -22,7 +23,7 @@ export const ContentGrid = styled.div`
   grid-template-columns: 1fr;
   gap: ${({ theme }) => theme.spacing["3xl"]};
   align-items: center;
-  
+
   ${({ theme }) => `
     @media (min-width: ${theme.breakpoints.lg}) {
       grid-template-columns: 1fr 1fr;
@@ -55,7 +56,7 @@ export const PlaceholderImage = styled.div`
     ${({ theme }) => theme.colors.caramel.light} 100%
   );
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
-  
+
   svg {
     opacity: 0.6;
   }
@@ -115,7 +116,7 @@ export const QuoteBox = styled.div`
 export const Quote = styled.p`
   font-size: 1.125rem;
   font-style: italic;
-  color: ${({ theme }) => theme.colors.mauvelous.base};
+  color: ${({ theme }) => theme.colors.chocolateKisses.base};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   line-height: 1.6;
 `;
@@ -123,7 +124,7 @@ export const Quote = styled.p`
 export const QuoteAuthor = styled.p`
   font-size: 0.875rem;
   font-style: italic;
-  color: ${({ theme }) => theme.colors.mauvelous.base};
+  color: ${({ theme }) => theme.colors.chocolateKisses.base};
   font-weight: 400;
 `;
 

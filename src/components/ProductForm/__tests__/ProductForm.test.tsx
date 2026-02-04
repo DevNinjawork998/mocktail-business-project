@@ -1,5 +1,10 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "../../../__tests__/test-utils";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+} from "../../../__tests__/test-utils";
 import ProductForm from "../ProductForm";
 import "@jest/globals";
 
@@ -70,7 +75,9 @@ const getInputByName = (name: string) => {
 };
 
 const getTextAreaByName = (name: string) => {
-  return document.querySelector(`textarea[name="${name}"]`) as HTMLTextAreaElement;
+  return document.querySelector(
+    `textarea[name="${name}"]`,
+  ) as HTMLTextAreaElement;
 };
 
 describe("ProductForm", () => {
@@ -149,7 +156,9 @@ describe("ProductForm", () => {
       render(<ProductForm />);
 
       expect(
-        screen.getByText(/Optional: A heading that will appear above the description paragraphs/i)
+        screen.getByText(
+          /Optional: A heading that will appear above the description paragraphs/i,
+        ),
       ).toBeInTheDocument();
     });
 
@@ -164,7 +173,9 @@ describe("ProductForm", () => {
 
       const sectionTitleInput = getInputByName("longDescriptionSectionTitle");
       expect(sectionTitleInput).toBeTruthy();
-      expect(sectionTitleInput.placeholder).toBe("e.g., Stamina & Libido Boost");
+      expect(sectionTitleInput.placeholder).toBe(
+        "e.g., Stamina & Libido Boost",
+      );
     });
   });
 
@@ -185,7 +196,7 @@ describe("ProductForm", () => {
       await waitFor(() => {
         expect(mockUpdateProduct).toHaveBeenCalledWith(
           "test-product-id",
-          expect.any(Object)
+          expect.any(Object),
         );
       });
     });
@@ -205,7 +216,10 @@ describe("ProductForm", () => {
     });
 
     it("handles update errors", async () => {
-      mockUpdateProduct.mockResolvedValue({ success: false, error: "Failed to update" });
+      mockUpdateProduct.mockResolvedValue({
+        success: false,
+        error: "Failed to update",
+      });
 
       render(<ProductForm product={mockProduct} />);
 
@@ -219,7 +233,10 @@ describe("ProductForm", () => {
 
     it("shows saving state during submission", async () => {
       mockUpdateProduct.mockImplementation(
-        () => new Promise((resolve) => setTimeout(() => resolve({ success: true }), 1000))
+        () =>
+          new Promise((resolve) =>
+            setTimeout(() => resolve({ success: true }), 1000),
+          ),
       );
 
       render(<ProductForm product={mockProduct} />);
@@ -250,7 +267,8 @@ describe("ProductForm", () => {
       render(<ProductForm />);
 
       // Get initial count of feature fields
-      const initialFeatureFields = screen.getAllByPlaceholderText("Feature text");
+      const initialFeatureFields =
+        screen.getAllByPlaceholderText("Feature text");
       const initialCount = initialFeatureFields.length;
 
       // Add a feature
@@ -264,9 +282,9 @@ describe("ProductForm", () => {
       // Remove the last added feature
       const removeButtons = screen.getAllByText("×");
       const lastRemoveButton = removeButtons[removeButtons.length - 1];
-      
+
       fireEvent.click(lastRemoveButton);
-      
+
       // Should be back to initial count
       const afterRemoveFields = screen.getAllByPlaceholderText("Feature text");
       expect(afterRemoveFields.length).toBe(initialCount);
@@ -372,7 +390,9 @@ describe("ProductForm", () => {
       render(<ProductForm />);
 
       const descriptionTextarea = getTextAreaByName("description");
-      fireEvent.change(descriptionTextarea, { target: { value: "New Description" } });
+      fireEvent.change(descriptionTextarea, {
+        target: { value: "New Description" },
+      });
 
       expect(descriptionTextarea.value).toBe("New Description");
     });

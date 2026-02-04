@@ -65,11 +65,17 @@ describe("SettingsClient", () => {
   });
 
   it("renders the settings form with initial landing photo URL", () => {
-    render(<SettingsClient initialLandingPhotoUrl="https://example.com/image.jpg" />);
+    render(
+      <SettingsClient initialLandingPhotoUrl="https://example.com/image.jpg" />,
+    );
 
-    expect(screen.getByRole("heading", { name: "Landing Photo" })).toBeInTheDocument();
     expect(
-      screen.getByText("Upload or change the hero image displayed on the homepage")
+      screen.getByRole("heading", { name: "Landing Photo" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Upload or change the hero image displayed on the homepage",
+      ),
     ).toBeInTheDocument();
     expect(screen.getByTestId("image-upload")).toBeInTheDocument();
   });
@@ -77,7 +83,9 @@ describe("SettingsClient", () => {
   it("renders without initial landing photo URL", () => {
     render(<SettingsClient initialLandingPhotoUrl={null} />);
 
-    expect(screen.getByRole("heading", { name: "Landing Photo" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Landing Photo" }),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("image-upload")).toBeInTheDocument();
   });
 
@@ -90,7 +98,7 @@ describe("SettingsClient", () => {
 
     expect(screen.getByTestId("image-preview")).toBeInTheDocument();
     expect(screen.getByTestId("image-preview")).toHaveTextContent(
-      "https://example.com/new-image.jpg"
+      "https://example.com/new-image.jpg",
     );
   });
 
@@ -110,8 +118,12 @@ describe("SettingsClient", () => {
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(mockUpdate).toHaveBeenCalledWith("https://example.com/new-image.jpg");
-      expect(screen.getByText("Landing photo updated successfully!")).toBeInTheDocument();
+      expect(mockUpdate).toHaveBeenCalledWith(
+        "https://example.com/new-image.jpg",
+      );
+      expect(
+        screen.getByText("Landing photo updated successfully!"),
+      ).toBeInTheDocument();
     });
   });
 
@@ -165,14 +177,18 @@ describe("SettingsClient", () => {
     const mockRemove = jest.spyOn(settingsActions, "removeLandingPhoto");
     mockRemove.mockResolvedValue({ success: true });
 
-    render(<SettingsClient initialLandingPhotoUrl="https://example.com/image.jpg" />);
+    render(
+      <SettingsClient initialLandingPhotoUrl="https://example.com/image.jpg" />,
+    );
 
     const removeButton = screen.getByRole("button", { name: /remove photo/i });
     await user.click(removeButton);
 
     await waitFor(() => {
       expect(mockRemove).toHaveBeenCalled();
-      expect(screen.getByText("Landing photo removed successfully!")).toBeInTheDocument();
+      expect(
+        screen.getByText("Landing photo removed successfully!"),
+      ).toBeInTheDocument();
     });
   });
 
@@ -181,7 +197,9 @@ describe("SettingsClient", () => {
     const mockRemove = jest.spyOn(settingsActions, "removeLandingPhoto");
     mockRemove.mockResolvedValue({ success: false, error: "Failed to remove" });
 
-    render(<SettingsClient initialLandingPhotoUrl="https://example.com/image.jpg" />);
+    render(
+      <SettingsClient initialLandingPhotoUrl="https://example.com/image.jpg" />,
+    );
 
     const removeButton = screen.getByRole("button", { name: /remove photo/i });
     await user.click(removeButton);
@@ -207,9 +225,12 @@ describe("SettingsClient", () => {
     expect(saveButton).toBeDisabled();
 
     // Wait for upload to complete
-    await waitFor(() => {
-      expect(saveButton).not.toBeDisabled();
-    }, { timeout: 200 });
+    await waitFor(
+      () => {
+        expect(saveButton).not.toBeDisabled();
+      },
+      { timeout: 200 },
+    );
   });
 
   it("disables save button when saving", async () => {
@@ -219,7 +240,7 @@ describe("SettingsClient", () => {
       () =>
         new Promise((resolve) => {
           setTimeout(() => resolve({ success: true }), 100);
-        })
+        }),
     );
 
     render(<SettingsClient initialLandingPhotoUrl={null} />);

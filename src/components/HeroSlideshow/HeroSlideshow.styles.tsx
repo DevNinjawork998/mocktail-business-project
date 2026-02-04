@@ -18,7 +18,7 @@ export const ImageWrapper = styled.div`
   border-radius: ${({ theme }) => theme.radii.xl};
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.shadows.xl};
-  
+
   ${({ theme }) => `
     @media (min-width: ${theme.breakpoints.lg}) {
       min-height: 600px;
@@ -30,12 +30,12 @@ export const Badge = styled.div`
   position: absolute;
   top: ${({ theme }) => theme.spacing.md};
   right: ${({ theme }) => theme.spacing.md};
-  background-color: #E8F5E9;
+  background-color: #e8f5e9;
   padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
   border-radius: ${({ theme }) => theme.radii.md};
   font-size: 0.75rem;
   font-weight: 600;
-  color: #2E7D32;
+  color: #2e7d32;
   box-shadow: ${({ theme }) => theme.shadows.md};
   display: flex;
   align-items: center;

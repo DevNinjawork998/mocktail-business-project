@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const CommunitySection = styled.section`
   background-color: ${({ theme }) => theme.colors.mauvelous.base};
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   position: relative;
   overflow: hidden;
 

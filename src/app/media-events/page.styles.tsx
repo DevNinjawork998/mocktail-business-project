@@ -12,7 +12,8 @@ export const HeroSection = styled.section`
     ${({ theme }) => theme.colors.royalOrange.base} 0%,
     ${({ theme }) => theme.colors.bittersweetShimmer.base} 100%
   );
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   text-align: center;
   color: white;
 `;
@@ -44,7 +45,8 @@ export const HeroSubtitle = styled.p`
 `;
 
 export const ContentSection = styled.section`
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   max-width: 1200px;
   margin: 0 auto;
 `;
@@ -153,7 +155,8 @@ export const EventButton = styled.a`
 
 export const ComingSoon = styled.div`
   text-align: center;
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: ${({ theme }) => theme.radii.xl};
   margin-bottom: ${({ theme }) => theme.spacing["3xl"]};

@@ -38,7 +38,9 @@ jest.mock("../../HeroSlideshow/HeroSlideshow", () => {
 describe("LandingPage", () => {
   it("renders badge text", () => {
     render(<LandingPage />);
-    expect(screen.getByText(/Fresh. Functional. Delicious./i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Fresh. Functional. Delicious./i),
+    ).toBeInTheDocument();
   });
 
   it("renders main title", () => {
@@ -50,9 +52,7 @@ describe("LandingPage", () => {
   it("renders subtitle", () => {
     render(<LandingPage />);
     expect(
-      screen.getByText(
-        /Mocktails Made for Movement/i,
-      ),
+      screen.getByText(/Mocktails Made for Movement/i),
     ).toBeInTheDocument();
   });
 
@@ -60,7 +60,7 @@ describe("LandingPage", () => {
     render(<LandingPage />);
     expect(screen.getByRole("link", { name: /Shop Now/i })).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Explore Flavors/i }),
+      screen.getByRole("link", { name: /Explore Ingredients/i }),
     ).toBeInTheDocument();
   });
 
@@ -68,13 +68,12 @@ describe("LandingPage", () => {
     render(<LandingPage />);
     const shopNowLink = screen.getByRole("link", { name: /Shop Now/i });
     const exploreFlavorsLink = screen.getByRole("link", {
-      name: /Explore Flavors/i,
+      name: /Explore Ingredients/i,
     });
 
     expect(shopNowLink).toHaveAttribute("href", "/shop");
     expect(exploreFlavorsLink).toHaveAttribute("href", "/ingredients");
   });
-
 
   it("renders hero slideshow component", () => {
     render(<LandingPage />);

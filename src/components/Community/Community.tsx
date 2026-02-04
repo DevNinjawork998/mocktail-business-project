@@ -64,7 +64,10 @@ const communityPhotos = [
 
 const Community: React.FC = () => {
   const handleInstagramClick = () => {
-    window.open("https://www.instagram.com/explore/tags/MocktailsOnTheGo/", "_blank");
+    window.open(
+      "https://www.instagram.com/mocktailsonthego_motg?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+      "_blank",
+    );
   };
 
   return (
@@ -73,8 +76,8 @@ const Community: React.FC = () => {
         <ContentWrapper>
           <Title>Our Community</Title>
           <Subtitle>
-            Join our vibrant community of mocktail lovers. Tag us in a picture to
-            be featured!
+            Join our vibrant community of mocktail lovers. Tag us in a picture
+            to be featured!
           </Subtitle>
         </ContentWrapper>
 
@@ -95,7 +98,8 @@ const Community: React.FC = () => {
             <HashtagText>@MocktailsOnTheGo</HashtagText>
           </CTAButton>
           <CallToAction>
-            Share your mocktail moments with <HashtagText>#MocktailsOnTheGo</HashtagText>
+            Share your mocktail moments with{" "}
+            <HashtagText>#MocktailsOnTheGo</HashtagText>
           </CallToAction>
         </ContentWrapper>
       </Container>

@@ -48,7 +48,10 @@ describe("ProductPageWrapper", () => {
 
   it("renders loading component initially", () => {
     render(
-      <ProductPageWrapper product={mockProduct} otherProducts={mockOtherProducts} />
+      <ProductPageWrapper
+        product={mockProduct}
+        otherProducts={mockOtherProducts}
+      />,
     );
 
     expect(screen.getByTestId("product-page-loading")).toBeInTheDocument();
@@ -57,7 +60,10 @@ describe("ProductPageWrapper", () => {
 
   it("renders product page client after loading delay", async () => {
     render(
-      <ProductPageWrapper product={mockProduct} otherProducts={mockOtherProducts} />
+      <ProductPageWrapper
+        product={mockProduct}
+        otherProducts={mockOtherProducts}
+      />,
     );
 
     // Fast-forward time - wrap in act() to handle state updates
@@ -69,12 +75,17 @@ describe("ProductPageWrapper", () => {
       expect(screen.getByTestId("product-page-client")).toBeInTheDocument();
     });
 
-    expect(screen.queryByTestId("product-page-loading")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("product-page-loading"),
+    ).not.toBeInTheDocument();
   });
 
   it("cleans up timer on unmount", () => {
     const { unmount } = render(
-      <ProductPageWrapper product={mockProduct} otherProducts={mockOtherProducts} />
+      <ProductPageWrapper
+        product={mockProduct}
+        otherProducts={mockOtherProducts}
+      />,
     );
 
     const clearTimeoutSpy = jest.spyOn(global, "clearTimeout");
@@ -87,7 +98,10 @@ describe("ProductPageWrapper", () => {
 
   it("passes product and otherProducts to ProductPageClient", async () => {
     render(
-      <ProductPageWrapper product={mockProduct} otherProducts={mockOtherProducts} />
+      <ProductPageWrapper
+        product={mockProduct}
+        otherProducts={mockOtherProducts}
+      />,
     );
 
     // Wrap in act() to handle state updates from timer

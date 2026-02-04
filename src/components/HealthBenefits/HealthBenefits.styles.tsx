@@ -79,8 +79,6 @@ export const IngredientImage = styled.div`
     object-fit: cover;
     transition: transform 0.3s ease;
   }
-
-
 `;
 
 export const IngredientContent = styled.div`
@@ -114,7 +112,9 @@ export const CardFace = styled.div`
 
 export const CardFront = styled(CardFace)`
   background-color: ${({ theme }) => theme.currentSemantic.surface};
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.3s ease;
 `;
 
@@ -122,9 +122,11 @@ export const FlipCardContainer = styled.div`
   perspective: 1000px;
   height: 100%;
   min-height: 300px;
-  
+
   &:hover ${CardFront} {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.1);
+    box-shadow:
+      0 12px 24px rgba(0, 0, 0, 0.15),
+      0 6px 12px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -133,13 +135,17 @@ export const FlipCard = styled.div<{ $isFlipped: boolean }>`
   width: 100%;
   height: 100%;
   min-height: 300px;
-  transition: transform 0.6s, box-shadow 0.3s ease;
+  transition:
+    transform 0.6s,
+    box-shadow 0.3s ease;
   transform-style: preserve-3d;
-  transform: ${({ $isFlipped }) => ($isFlipped ? "rotateY(180deg)" : "rotateY(0)")};
+  transform: ${({ $isFlipped }) =>
+    $isFlipped ? "rotateY(180deg)" : "rotateY(0)"};
   cursor: pointer;
-  
+
   &:hover {
-    transform: ${({ $isFlipped }) => ($isFlipped ? "rotateY(180deg) scale(1.02)" : "rotateY(0) scale(1.02)")};
+    transform: ${({ $isFlipped }) =>
+      $isFlipped ? "rotateY(180deg) scale(1.02)" : "rotateY(0) scale(1.02)"};
   }
 `;
 
@@ -156,7 +162,9 @@ export const CardBack = styled(CardFace)`
   justify-content: center;
   align-items: center;
   padding: 1.5rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.15);
   transition: box-shadow 0.3s ease;
 `;
 
@@ -189,4 +197,3 @@ export const BackDescription = styled.p`
   text-align: center;
   margin: 0;
 `;
-

@@ -71,7 +71,9 @@ export const Input = styled.input<{ $hasError?: boolean }>`
   font-size: 1rem;
   background-color: ${({ theme }) => theme.currentSemantic.background};
   color: ${({ theme }) => theme.currentSemantic.foreground};
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 
   &:focus {
     outline: none;
@@ -114,7 +116,9 @@ export const SubmitButton = styled.button`
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 
   &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.colors.chocolateKisses.dark};

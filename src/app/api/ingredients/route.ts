@@ -16,7 +16,7 @@ export async function GET() {
     console.error("Error fetching ingredients:", error);
     return NextResponse.json(
       { error: "Failed to fetch ingredients" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

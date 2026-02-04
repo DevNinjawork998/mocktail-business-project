@@ -155,9 +155,13 @@ export default function UserForm({ user, currentUserId }: UserFormProps) {
               $hasError={!!errors.email}
               disabled={isEditing}
             />
-            {errors.email && <S.FieldError>{errors.email.message}</S.FieldError>}
+            {errors.email && (
+              <S.FieldError>{errors.email.message}</S.FieldError>
+            )}
             {isEditing && (
-              <S.HelpText>Email cannot be changed after user creation</S.HelpText>
+              <S.HelpText>
+                Email cannot be changed after user creation
+              </S.HelpText>
             )}
           </S.FormGroup>
 

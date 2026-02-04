@@ -19,7 +19,7 @@ function extractFileKeyFromUrl(url: string): string | null {
   if (!url.startsWith("https://utfs.io/")) {
     return null;
   }
-  
+
   try {
     const urlParts = url.split("/");
     const fileKey = urlParts[urlParts.length - 1];
@@ -32,7 +32,9 @@ function extractFileKeyFromUrl(url: string): string | null {
 /**
  * Delete file from UploadThing if URL is an UploadThing URL
  */
-async function deleteUploadThingFile(imageUrl: string | null | undefined): Promise<void> {
+async function deleteUploadThingFile(
+  imageUrl: string | null | undefined,
+): Promise<void> {
   if (!imageUrl) {
     return;
   }
@@ -64,7 +66,7 @@ const ingredientSchema = z.object({
 export type IngredientFormData = z.infer<typeof ingredientSchema>;
 
 export async function createIngredient(
-  data: IngredientFormData
+  data: IngredientFormData,
 ): Promise<ActionResult<{ id: string }>> {
   const session = await auth();
   if (!session?.user || !getEditorRoles().includes(session.user.role)) {
@@ -95,7 +97,7 @@ export async function createIngredient(
 
 export async function updateIngredient(
   id: string,
-  data: IngredientFormData
+  data: IngredientFormData,
 ): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user || !getEditorRoles().includes(session.user.role)) {
@@ -104,7 +106,7 @@ export async function updateIngredient(
 
   try {
     const validated = ingredientSchema.parse(data);
-    
+
     // Get the current ingredient to check if we need to delete the old image
     const currentIngredient = await prisma.ingredient.findUnique({
       where: { id },

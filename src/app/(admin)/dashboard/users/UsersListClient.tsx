@@ -118,7 +118,10 @@ export default function UsersListClient({
                   </S.UserInfo>
                 </S.TableCell>
                 <S.TableCell>
-                  <S.RoleBadge $role={user.role} aria-label={`User role: ${user.role}`}>
+                  <S.RoleBadge
+                    $role={user.role}
+                    aria-label={`User role: ${user.role}`}
+                  >
                     {user.role}
                   </S.RoleBadge>
                 </S.TableCell>
@@ -146,9 +149,13 @@ export default function UsersListClient({
                     </Link>
                     <S.DeleteButton
                       onClick={() => handleDelete(user.id, user.email)}
-                      disabled={deletingId === user.id || user.id === currentUserId}
+                      disabled={
+                        deletingId === user.id || user.id === currentUserId
+                      }
                       aria-label={`Delete user ${user.name || user.email}`}
-                      aria-disabled={deletingId === user.id || user.id === currentUserId}
+                      aria-disabled={
+                        deletingId === user.id || user.id === currentUserId
+                      }
                     >
                       {deletingId === user.id ? "..." : "Delete"}
                     </S.DeleteButton>

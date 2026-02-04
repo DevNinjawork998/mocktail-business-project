@@ -13,11 +13,14 @@ async function main() {
   const adminEmail = process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;
   const adminName = process.env.ADMIN_NAME;
-  const adminRole = (process.env.ADMIN_ROLE || "ADMIN") as "SUPERADMIN" | "ADMIN" | "EDITOR";
+  const adminRole = (process.env.ADMIN_ROLE || "ADMIN") as
+    | "SUPERADMIN"
+    | "ADMIN"
+    | "EDITOR";
 
   if (!adminEmail || !adminPassword) {
     console.error(
-      "Error: ADMIN_EMAIL and ADMIN_PASSWORD environment variables are required"
+      "Error: ADMIN_EMAIL and ADMIN_PASSWORD environment variables are required",
     );
     console.error("Please set them in your .env file or environment");
     process.exit(1);
@@ -26,9 +29,7 @@ async function main() {
   // Validate role
   const validRoles = ["SUPERADMIN", "ADMIN", "EDITOR"];
   if (!validRoles.includes(adminRole)) {
-    console.error(
-      `Error: ADMIN_ROLE must be one of: ${validRoles.join(", ")}`
-    );
+    console.error(`Error: ADMIN_ROLE must be one of: ${validRoles.join(", ")}`);
     process.exit(1);
   }
 
@@ -51,7 +52,9 @@ async function main() {
     },
   });
 
-  console.log(`Admin user created/updated: ${user.email} (name: ${user.name}, role: ${user.role})`);
+  console.log(
+    `Admin user created/updated: ${user.email} (name: ${user.name}, role: ${user.role})`,
+  );
 }
 
 main()

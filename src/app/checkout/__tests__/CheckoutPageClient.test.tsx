@@ -29,16 +29,16 @@ const renderWithCart = (component: React.ReactElement) => {
 
 beforeAll(() => {
   window.alert = jest.fn();
-  
+
   // Suppress console.error for act() warnings in tests
   const originalError = console.error;
   console.error = (...args: unknown[]) => {
     if (
       typeof args[0] === "string" &&
       (args[0].includes("not wrapped in act") ||
-       args[0].includes("FORM SUBMIT") ||
-       args[0].includes("WhatsApp order handler called") ||
-       args[0].includes("Opening WhatsApp URL"))
+        args[0].includes("FORM SUBMIT") ||
+        args[0].includes("WhatsApp order handler called") ||
+        args[0].includes("Opening WhatsApp URL"))
     ) {
       return;
     }
@@ -380,7 +380,9 @@ describe("CheckoutPageClient", () => {
       });
 
       // Check the terms consent checkbox
-      const consentCheckbox = screen.getByLabelText(/I agree to the collection/i);
+      const consentCheckbox = screen.getByLabelText(
+        /I agree to the collection/i,
+      );
       fireEvent.click(consentCheckbox);
 
       // Submit the form directly to ensure proper event

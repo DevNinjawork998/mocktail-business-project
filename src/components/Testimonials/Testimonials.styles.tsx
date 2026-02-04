@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const TestimonialsSection = styled.section`
   background: linear-gradient(
@@ -42,23 +42,35 @@ export const SectionSubtitle = styled.p`
   margin: 0 auto;
 `;
 
-export const TestimonialsContainer = styled.div`
-  position: relative;
+const scrollAnimation = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 `;
 
-export const TestimonialsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: ${({ theme }) => theme.spacing.xl};
+export const TestimonialsContainer = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: ${({ theme }) => theme.spacing.md} 0;
+`;
 
-  ${({ theme }) => `
-    @media (min-width: ${theme.breakpoints.md}) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    @media (min-width: ${theme.breakpoints.lg}) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  `}
+export const CarouselTrack = styled.div<{ $isPaused?: boolean }>`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.xl};
+  width: fit-content;
+  animation: ${scrollAnimation} 30s linear infinite;
+  animation-play-state: ${({ $isPaused }) =>
+    $isPaused ? "paused" : "running"};
+  cursor: grab;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
 export const TestimonialCard = styled.div`
@@ -73,6 +85,16 @@ export const TestimonialCard = styled.div`
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
+  width: 320px;
+  min-width: 320px;
+
+  ${({ theme }) => `
+    @media (min-width: ${theme.breakpoints.md}) {
+      width: 380px;
+      min-width: 380px;
+    }
+  `}
 
   &:hover {
     transform: translateY(-0.5rem);
@@ -150,12 +172,6 @@ export const CustomerName = styled.div`
   margin-bottom: 0.25rem;
 `;
 
-export const CustomerTitle = styled.div`
-  font-size: 0.875rem;
-  color: ${({ theme }) => theme.colors.caramel.base};
-  opacity: 0.9;
-`;
-
 export const RatingStars = styled.div`
   display: flex;
   gap: 0.25rem;
@@ -165,36 +181,6 @@ export const RatingStars = styled.div`
 export const Star = styled.span`
   color: ${({ theme }) => theme.colors.caramel.base};
   font-size: 1.125rem;
-`;
-
-export const NavigationDots = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-top: ${({ theme }) => theme.spacing["2xl"]};
-
-  ${({ theme }) => `
-    @media (min-width: ${theme.breakpoints.lg}) {
-      display: none;
-    }
-  `}
-`;
-
-export const Dot = styled.button<{ $active: boolean }>`
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  border: none;
-  background-color: ${({ theme, $active }) =>
-    $active ? theme.colors.caramel.base : theme.colors.mauvelous.base};
-  opacity: ${({ $active }) => ($active ? 1 : 0.5)};
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    opacity: 1;
-    transform: scale(1.2);
-  }
 `;
 
 export const BackgroundDecoration = styled.div`

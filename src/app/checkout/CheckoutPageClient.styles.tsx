@@ -4,12 +4,16 @@ export const CheckoutContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  padding-top: calc(4rem + 2rem); /* Account for fixed navigation bar + existing padding */
+  padding-top: calc(
+    4rem + 2rem
+  ); /* Account for fixed navigation bar + existing padding */
   min-height: 60vh;
 
   @media (max-width: 768px) {
     padding: 1rem;
-    padding-top: calc(4rem + 1rem); /* Account for fixed navigation bar + existing padding */
+    padding-top: calc(
+      4rem + 1rem
+    ); /* Account for fixed navigation bar + existing padding */
   }
 `;
 

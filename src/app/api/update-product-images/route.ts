@@ -3,8 +3,10 @@ import { prisma } from "@/lib/prisma";
 
 // Product image mappings - add your UploadThing URLs here
 const productImageUpdates: Record<string, string> = {
-  "tequila-sundown": "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLwb9um7RDETcuXnIk7JCmOv0Bsr38UjpZ4KSl",
-  "dark-stormy": "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLxaDEcbIwFrVt8c4Mls7L1TieS2KgUjDE390",
+  "tequila-sundown":
+    "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLwb9um7RDETcuXnIk7JCmOv0Bsr38UjpZ4KSl",
+  "dark-stormy":
+    "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLxaDEcbIwFrVt8c4Mls7L1TieS2KgUjDE390",
 };
 
 export async function POST() {
@@ -33,7 +35,7 @@ export async function POST() {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -58,7 +60,7 @@ export async function GET() {
     console.error("Error fetching product images:", error);
     return NextResponse.json(
       { error: "Failed to fetch product images" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -31,7 +31,7 @@ const benefits = [
     icon: "🍯",
     title: "Low Sugar",
     description:
-      "Just 5g of sugar or less per serving. All the taste without the sugar crash.",
+      "We strive to keep the sugar and calorie content as low as possible. This will soon be certified by professionals.",
   },
   {
     icon: "✨",
@@ -48,8 +48,8 @@ const WhyMocktails: React.FC = () => {
         <SectionHeader>
           <SectionTitle>Why Mocktails On the Go?</SectionTitle>
           <SectionSubtitle>
-            We&apos;re reimagining what a beverage can be. Delicious, functional,
-            and good for you.
+            We&apos;re reimagining what a beverage can be. Delicious,
+            functional, and good for you.
           </SectionSubtitle>
         </SectionHeader>
 

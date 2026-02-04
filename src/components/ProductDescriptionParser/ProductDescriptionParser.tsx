@@ -19,14 +19,14 @@ export default function ProductDescriptionParser({
     const sections: ParsedSection[] = [];
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
-    
+
     let currentSection: ParsedSection | null = null;
-    
+
     // Process all child nodes
     Array.from(doc.body.childNodes).forEach((node) => {
       if (node.nodeType === Node.ELEMENT_NODE) {
         const element = node as HTMLElement;
-        
+
         if (element.tagName === "H3") {
           // Save previous section if exists
           if (currentSection) {
@@ -52,18 +52,18 @@ export default function ProductDescriptionParser({
         }
       }
     });
-    
+
     // Add last section
     if (currentSection) {
       sections.push(currentSection);
     }
-    
+
     // If no sections found, treat entire content as paragraphs
     if (sections.length === 0) {
       const paragraphs = Array.from(doc.body.querySelectorAll("p"))
         .map((p) => p.textContent?.trim() || "")
         .filter((text) => text.length > 0);
-      
+
       if (paragraphs.length > 0) {
         sections.push({
           title: "",
@@ -71,7 +71,7 @@ export default function ProductDescriptionParser({
         });
       }
     }
-    
+
     return sections;
   };
 
@@ -84,7 +84,7 @@ export default function ProductDescriptionParser({
       .filter((s) => s.length > 15 && !s.match(/^\W+$/))
       .map((s) => s.replace(/^[,\s]+|[,\s]+$/g, "")) // Remove leading/trailing commas and spaces
       .filter((s) => s.length > 0);
-    
+
     return sentences;
   };
 
@@ -98,10 +98,8 @@ export default function ProductDescriptionParser({
     <S.DescriptionContainer>
       {sections.map((section, sectionIndex) => (
         <S.Section key={sectionIndex}>
-          {section.title && (
-            <S.SectionTitle>{section.title}</S.SectionTitle>
-          )}
-          
+          {section.title && <S.SectionTitle>{section.title}</S.SectionTitle>}
+
           {section.paragraphs.length > 0 && (
             <S.ContentWrapper>
               {section.isList ? (
@@ -134,11 +132,9 @@ export default function ProductDescriptionParser({
                       );
                     }
                   }
-                  
+
                   // For shorter paragraphs or if splitting didn't work well, display as regular text
-                  return (
-                    <S.Paragraph key={paraIndex}>{paragraph}</S.Paragraph>
-                  );
+                  return <S.Paragraph key={paraIndex}>{paragraph}</S.Paragraph>;
                 })
               )}
             </S.ContentWrapper>

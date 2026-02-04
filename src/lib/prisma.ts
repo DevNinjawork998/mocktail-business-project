@@ -102,7 +102,7 @@ function createPrismaClient() {
   throw new Error(
     `DATABASE_URL, POSTGRES_URL, DIRECT_URL, or PRISMA_DATABASE_URL environment variable is required. ` +
       `Please set it to your PostgreSQL connection string (postgres://...), Prisma Accelerate URL (prisma://... or prisma+postgres://...), or SQLite (file:...). ` +
-      `${isBuildTime ? "This error occurred during build - make sure the database URL is set in Vercel's environment variables and marked as 'Available during build'." : ""}`
+      `${isBuildTime ? "This error occurred during build - make sure the database URL is set in Vercel's environment variables and marked as 'Available during build'." : ""}`,
   );
 }
 
@@ -128,7 +128,7 @@ function getPrismaClient(): PrismaClient {
       // This prevents the module from throwing during static analysis
       throw new Error(
         "DATABASE_URL, POSTGRES_URL, DIRECT_URL, or PRISMA_DATABASE_URL environment variable is required. " +
-          "Please set it to your PostgreSQL connection string (postgres://...), Prisma Accelerate URL (prisma://... or prisma+postgres://...), or SQLite (file:...)"
+          "Please set it to your PostgreSQL connection string (postgres://...), Prisma Accelerate URL (prisma://... or prisma+postgres://...), or SQLite (file:...)",
       );
     }
 
@@ -150,7 +150,9 @@ export const prisma = new Proxy({} as PrismaClient, {
   get(_target, prop) {
     const client = getPrismaClient();
     // Use unknown first to avoid type errors, then check the actual value
-    const value = (client as unknown as Record<string, unknown>)[prop as string];
+    const value = (client as unknown as Record<string, unknown>)[
+      prop as string
+    ];
     // If it's a function, bind it to the client to preserve 'this' context
     if (typeof value === "function") {
       return (value as (...args: unknown[]) => unknown).bind(client);

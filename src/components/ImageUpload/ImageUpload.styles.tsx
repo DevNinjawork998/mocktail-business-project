@@ -119,13 +119,13 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
   width: 100%;
   transition: all 0.3s ease;
   position: relative;
-  
+
   /* Ensure file inputs are accessible */
   & input[type="file"] {
     pointer-events: auto !important;
     cursor: pointer !important;
   }
-  
+
   /* Target the UploadDropzone root container */
   & > div {
     width: 100% !important;
@@ -139,7 +139,7 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
     justify-content: center !important;
     pointer-events: auto !important;
   }
-  
+
   /* Ensure no overflow or clipping and center all nested divs */
   & > div,
   & > div > div {
@@ -151,7 +151,7 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
     justify-content: center !important;
     pointer-events: auto !important;
   }
-  
+
   /* Fix text wrapping - target all text elements and center them */
   & [data-ut-element="label"],
   & [data-ut-element="allowed-content"],
@@ -168,7 +168,7 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
     margin-left: auto !important;
     margin-right: auto !important;
   }
-  
+
   /* Center the button specifically and ensure it's clickable */
   & [data-ut-element="button"],
   & button {
@@ -180,7 +180,7 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
     position: relative !important;
     z-index: 10 !important;
   }
-  
+
   /* Ensure labels and file inputs are clickable */
   & label {
     cursor: pointer !important;
@@ -188,8 +188,7 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
     position: relative !important;
     z-index: 10 !important;
   }
-  
-  
+
   /* Center the icon */
   & [data-ut-element="upload-icon"],
   & svg {
@@ -197,22 +196,24 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
     margin-left: auto !important;
     margin-right: auto !important;
   }
-  
+
   /* Hover effect */
   &:hover:not([data-uploading="true"]) {
     & > div {
       border-color: ${({ theme }) => theme.semantic.primary} !important;
-      background-color: ${({ theme }) => theme.currentSemantic.backgroundSecondary} !important;
+      background-color: ${({ theme }) =>
+        theme.currentSemantic.backgroundSecondary} !important;
       transform: translateY(-2px);
       box-shadow: ${({ theme }) => theme.shadows.lg} !important;
     }
-    
+
     & [data-ut-element="button"] {
-      background-color: ${({ theme }) => theme.colors.chocolateKisses.dark} !important;
+      background-color: ${({ theme }) =>
+        theme.colors.chocolateKisses.dark} !important;
       transform: scale(1.02);
     }
   }
-  
+
   /* Active/dragging state */
   &[data-dragging="true"] {
     & > div {
@@ -222,7 +223,7 @@ export const DropzoneWrapper = styled.div<{ $isUploading?: boolean }>`
       border-style: solid !important;
     }
   }
-  
+
   /* Uploading state */
   &[data-uploading="true"] {
     cursor: wait;

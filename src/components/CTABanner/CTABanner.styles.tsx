@@ -6,7 +6,8 @@ export const CTASection = styled.section`
     ${({ theme }) => theme.colors.royalOrange.base} 0%,
     ${({ theme }) => theme.colors.bittersweetShimmer.base} 100%
   );
-  padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing["4xl"]}
+    ${({ theme }) => theme.spacing.md};
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -72,7 +73,8 @@ export const ButtonGroup = styled.div`
 
 export const PrimaryButton = styled.a`
   display: inline-block;
-  padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing["2xl"]};
+  padding: ${({ theme }) => theme.spacing.lg}
+    ${({ theme }) => theme.spacing["2xl"]};
   background-color: ${({ theme }) => theme.colors.chocolateKisses.base};
   color: white;
   border-radius: ${({ theme }) => theme.radii.full};
@@ -100,7 +102,8 @@ export const PrimaryButton = styled.a`
 
 export const SecondaryButton = styled.a`
   display: inline-block;
-  padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing["2xl"]};
+  padding: ${({ theme }) => theme.spacing.lg}
+    ${({ theme }) => theme.spacing["2xl"]};
   background-color: transparent;
   color: white;
   border: 2px solid white;

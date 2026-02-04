@@ -52,7 +52,7 @@ describe("WhyMocktails", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Just 5g of sugar or less per serving. All the taste without the sugar crash.",
+        "We strive to keep the sugar and calorie content as low as possible. This will soon be certified by professionals.",
       ),
     ).toBeInTheDocument();
     expect(

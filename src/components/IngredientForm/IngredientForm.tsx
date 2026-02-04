@@ -120,7 +120,11 @@ export default function IngredientForm({ ingredient }: IngredientFormProps) {
 
           <S.FormGroup>
             <S.Label>Type *</S.Label>
-            <S.Input as="select" {...register("type")} $hasError={!!errors.type}>
+            <S.Input
+              as="select"
+              {...register("type")}
+              $hasError={!!errors.type}
+            >
               <option value="Adaptogen">Adaptogen</option>
               <option value="Fruit">Fruit</option>
             </S.Input>

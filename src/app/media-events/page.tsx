@@ -46,7 +46,11 @@ export default function MediaEventsPage() {
                 <S.EventDate>{event.date}</S.EventDate>
                 <S.EventTitle>{event.title}</S.EventTitle>
                 <S.EventDescription>{event.description}</S.EventDescription>
-                <S.EventButton as="button" disabled style={{ opacity: 0.6, cursor: "not-allowed" }}>
+                <S.EventButton
+                  as="button"
+                  disabled
+                  style={{ opacity: 0.6, cursor: "not-allowed" }}
+                >
                   Registration Opens Soon
                 </S.EventButton>
               </S.EventContent>

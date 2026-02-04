@@ -40,12 +40,7 @@ export const GradientBackground = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    135deg,
-    #FFE5E5 0%,
-    #FFD4C4 50%,
-    #FFB88C 100%
-  );
+  background: linear-gradient(135deg, #ffe5e5 0%, #ffd4c4 50%, #ffb88c 100%);
   opacity: 1;
   z-index: 0;
   pointer-events: none;
@@ -118,7 +113,7 @@ export const Title = styled.h1`
 `;
 
 export const TitleAccent = styled.span`
-  color: #F7941D;
+  color: #f7941d;
 `;
 
 export const Subtitle = styled.p`
@@ -229,14 +224,14 @@ export const FeatureText = styled.div`
   font-size: 0.875rem;
   font-weight: 500;
   color: ${({ theme }) => theme.currentSemantic.foreground};
-  
+
   &:first-child {
     font-size: 2rem;
     font-weight: bold;
     color: #451515;
     line-height: 1.2;
   }
-  
+
   &:not(:first-child) {
     font-size: 0.875rem;
     color: ${({ theme }) => theme.colors.chocolateKisses.base};
@@ -566,12 +561,20 @@ export const Badge = styled.div`
   border-radius: ${({ theme }) => theme.radii.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   font-size: 0.875rem;
-  color: ${({ theme }) => theme.colors.chocolateKisses.base};
+  color: ${({ theme }) => theme.colors.chocolateKisses.dark};
+  font-weight: 600;
+  letter-spacing: 0.5px;
   box-shadow: ${({ theme }) => theme.shadows.sm};
   width: fit-content;
-  
+
   &::before {
     content: "✨";
-    font-size: 1rem;
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    filter: brightness(1.4) contrast(1.5) saturate(1.3);
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    text-shadow: 0 0 4px rgba(250, 195, 88, 0.5);
   }
 `;

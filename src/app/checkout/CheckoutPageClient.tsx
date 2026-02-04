@@ -201,7 +201,7 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
       )}*\n${customerDetails}\n\nPlease confirm this order and provide payment instructions.`;
 
       // Ensure phone number has country code
-      const phoneNumber = "60146491165";
+      const phoneNumber = "60129104201";
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
         message,
       )}`;
@@ -360,7 +360,12 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
                       $isSelected={paymentMethod === PaymentMethod.WHATSAPP}
                       $variant="whatsapp"
                     >
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
                         <circle
                           cx="12"
                           cy="12"
@@ -488,10 +493,14 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
                     />
                     <ConsentLabel htmlFor="termsConsent">
                       <ConsentText>
-                        I agree to the collection and processing of my personal data
-                        for order processing and delivery purposes. I have read and
-                        agree to the{" "}
-                        <ConsentLink href="/terms-of-use" target="_blank" rel="noopener noreferrer">
+                        I agree to the collection and processing of my personal
+                        data for order processing and delivery purposes. I have
+                        read and agree to the{" "}
+                        <ConsentLink
+                          href="/terms-of-use"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           Terms of Use
                         </ConsentLink>
                         . *
@@ -499,7 +508,14 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
                     </ConsentLabel>
                   </ConsentCheckboxWrapper>
                   {errors.termsConsent && (
-                    <span style={{ color: "red", fontSize: 12, marginTop: "0.5rem", display: "block" }}>
+                    <span
+                      style={{
+                        color: "red",
+                        fontSize: 12,
+                        marginTop: "0.5rem",
+                        display: "block",
+                      }}
+                    >
                       {errors.termsConsent.message}
                     </span>
                   )}
@@ -511,10 +527,7 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
                     WhatsApp. We&apos;ll confirm your order and provide payment
                     instructions.
                   </WhatsAppDescription>
-                  <WhatsAppButton
-                    type="submit"
-                    disabled={!isValid || loading}
-                  >
+                  <WhatsAppButton type="submit" disabled={!isValid || loading}>
                     <WhatsAppIcon>
                       <svg
                         width="24"

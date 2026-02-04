@@ -60,7 +60,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [isImageUploading, setIsImageUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(
-    product?.imageUrl || null
+    product?.imageUrl || null,
   );
   // Use a ref to ensure we always have the latest imageUrl value
   const imageUrlRef = useRef<string | null>(product?.imageUrl || null);
@@ -138,14 +138,19 @@ export default function ProductForm({ product }: ProductFormProps) {
   useEffect(() => {
     const currentValue = imageUrl || uploadedImageUrl || imageUrlRef.current;
     if (currentValue) {
-      setValue("imageUrl", currentValue, { shouldValidate: false, shouldDirty: false });
+      setValue("imageUrl", currentValue, {
+        shouldValidate: false,
+        shouldDirty: false,
+      });
     }
   }, [imageUrl, uploadedImageUrl, setValue]);
 
   const onSubmit = async (data: FormData) => {
     // Prevent submission if image is still uploading
     if (isImageUploading) {
-      setError("Please wait for the image upload to complete before submitting.");
+      setError(
+        "Please wait for the image upload to complete before submitting.",
+      );
       return;
     }
 
@@ -159,13 +164,14 @@ export default function ProductForm({ product }: ProductFormProps) {
     );
 
     // Get the current imageUrl value - check all possible sources including ref
-    const currentImageUrl = (
-      imageUrlRef.current || 
-      uploadedImageUrl || 
-      imageUrl || 
-      data.imageUrl || 
-      getValues("imageUrl")
-    )?.trim() || null;
+    const currentImageUrl =
+      (
+        imageUrlRef.current ||
+        uploadedImageUrl ||
+        imageUrl ||
+        data.imageUrl ||
+        getValues("imageUrl")
+      )?.trim() || null;
 
     const formData: ProductFormData = {
       name: data.name,
@@ -242,7 +248,8 @@ export default function ProductForm({ product }: ProductFormProps) {
             placeholder="e.g., Stamina & Libido Boost"
           />
           <S.HelpText>
-            Optional: A heading that will appear above the description paragraphs
+            Optional: A heading that will appear above the description
+            paragraphs
           </S.HelpText>
         </S.FormGroup>
 
@@ -333,7 +340,11 @@ export default function ProductForm({ product }: ProductFormProps) {
               onChange={(url) => {
                 imageUrlRef.current = url;
                 setUploadedImageUrl(url);
-                setValue("imageUrl", url, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+                setValue("imageUrl", url, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                  shouldTouch: true,
+                });
                 setIsImageUploading(false);
               }}
               onUploadStart={() => {
@@ -386,7 +397,10 @@ export default function ProductForm({ product }: ProductFormProps) {
         <S.CancelButton type="button" onClick={() => router.back()}>
           Cancel
         </S.CancelButton>
-        <S.SubmitButton type="submit" disabled={isSubmitting || isImageUploading}>
+        <S.SubmitButton
+          type="submit"
+          disabled={isSubmitting || isImageUploading}
+        >
           {isSubmitting
             ? "Saving..."
             : isImageUploading

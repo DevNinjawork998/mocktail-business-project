@@ -87,7 +87,7 @@ export default function ShopPage() {
         <Breadcrumb items={breadcrumbItems} />
         <ShopContainer>
           <ShopHeader>
-            <ShopTitle>Explore Our Flavours</ShopTitle>
+            <ShopTitle>Explore Our Ingredients</ShopTitle>
             <ShopSubtitle>
               Discover our premium collection of artisanal cocktail mixes,
               crafted with the finest ingredients for the perfect drink
@@ -111,7 +111,7 @@ export default function ShopPage() {
         <Breadcrumb items={breadcrumbItems} />
         <ShopContainer>
           <ShopHeader>
-            <ShopTitle>Explore Our Flavours</ShopTitle>
+            <ShopTitle>Explore Our Ingredients</ShopTitle>
             <ShopSubtitle>
               Discover our premium collection of artisanal cocktail mixes,
               crafted with the finest ingredients for the perfect drink
@@ -136,7 +136,8 @@ export default function ShopPage() {
         <ShopHeader>
           <ShopTitle>Our Signature Collection</ShopTitle>
           <ShopSubtitle>
-            Each flavor is thoughtfully crafted with premium ingredients and functional adaptogens.
+            Each flavor is thoughtfully crafted with premium ingredients and
+            functional adaptogens.
           </ShopSubtitle>
         </ShopHeader>
 
@@ -145,21 +146,15 @@ export default function ShopPage() {
             <ProductCard key={product.id} href={`/shop/${product.id}`}>
               <ProductImageContainer>
                 {product.imageUrl ? (
-                  <div
-                    style={{
-                      position: "relative",
-                      width: "100%",
-                      height: "100%",
-                      maxWidth: "200px",
-                      maxHeight: "300px",
-                      margin: "0 auto",
-                    }}
-                  >
+                  <div>
                     <Image
                       src={product.imageUrl}
                       alt={product.name}
                       fill
-                      style={{ objectFit: "contain", borderRadius: "8px" }}
+                      style={{
+                        objectFit: "cover",
+                        objectPosition: "center",
+                      }}
                       sizes="(max-width: 768px) 150px, 200px"
                     />
                   </div>

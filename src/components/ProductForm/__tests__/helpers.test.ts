@@ -4,11 +4,15 @@ import "@jest/globals";
 describe("ProductForm Helper Functions", () => {
   describe("parseLongDescription", () => {
     it("parses HTML with h3 and paragraphs", () => {
-      const html = "<h3>Test Title</h3><p>First paragraph.</p><p>Second paragraph.</p>";
+      const html =
+        "<h3>Test Title</h3><p>First paragraph.</p><p>Second paragraph.</p>";
       const result = parseLongDescription(html);
 
       expect(result.sectionTitle).toBe("Test Title");
-      expect(result.paragraphs).toEqual(["First paragraph.", "Second paragraph."]);
+      expect(result.paragraphs).toEqual([
+        "First paragraph.",
+        "Second paragraph.",
+      ]);
     });
 
     it("parses HTML with only paragraphs (no title)", () => {
@@ -16,7 +20,10 @@ describe("ProductForm Helper Functions", () => {
       const result = parseLongDescription(html);
 
       expect(result.sectionTitle).toBe("");
-      expect(result.paragraphs).toEqual(["First paragraph.", "Second paragraph."]);
+      expect(result.paragraphs).toEqual([
+        "First paragraph.",
+        "Second paragraph.",
+      ]);
     });
 
     it("returns empty structure for empty HTML", () => {
@@ -64,10 +71,13 @@ describe("ProductForm Helper Functions", () => {
     });
 
     it("handles paragraphs with special characters", () => {
-      const html = "<h3>Title</h3><p>Content with &amp; special \"chars\" and 'apostrophes'.</p>";
+      const html =
+        "<h3>Title</h3><p>Content with &amp; special \"chars\" and 'apostrophes'.</p>";
       const result = parseLongDescription(html);
 
-      expect(result.paragraphs[0]).toBe("Content with & special \"chars\" and 'apostrophes'.");
+      expect(result.paragraphs[0]).toBe(
+        "Content with & special \"chars\" and 'apostrophes'.",
+      );
     });
 
     it("returns at least one empty paragraph when no content", () => {
@@ -91,14 +101,16 @@ describe("ProductForm Helper Functions", () => {
     });
 
     it("filters out empty paragraphs", () => {
-      const html = "<h3>Title</h3><p>Content</p><p></p><p>   </p><p>More content</p>";
+      const html =
+        "<h3>Title</h3><p>Content</p><p></p><p>   </p><p>More content</p>";
       const result = parseLongDescription(html);
 
       expect(result.paragraphs).toEqual(["Content", "More content"]);
     });
 
     it("handles nested elements in paragraphs", () => {
-      const html = "<h3>Title</h3><p><strong>Bold</strong> and <em>italic</em> text.</p>";
+      const html =
+        "<h3>Title</h3><p><strong>Bold</strong> and <em>italic</em> text.</p>";
       const result = parseLongDescription(html);
 
       expect(result.paragraphs[0]).toBe("Bold and italic text.");
@@ -128,7 +140,10 @@ describe("ProductForm Helper Functions", () => {
 
   describe("combineLongDescription", () => {
     it("combines title and paragraphs into HTML", () => {
-      const result = combineLongDescription("Test Title", ["First paragraph.", "Second paragraph."]);
+      const result = combineLongDescription("Test Title", [
+        "First paragraph.",
+        "Second paragraph.",
+      ]);
 
       expect(result).toContain("<h3>Test Title</h3>");
       expect(result).toContain("<p>First paragraph.</p>");
@@ -136,7 +151,10 @@ describe("ProductForm Helper Functions", () => {
     });
 
     it("omits title when empty", () => {
-      const result = combineLongDescription("", ["First paragraph.", "Second paragraph."]);
+      const result = combineLongDescription("", [
+        "First paragraph.",
+        "Second paragraph.",
+      ]);
 
       expect(result).not.toContain("<h3>");
       expect(result).toContain("<p>First paragraph.</p>");
@@ -151,7 +169,12 @@ describe("ProductForm Helper Functions", () => {
     });
 
     it("filters out empty paragraphs", () => {
-      const result = combineLongDescription("Title", ["Content", "", "   ", "More content"]);
+      const result = combineLongDescription("Title", [
+        "Content",
+        "",
+        "   ",
+        "More content",
+      ]);
 
       expect(result).toContain("<p>Content</p>");
       expect(result).toContain("<p>More content</p>");
@@ -179,13 +202,12 @@ describe("ProductForm Helper Functions", () => {
     });
 
     it("handles special characters in content", () => {
-      const result = combineLongDescription(
-        "Title with & special",
-        ["Content with \"quotes\" and 'apostrophes'."]
-      );
+      const result = combineLongDescription("Title with & special", [
+        "Content with \"quotes\" and 'apostrophes'.",
+      ]);
 
       expect(result).toContain("<h3>Title with & special</h3>");
-      expect(result).toContain("\"quotes\"");
+      expect(result).toContain('"quotes"');
       expect(result).toContain("'apostrophes'");
     });
 
@@ -204,7 +226,10 @@ describe("ProductForm Helper Functions", () => {
     });
 
     it("trims whitespace from title and paragraphs", () => {
-      const result = combineLongDescription("  Title  ", ["  Para 1  ", "  Para 2  "]);
+      const result = combineLongDescription("  Title  ", [
+        "  Para 1  ",
+        "  Para 2  ",
+      ]);
 
       expect(result).toContain("<h3>Title</h3>");
       expect(result).toContain("<p>Para 1</p>");
@@ -230,7 +255,10 @@ describe("ProductForm Helper Functions", () => {
     it("round-trips simple HTML correctly", () => {
       const originalHtml = "<h3>Title</h3>\n  <p>Paragraph content.</p>";
       const parsed = parseLongDescription(originalHtml);
-      const combined = combineLongDescription(parsed.sectionTitle, parsed.paragraphs);
+      const combined = combineLongDescription(
+        parsed.sectionTitle,
+        parsed.paragraphs,
+      );
 
       expect(combined).toContain("<h3>Title</h3>");
       expect(combined).toContain("<p>Paragraph content.</p>");
@@ -243,7 +271,10 @@ describe("ProductForm Helper Functions", () => {
         <p>Second paragraph content.</p>
       `;
       const parsed = parseLongDescription(originalHtml);
-      const combined = combineLongDescription(parsed.sectionTitle, parsed.paragraphs);
+      const combined = combineLongDescription(
+        parsed.sectionTitle,
+        parsed.paragraphs,
+      );
 
       expect(combined).toContain("<h3>Stamina & Libido Boost</h3>");
       expect(combined).toContain("<p>First paragraph content.</p>");

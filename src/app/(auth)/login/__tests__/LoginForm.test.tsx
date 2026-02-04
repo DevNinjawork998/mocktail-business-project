@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor, act } from "@/__tests__/test-utils";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@/__tests__/test-utils";
 import LoginForm from "../LoginForm";
 import "@jest/globals";
 
@@ -47,7 +53,11 @@ describe("LoginForm", () => {
     mockGetProviders.mockClear();
     mockGet.mockReturnValue(null); // Default: no callbackUrl
     mockGetProviders.mockResolvedValue({
-      credentials: { id: "credentials", name: "Credentials", type: "credentials" },
+      credentials: {
+        id: "credentials",
+        name: "Credentials",
+        type: "credentials",
+      },
     });
   });
 
@@ -56,7 +66,9 @@ describe("LoginForm", () => {
       await renderLoginForm();
 
       expect(screen.getByText("Mocktails Admin")).toBeInTheDocument();
-      expect(screen.getByText("Sign in to manage your products")).toBeInTheDocument();
+      expect(
+        screen.getByText("Sign in to manage your products"),
+      ).toBeInTheDocument();
       expect(screen.getByLabelText("Email")).toBeInTheDocument();
       expect(screen.getByLabelText("Password")).toBeInTheDocument();
       expect(screen.getByText("Sign In")).toBeInTheDocument();
@@ -64,7 +76,11 @@ describe("LoginForm", () => {
 
     it("renders OAuth button when Google provider is available", async () => {
       mockGetProviders.mockResolvedValue({
-        credentials: { id: "credentials", name: "Credentials", type: "credentials" },
+        credentials: {
+          id: "credentials",
+          name: "Credentials",
+          type: "credentials",
+        },
         google: { id: "google", name: "Google", type: "oauth" },
       });
 
@@ -77,7 +93,11 @@ describe("LoginForm", () => {
 
     it("renders divider when OAuth provider is available", async () => {
       mockGetProviders.mockResolvedValue({
-        credentials: { id: "credentials", name: "Credentials", type: "credentials" },
+        credentials: {
+          id: "credentials",
+          name: "Credentials",
+          type: "credentials",
+        },
         google: { id: "google", name: "Google", type: "oauth" },
       });
 
@@ -150,7 +170,9 @@ describe("LoginForm", () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText("Invalid email or password")).toBeInTheDocument();
+        expect(
+          screen.getByText("Invalid email or password"),
+        ).toBeInTheDocument();
       });
     });
 
@@ -168,13 +190,18 @@ describe("LoginForm", () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getByText("An unexpected error occurred. Please try again.")).toBeInTheDocument();
+        expect(
+          screen.getByText("An unexpected error occurred. Please try again."),
+        ).toBeInTheDocument();
       });
     });
 
     it("shows loading state during submission", async () => {
       mockSignIn.mockImplementation(
-        () => new Promise((resolve) => setTimeout(() => resolve({ error: null }), 1000))
+        () =>
+          new Promise((resolve) =>
+            setTimeout(() => resolve({ error: null }), 1000),
+          ),
       );
 
       await renderLoginForm();
@@ -210,7 +237,8 @@ describe("LoginForm", () => {
       // The form won't submit, so signIn shouldn't be called
       await waitFor(() => {
         // Either validation error shows or form doesn't submit
-        const hasError = screen.queryByText(/Please enter a valid email address/i) !== null;
+        const hasError =
+          screen.queryByText(/Please enter a valid email address/i) !== null;
         const signInNotCalled = mockSignIn.mock.calls.length === 0;
         expect(hasError || signInNotCalled).toBe(true);
       });
@@ -230,7 +258,9 @@ describe("LoginForm", () => {
 
       // Form validation should prevent submission with short password
       await waitFor(() => {
-        const hasError = screen.queryByText(/Password must be at least 6 characters/i) !== null;
+        const hasError =
+          screen.queryByText(/Password must be at least 6 characters/i) !==
+          null;
         const signInNotCalled = mockSignIn.mock.calls.length === 0;
         expect(hasError || signInNotCalled).toBe(true);
       });
@@ -240,7 +270,11 @@ describe("LoginForm", () => {
   describe("OAuth Sign In", () => {
     it("handles OAuth sign in", async () => {
       mockGetProviders.mockResolvedValue({
-        credentials: { id: "credentials", name: "Credentials", type: "credentials" },
+        credentials: {
+          id: "credentials",
+          name: "Credentials",
+          type: "credentials",
+        },
         google: { id: "google", name: "Google", type: "oauth" },
       });
       mockSignIn.mockResolvedValue(undefined);
@@ -251,7 +285,9 @@ describe("LoginForm", () => {
         expect(screen.getByText("Continue with Google")).toBeInTheDocument();
       });
 
-      const googleButton = screen.getByText("Continue with Google").closest("button");
+      const googleButton = screen
+        .getByText("Continue with Google")
+        .closest("button");
       if (googleButton) {
         fireEvent.click(googleButton);
       }
@@ -266,11 +302,15 @@ describe("LoginForm", () => {
 
     it("shows loading state for OAuth", async () => {
       mockGetProviders.mockResolvedValue({
-        credentials: { id: "credentials", name: "Credentials", type: "credentials" },
+        credentials: {
+          id: "credentials",
+          name: "Credentials",
+          type: "credentials",
+        },
         google: { id: "google", name: "Google", type: "oauth" },
       });
       mockSignIn.mockImplementation(
-        () => new Promise(() => {}) // Never resolves to test loading state
+        () => new Promise(() => {}), // Never resolves to test loading state
       );
 
       await renderLoginForm();
@@ -279,7 +319,9 @@ describe("LoginForm", () => {
         expect(screen.getByText("Continue with Google")).toBeInTheDocument();
       });
 
-      const googleButton = screen.getByText("Continue with Google").closest("button");
+      const googleButton = screen
+        .getByText("Continue with Google")
+        .closest("button");
       if (googleButton) {
         fireEvent.click(googleButton);
       }
@@ -291,7 +333,11 @@ describe("LoginForm", () => {
 
     it("handles OAuth errors", async () => {
       mockGetProviders.mockResolvedValue({
-        credentials: { id: "credentials", name: "Credentials", type: "credentials" },
+        credentials: {
+          id: "credentials",
+          name: "Credentials",
+          type: "credentials",
+        },
         google: { id: "google", name: "Google", type: "oauth" },
       });
       mockSignIn.mockRejectedValue(new Error("OAuth error"));
@@ -302,13 +348,17 @@ describe("LoginForm", () => {
         expect(screen.getByText("Continue with Google")).toBeInTheDocument();
       });
 
-      const googleButton = screen.getByText("Continue with Google").closest("button");
+      const googleButton = screen
+        .getByText("Continue with Google")
+        .closest("button");
       if (googleButton) {
         fireEvent.click(googleButton);
       }
 
       await waitFor(() => {
-        expect(screen.getByText("Failed to sign in with google")).toBeInTheDocument();
+        expect(
+          screen.getByText("Failed to sign in with google"),
+        ).toBeInTheDocument();
       });
     });
   });
@@ -322,6 +372,5 @@ describe("LoginForm", () => {
       // Should still render the form
       expect(screen.getByText("Sign In")).toBeInTheDocument();
     });
-
   });
 });

@@ -27,21 +27,21 @@ export async function POST() {
       CREATE UNIQUE INDEX IF NOT EXISTS "settings_key_key" ON "settings"("key")
     `);
 
-    return NextResponse.json({ 
-      success: true, 
-      message: "Settings table initialized successfully" 
+    return NextResponse.json({
+      success: true,
+      message: "Settings table initialized successfully",
     });
   } catch (error) {
     console.error("Error initializing settings table:", error);
     return NextResponse.json(
       { error: "Failed to initialize settings table" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function GET() {
-  return NextResponse.json({ 
-    message: "Use POST to initialize the settings table" 
+  return NextResponse.json({
+    message: "Use POST to initialize the settings table",
   });
 }

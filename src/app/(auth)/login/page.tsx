@@ -10,7 +10,14 @@ export const metadata = {
 
 function LoginFormFallback() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}
+    >
       <div>Loading...</div>
     </div>
   );
@@ -22,7 +29,7 @@ export default async function LoginPage({
   searchParams: { callbackUrl?: string };
 }) {
   const session = await auth();
-  
+
   // Redirect authenticated users to their intended destination
   if (session?.user) {
     const callbackUrl = searchParams?.callbackUrl || "/dashboard";

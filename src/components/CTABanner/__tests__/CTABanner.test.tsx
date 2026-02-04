@@ -47,7 +47,10 @@ describe("CTABanner", () => {
 
     const secondaryButton = screen.getByText("Subscribe & Save 20%");
     expect(secondaryButton).toBeInTheDocument();
-    expect(secondaryButton.closest("a")).toHaveAttribute("href", "/shop#subscribe");
+    expect(secondaryButton.closest("a")).toHaveAttribute(
+      "href",
+      "/shop#subscribe",
+    );
   });
 
   it("renders both buttons", () => {

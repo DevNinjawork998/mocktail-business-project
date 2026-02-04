@@ -88,7 +88,7 @@ const SocialLink: React.FC<SocialLinkProps> = ({ href, icon, label }) => (
 const Footer: React.FC = () => {
   const socialLinks = [
     {
-      href: "https://instagram.com/mocktailsonthego",
+      href: "https://www.instagram.com/mocktailsonthego_motg?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
       icon: <InstagramIcon />,
       label: "Follow us on Instagram",
     },
@@ -98,7 +98,7 @@ const Footer: React.FC = () => {
       label: "Follow us on TikTok",
     },
     {
-      href: "https://wa.me",
+      href: "https://wa.me/60129104201",
       icon: <WhatsAppIcon />,
       label: "Contact us on WhatsApp",
     },
@@ -220,10 +220,10 @@ const Footer: React.FC = () => {
                 </CopyrightText>
                 <DisclaimerText>
                   Individual results may vary. These statements have not been
-                  evaluated by health authorities. Our products are not intended to
-                  diagnose, treat, cure, or prevent any disease. Please review our{" "}
-                  <Link href="/terms-of-use">full disclaimer</Link> for more
-                  information.
+                  evaluated by health authorities. Our products are not intended
+                  to diagnose, treat, cure, or prevent any disease. Please
+                  review our <Link href="/terms-of-use">terms of use</Link> for
+                  more information.
                 </DisclaimerText>
               </CopyrightSection>
               <LegalLinks>
