@@ -11,7 +11,7 @@ describe("colors", () => {
 
   it("exports RGB variants", () => {
     expect(colors.chocolateKissesRgb).toBe("69, 21, 21");
-    expect(colors.mauvelousRgb).toBe("234, 157, 174");
+    expect(colors.mauvelousRgb).toBe("212, 170, 179");
   });
 });
 
@@ -28,10 +28,10 @@ describe("getColorWithOpacity", () => {
   });
 
   it("works with all color variants", () => {
-    expect(getColorWithOpacity("mauvelous", 0.5)).toBe("rgba(234, 157, 174, 0.5)");
-    expect(getColorWithOpacity("caramel", 0.5)).toBe("rgba(251, 232, 158, 0.5)");
-    expect(getColorWithOpacity("royalOrange", 0.5)).toBe("rgba(248, 146, 86, 0.5)");
-    expect(getColorWithOpacity("bittersweetShimmer", 0.5)).toBe("rgba(199, 76, 61, 0.5)");
+    expect(getColorWithOpacity("mauvelous", 0.5)).toBe("rgba(212, 170, 179, 0.5)");
+    expect(getColorWithOpacity("caramel", 0.5)).toBe("rgba(250, 195, 88, 0.5)");
+    expect(getColorWithOpacity("royalOrange", 0.5)).toBe("rgba(221, 84, 28, 0.5)");
+    expect(getColorWithOpacity("bittersweetShimmer", 0.5)).toBe("rgba(198, 95, 88, 0.5)");
   });
 
   it("returns the color object as string if no RGB variant exists", () => {

@@ -218,7 +218,7 @@ export const SocialLinkButton = styled.a`
     border-color: ${({ theme }) => theme.colors.royalOrange.base};
     background-color: ${({ theme }) => theme.colors.royalOrange.base};
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(248, 146, 86, 0.3);
+    box-shadow: 0 4px 12px rgba(221, 84, 28, 0.3);
   }
 
   ${({ theme }) => `
@@ -267,7 +267,7 @@ export const DividerLine = styled.div`
 
 export const FooterBottom = styled.div`
   padding-top: ${({ theme }) => theme.spacing.xs};
-  border-top: 1px solid rgba(234, 157, 174, 0.2);
+  border-top: 1px solid rgba(212, 170, 179, 0.2);
   margin-top: ${({ theme }) => theme.spacing.xs};
   width: 100%;
 `;
