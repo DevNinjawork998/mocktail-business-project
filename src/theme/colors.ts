@@ -11,32 +11,32 @@ export const colors = {
     dark: "#2A0F0F",
   },
   mauvelous: {
-    base: "#EA9DAE",
-    light: "#F1B4C5",
-    dark: "#D67A95",
+    base: "#D4AAB3",
+    light: "#E5C4CB",
+    dark: "#C3909B",
   },
   caramel: {
-    base: "#FBE89E",
-    light: "#FCF0B8",
-    dark: "#F7DC7A",
+    base: "#FAC358",
+    light: "#FCDA8A",
+    dark: "#F7AC26",
   },
   royalOrange: {
-    base: "#F89256",
-    light: "#FAA670",
-    dark: "#F67E3C",
+    base: "#DD541C",
+    light: "#E87A4A",
+    dark: "#C43E0A",
   },
   bittersweetShimmer: {
-    base: "#C74C3D",
-    light: "#D66B5E",
-    dark: "#A73E32",
+    base: "#C65F58",
+    light: "#D8827B",
+    dark: "#B03C35",
   },
 
   // RGB variants for transparency
   chocolateKissesRgb: "69, 21, 21",
-  mauvelousRgb: "234, 157, 174",
-  caramelRgb: "251, 232, 158",
-  royalOrangeRgb: "248, 146, 86",
-  bittersweetShimmerRgb: "199, 76, 61",
+  mauvelousRgb: "212, 170, 179",
+  caramelRgb: "250, 195, 88",
+  royalOrangeRgb: "221, 84, 28",
+  bittersweetShimmerRgb: "198, 95, 88",
 } as const;
 
 export const semanticColors = {
@@ -48,10 +48,10 @@ export const semanticColors = {
   dangerDark: colors.bittersweetShimmer.dark,
 
   // Background colors
-  background: "#ffffff",
-  backgroundSecondary: "#fafafa",
-  surface: "#ffffff",
-  surfaceHover: "#f5f5f5",
+  background: "#edcfb9",
+  backgroundSecondary: "#edcfb9",
+  surface: "#edcfb9",
+  surfaceHover: "#D4AAB3",
 
   // Text colors
   text: colors.chocolateKisses.base,

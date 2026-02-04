@@ -8,17 +8,17 @@
 
   /* Primary Colors */
   --chocolate-kisses: #451515;
-  --mauvelous: #ea9dae;
-  --caramel: #fbe89e;
-  --royal-orange: #f89256;
-  --bittersweet-shimmer: #c74c3d;
+  --mauvelous: #d4aab3;
+  --caramel: #fac358;
+  --royal-orange: #dd541c;
+  --bittersweet-shimmer: #c65f58;
 
   /* RGB Values for transparency usage */
   --chocolate-kisses-rgb: 69, 21, 21;
-  --mauvelous-rgb: 234, 157, 174;
-  --caramel-rgb: 251, 232, 158;
-  --royal-orange-rgb: 248, 146, 86;
-  --bittersweet-shimmer-rgb: 199, 76, 61;
+  --mauvelous-rgb: 212, 170, 179;
+  --caramel-rgb: 250, 195, 88;
+  --royal-orange-rgb: 221, 84, 28;
+  --bittersweet-shimmer-rgb: 198, 95, 88;
 
   /* Semantic Color Assignments */
   --primary: var(--chocolate-kisses);
@@ -28,10 +28,10 @@
   --danger: var(--bittersweet-shimmer);
 
   /* Background Colors */
-  --background: #ffffff;
-  --background-secondary: #fafafa;
-  --surface: #ffffff;
-  --surface-hover: #f5f5f5;
+  --background: #edcfb9;
+  --background-secondary: #edcfb9;
+  --surface: #edcfb9;
+  --surface-hover: #D4AAB3;
 
   /* Text Colors */
   --foreground: var(--chocolate-kisses);

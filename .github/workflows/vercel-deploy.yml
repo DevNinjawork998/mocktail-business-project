@@ -1,46 +1,31 @@
 name: Vercel Deployment
 
 on:
-  push:
-    branches: [main, master]
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches:
+      - main
+      - master
+  # Fallback: Allow manual trigger if needed
+  workflow_dispatch:
 
 jobs:
-  # Run quality checks first
-  quality-checks:
-    name: Quality Checks
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run TypeScript type checking
-        run: npm run type-check
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Run tests
-        run: npm run test:ci
-
-  # Deploy only if quality checks pass
+  # Deploy only if CI workflow passed
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
-    needs: quality-checks
+    # Only deploy if the CI workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        # Use the commit from the workflow_run event, or default branch for manual dispatch
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

@@ -30,7 +30,7 @@ export const StatsGrid = styled.div`
 `;
 
 export const StatCard = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: ${({ theme }) => theme.radii.xl};
   padding: ${({ theme }) => theme.spacing.xl};
   box-shadow: ${({ theme }) => theme.shadows.sm};
@@ -69,7 +69,7 @@ export const StatLink = styled.span`
 `;
 
 export const Section = styled.section`
-  background-color: white;
+  background-color: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: ${({ theme }) => theme.radii.xl};
   padding: ${({ theme }) => theme.spacing.xl};
   box-shadow: ${({ theme }) => theme.shadows.sm};
@@ -150,7 +150,7 @@ export const EmptyState = styled.div`
 `;
 
 export const QuickActions = styled.section`
-  background-color: white;
+  background-color: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: ${({ theme }) => theme.radii.xl};
   padding: ${({ theme }) => theme.spacing.xl};
   box-shadow: ${({ theme }) => theme.shadows.sm};

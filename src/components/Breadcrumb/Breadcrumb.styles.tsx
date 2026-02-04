@@ -4,7 +4,7 @@ export const BreadcrumbContainer = styled.nav`
   padding: 12px 0;
   border-top: 1px solid #E5E5E5;
   border-bottom: 1px solid #E5E5E5;
-  background-color: #FFFFFF;
+  background-color: ${({ theme }) => theme.currentSemantic.background};
   position: relative;
   z-index: 40;
   width: 100%;

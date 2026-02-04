@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export const ProductPageContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: ${({ theme }) => theme.currentSemantic.background};
   padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
 
   ${media.lg} {
@@ -487,7 +487,7 @@ export const FeatureItemContainer = styled.div`
 
 export const LoadingContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: ${({ theme }) => theme.currentSemantic.background};
   padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
   display: flex;
   align-items: center;

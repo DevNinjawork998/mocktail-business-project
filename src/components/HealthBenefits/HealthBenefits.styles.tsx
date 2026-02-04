@@ -57,7 +57,7 @@ export const IngredientsGrid = styled.div`
 `;
 
 export const IngredientCard = styled.div`
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -113,7 +113,7 @@ export const CardFace = styled.div`
 `;
 
 export const CardFront = styled(CardFace)`
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.currentSemantic.surface};
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.3s ease;
 `;

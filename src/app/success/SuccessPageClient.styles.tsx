@@ -3,7 +3,7 @@ import { media } from "@/theme/styled-theme";
 
 export const SuccessContainer = styled.div`
   min-height: 100vh;
-  background: white;
+  background: ${({ theme }) => theme.currentSemantic.background};
   padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
   display: flex;
   align-items: center;
@@ -259,7 +259,7 @@ export const SuccessMessageStyled = styled.p`
 `;
 
 export const OrderDetailsStyled = styled.div`
-  background: white;
+  background: ${({ theme }) => theme.currentSemantic.surface};
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -360,7 +360,7 @@ export const PrimaryButton = styled(Button)`
 `;
 
 export const SecondaryButton = styled(Button)`
-  background: white;
+  background: ${({ theme }) => theme.currentSemantic.surface};
   color: ${({ theme }) => theme.currentSemantic.primary};
   border: 2px solid ${({ theme }) => theme.currentSemantic.primary};
   &:hover {
