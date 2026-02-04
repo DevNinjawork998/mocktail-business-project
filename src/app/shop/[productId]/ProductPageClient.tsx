@@ -163,35 +163,37 @@ export default function ProductPageClient({
     return true;
   });
 
-  // Map common feature texts to icons
+  // Map common feature texts to icons (alphabetically ordered)
   const featureIconMap: Record<string, string> = {
-    "High Fiber": "🌾",
+    Antioxidant: "✨",
+    Caffeine: "☕",
+    Calcium: "🥛",
     Fiber: "🌾",
+    "GMO Free": "🚫🌽",
+    "Good Iron": "⚡",
+    "Good Vit C": "🍊",
+    "High Calcium": "🥛",
+    "High Fiber": "🌾",
     "Less Sugar": "🍬",
     "Less sugar": "🍬",
-    Vegan: "🌱",
     "Plant Powered": "🥥",
-    "GMO Free": "🚫🌽",
-    "High antioxidant": "✨",
-    Antioxidant: "✨",
-    "High Calcium": "🥛",
-    Calcium: "🥛",
-    Caffeine: "☕",
-    "Good Antioxidant": "✨",
-    "Good Fiber": "🌾",
-    "Good Vit C": "🍊",
-    "Good Iron": "⚡",
+    Vegan: "🌱",
   };
 
   // Filter out features that are ingredient names or excluded features
   // Also normalize feature labels (replace "High Fiber" -> "Fiber", etc.)
   const normalizeFeatureLabel = (label: string): string => {
-    if (label === "High Fiber") return "Fiber";
-    if (label === "High antioxidant") return "Antioxidant";
-    if (label === "High Calcium") return "Calcium";
+    const normalized = label.trim();
+    // Handle case-insensitive matching for "High" variations
+    if (/^high\s+fiber$/i.test(normalized)) return "Fiber";
+    if (/^high\s+antioxidant$/i.test(normalized)) return "Antioxidant";
+    if (/^high\s+calcium$/i.test(normalized)) return "Calcium";
+    // Handle case-insensitive matching for "Good" variations
+    if (/^good\s+fiber$/i.test(normalized)) return "Fiber";
+    if (/^good\s+antioxidant$/i.test(normalized)) return "Antioxidant";
     // Normalize "Less sugar" to "Less Sugar*" to match default feature
-    if (label === "Less sugar" || label === "Less Sugar") return "Less Sugar*";
-    return label;
+    if (normalized === "Less sugar" || normalized === "Less Sugar") return "Less Sugar";
+    return normalized;
   };
 
   const productSpecificFeatures =

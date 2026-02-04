@@ -5,6 +5,29 @@ import { CartProvider } from "../../../contexts/CartContext";
 import "@testing-library/jest-dom";
 import "@jest/globals";
 
+// Mock Next.js Image component
+jest.mock("next/image", () => ({
+  __esModule: true,
+  default: ({
+    src,
+    alt,
+    width,
+    height,
+    priority,
+    style,
+  }: {
+    src: string;
+    alt: string;
+    width?: number;
+    height?: number;
+    priority?: boolean;
+    style?: React.CSSProperties;
+  }) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt={alt} width={width} height={height} style={style} />;
+  },
+}));
+
 describe("Navigation", () => {
   beforeEach(() => {
     // Clear any previous renders
@@ -22,7 +45,11 @@ describe("Navigation", () => {
   it("renders navigation component with logo", () => {
     renderNavigation();
 
-    // Check if logo is rendered
+    // Check if logo image is rendered
+    const logoImage = screen.getByAltText("Mocktails On the Go");
+    expect(logoImage).toBeInTheDocument();
+    
+    // Check if logo text is rendered
     expect(screen.getByText("Mocktails")).toBeInTheDocument();
     expect(screen.getByText("On the Go")).toBeInTheDocument();
   });
@@ -82,7 +109,8 @@ describe("Navigation", () => {
   it("logo links to home page", () => {
     renderNavigation();
 
-    const logoLink = screen.getByText("Mocktails").closest("a");
+    const logoText = screen.getByText("Mocktails");
+    const logoLink = logoText.closest("a");
     expect(logoLink).toHaveAttribute("href", "/");
   });
 

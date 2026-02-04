@@ -120,11 +120,36 @@ export const Logo = styled.div`
   }
 `;
 
+export const LogoImage = styled.div`
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-right: ${({ theme }) => theme.spacing.sm};
+  
+  img {
+    height: 100%;
+    width: auto;
+  }
+  
+  ${({ theme }) => `
+    @media (max-width: ${theme.breakpoints.md}) {
+      height: 35px;
+      margin-right: ${theme.spacing.xs};
+    }
+  `}
+`;
+
 export const LogoText = styled.div`
   font-size: 1.25rem;
   font-weight: 600;
   color: white;
   white-space: nowrap;
+  
+  ${({ theme }) => `
+    @media (max-width: ${theme.breakpoints.md}) {
+      font-size: 1.125rem;
+    }
+  `}
 `;
 
 export const LogoAccent = styled.span`
