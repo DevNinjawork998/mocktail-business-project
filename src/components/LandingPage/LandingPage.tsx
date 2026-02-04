@@ -21,7 +21,7 @@ const LandingPage = () => {
         <S.MainGrid>
           {/* Left Content */}
           <S.LeftContent>
-            <S.Badge>✨ Fresh. Functional. Delicious.</S.Badge>
+            <S.Badge>Fresh. Functional. Delicious.</S.Badge>
             <S.ContentSection>
               <S.Title>
                 Mocktails that fuel

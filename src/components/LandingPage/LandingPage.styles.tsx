@@ -561,12 +561,20 @@ export const Badge = styled.div`
   border-radius: ${({ theme }) => theme.radii.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   font-size: 0.875rem;
-  color: ${({ theme }) => theme.colors.chocolateKisses.base};
+  color: ${({ theme }) => theme.colors.chocolateKisses.dark};
+  font-weight: 600;
+  letter-spacing: 0.5px;
   box-shadow: ${({ theme }) => theme.shadows.sm};
   width: fit-content;
 
   &::before {
     content: "✨";
-    font-size: 1rem;
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    filter: brightness(1.4) contrast(1.5) saturate(1.3);
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    text-shadow: 0 0 4px rgba(250, 195, 88, 0.5);
   }
 `;

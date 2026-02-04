@@ -357,14 +357,37 @@ export const ProductBriefText = styled.p`
 export const ProductInfoSection = styled.section`
   margin: 3rem auto 0 auto;
   padding: 2.5rem 2rem;
-  background: ${({ theme }) => theme.semantic.backgroundSecondary};
+  background: rgba(237, 207, 185, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 1.5rem;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(212, 170, 179, 0.3);
+  box-shadow: 
+    0 8px 32px 0 rgba(69, 21, 21, 0.15),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
   max-width: 1400px;
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 2.5rem;
   align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+  }
+  
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -717,13 +740,35 @@ export const MainImageLoadingPlaceholder = styled.div`
 export const ProductDisclaimerSection = styled.div`
   margin: 2rem auto 0 auto;
   padding: 1.25rem 1.5rem;
-  background: ${({ theme }) => theme.semantic.surface};
-  border: 1px solid ${({ theme }) => theme.semantic.border};
+  background: rgba(237, 207, 185, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 170, 179, 0.3);
   border-radius: 0.75rem;
+  box-shadow: 
+    0 8px 32px 0 rgba(69, 21, 21, 0.15),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
   max-width: 1400px;
   font-size: 0.875rem;
   line-height: 1.6;
   color: ${({ theme }) => theme.currentSemantic.textSecondary};
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+  }
 `;
 
 export const ProductDisclaimerText = styled.p`
