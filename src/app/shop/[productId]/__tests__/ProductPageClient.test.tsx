@@ -189,7 +189,7 @@ describe("ProductPageClient", () => {
 
       expect(screen.getByText(/Ingredients:/)).toBeInTheDocument();
       expect(
-        screen.getByText(/Ingredient 1, Ingredient 2, Ingredient 3/),
+        screen.getByText(/Ingredient 1, Ingredient 2, and Ingredient 3/),
       ).toBeInTheDocument();
     });
 
