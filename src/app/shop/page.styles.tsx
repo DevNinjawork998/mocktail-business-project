@@ -4,12 +4,7 @@ import Link from "next/link";
 
 export const ShopContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(
-    180deg,
-    #FEF9F5 0%,
-    #FFF5F0 50%,
-    #FFE8E0 100%
-  );
+  background: #D4AAB3;
   padding: ${({ theme }) => theme.spacing["2xl"]};
   ${({ theme }) => theme.spacing.md};
   padding-top: calc(4rem + ${({ theme }) => theme.spacing["2xl"]}); /* Account for fixed navigation bar + existing padding */
