@@ -24,9 +24,9 @@ const LandingPage = () => {
             <S.Badge>Fresh. Functional. Delicious.</S.Badge>
             <S.ContentSection>
               <S.Title>
-                Mocktails that fuel
+                Mocktails Made
                 <br />
-                <S.TitleAccent>your day</S.TitleAccent>
+                <S.TitleAccent>for Movement</S.TitleAccent>
               </S.Title>
 
               <S.Subtitle>
