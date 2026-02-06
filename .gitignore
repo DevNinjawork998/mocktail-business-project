@@ -58,6 +58,9 @@ next-env.d.ts
 /src/generated/prisma
 prisma/generated
 
+# Database backups
+prisma/prod-backup.json
+
 # IDE
 .vscode/*
 !.vscode/settings.json
