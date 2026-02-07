@@ -8,6 +8,25 @@ const globalForPrisma = globalThis as unknown as {
   pool: Pool | undefined;
 };
 
+/**
+ * Ensures the connection string uses sslmode=verify-full to suppress the
+ * pg-connection-string security warning about 'require'/'prefer'/'verify-ca'
+ * being treated as aliases for 'verify-full'.
+ */
+function ensureVerifyFullSsl(connectionString: string): string {
+  try {
+    const url = new URL(connectionString);
+    const sslmode = url.searchParams.get("sslmode");
+    if (sslmode && sslmode !== "verify-full" && sslmode !== "disable") {
+      url.searchParams.set("sslmode", "verify-full");
+      return url.toString();
+    }
+    return connectionString;
+  } catch {
+    return connectionString;
+  }
+}
+
 function createPrismaClient() {
   // Priority 1: Direct PostgreSQL connection (works for both build and runtime)
   const directPostgresUrl = process.env.POSTGRES_URL || process.env.DIRECT_URL;
@@ -21,7 +40,7 @@ function createPrismaClient() {
     const pool =
       globalForPrisma.pool ??
       new Pool({
-        connectionString: directPostgresUrl,
+        connectionString: ensureVerifyFullSsl(directPostgresUrl),
         max: parseInt(process.env.POSTGRES_POOL_MAX || "3", 10), // Reduced for hosted DB limits
         idleTimeoutMillis: 5000, // Close idle clients after 5 seconds
         connectionTimeoutMillis: 5000, // Return an error after 5 seconds if connection could not be established
@@ -48,7 +67,7 @@ function createPrismaClient() {
       const pool =
         globalForPrisma.pool ??
         new Pool({
-          connectionString: databaseUrl,
+          connectionString: ensureVerifyFullSsl(databaseUrl),
           max: parseInt(process.env.POSTGRES_POOL_MAX || "3", 10), // Reduced for hosted DB limits
           idleTimeoutMillis: 5000, // Close idle clients after 5 seconds
           connectionTimeoutMillis: 5000, // Return an error after 5 seconds if connection could not be established

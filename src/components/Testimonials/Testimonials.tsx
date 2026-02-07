@@ -22,27 +22,19 @@ import {
   DecorativeCircle,
 } from "./Testimonials.styles";
 
-// Testimonials data
-const testimonials = [
-  {
-    id: 1,
-    text: "Halal mocktails & so healthy. Tried Tequila Sundown & Maca Martini sedap sangat!! 😍",
-    customerName: "yasmeenn",
-    customerInitial: "Y",
-    avatarColor: "#FF6B6B",
-    rating: 5,
-  },
-  {
-    id: 2,
-    text: "My favourite flavour of the 3 is Tequila Sundown 😊. As for Dark & Stormy, I like how it gives my throat a nice warm hug with the ginger kick",
-    customerName: "KM",
-    customerInitial: "K",
-    avatarColor: "#4ECDC4",
-    rating: 5,
-  },
-];
+interface Testimonial {
+  id: string;
+  text: string;
+  customerName: string;
+  avatarColor: string;
+  rating: number;
+}
 
-const Testimonials: React.FC = () => {
+interface TestimonialsProps {
+  testimonials?: Testimonial[];
+}
+
+const Testimonials: React.FC<TestimonialsProps> = ({ testimonials = [] }) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -96,6 +88,11 @@ const Testimonials: React.FC = () => {
     ));
   };
 
+  // Handle empty testimonials array
+  if (!testimonials || testimonials.length === 0) {
+    return null;
+  }
+
   // Duplicate testimonials for seamless loop
   const duplicatedTestimonials = [...testimonials, ...testimonials];
 
@@ -137,23 +134,26 @@ const Testimonials: React.FC = () => {
               }
             }}
           >
-            {duplicatedTestimonials.map((testimonial, index) => (
-              <TestimonialCard key={`${testimonial.id}-${index}`}>
-                <TestimonialContent>
-                  <RatingStars>{renderStars(testimonial.rating)}</RatingStars>
-                  <TestimonialText>{testimonial.text}</TestimonialText>
-                </TestimonialContent>
+            {duplicatedTestimonials.map((testimonial, index) => {
+              const customerInitial = testimonial.customerName[0]?.toUpperCase() || "?";
+              return (
+                <TestimonialCard key={`${testimonial.id}-${index}`}>
+                  <TestimonialContent>
+                    <RatingStars>{renderStars(testimonial.rating)}</RatingStars>
+                    <TestimonialText>{testimonial.text}</TestimonialText>
+                  </TestimonialContent>
 
-                <TestimonialFooter>
-                  <CustomerAvatar $color={testimonial.avatarColor}>
-                    {testimonial.customerInitial}
-                  </CustomerAvatar>
-                  <CustomerInfo>
-                    <CustomerName>{testimonial.customerName}</CustomerName>
-                  </CustomerInfo>
-                </TestimonialFooter>
-              </TestimonialCard>
-            ))}
+                  <TestimonialFooter>
+                    <CustomerAvatar $color={testimonial.avatarColor}>
+                      {customerInitial}
+                    </CustomerAvatar>
+                    <CustomerInfo>
+                      <CustomerName>{testimonial.customerName}</CustomerName>
+                    </CustomerInfo>
+                  </TestimonialFooter>
+                </TestimonialCard>
+              );
+            })}
           </CarouselTrack>
         </TestimonialsContainer>
       </Container>

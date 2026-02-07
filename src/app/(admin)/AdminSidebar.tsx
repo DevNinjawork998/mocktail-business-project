@@ -18,6 +18,7 @@ const baseNavItems = [
   { href: "/dashboard", label: "Dashboard", icon: "📊" },
   { href: "/dashboard/products", label: "Products", icon: "🍹" },
   { href: "/dashboard/ingredients", label: "Ingredients", icon: "🌿" },
+  { href: "/dashboard/testimonials", label: "Testimonials", icon: "💬" },
   { href: "/dashboard/settings", label: "Settings", icon: "⚙️" },
 ];
 

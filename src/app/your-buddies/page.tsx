@@ -1,6 +1,5 @@
-"use client";
-
 import React from "react";
+import { prisma } from "@/lib/prisma";
 import Navigation from "@/components/Navigation/Navigation";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Footer from "@/components/Footer/Footer";
@@ -8,8 +7,25 @@ import Testimonials from "@/components/Testimonials/Testimonials";
 import Community from "@/components/Community/Community";
 import * as S from "./page.styles";
 
-export default function YourBuddiesPage() {
+export default async function YourBuddiesPage() {
   const breadcrumbItems = [{ label: "Community" }];
+
+  let testimonials = [];
+  try {
+    testimonials = await prisma.testimonial.findMany({
+      orderBy: { order: "asc" },
+      select: {
+        id: true,
+        text: true,
+        customerName: true,
+        avatarColor: true,
+        rating: true,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching testimonials:", error);
+    testimonials = [];
+  }
 
   return (
     <S.PageContainer>
@@ -17,7 +33,7 @@ export default function YourBuddiesPage() {
       <Breadcrumb items={breadcrumbItems} />
 
       {/* Customer Testimonials */}
-      <Testimonials />
+      <Testimonials testimonials={testimonials} />
 
       {/* Community Instagram Grid */}
       <Community />

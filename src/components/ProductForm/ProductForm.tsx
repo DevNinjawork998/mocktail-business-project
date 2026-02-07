@@ -209,33 +209,34 @@ export default function ProductForm({ product }: ProductFormProps) {
       <S.Section>
         <S.SectionTitle>Basic Information</S.SectionTitle>
 
-        <S.FormGrid>
-          <S.FormGroup>
-            <S.Label>Name *</S.Label>
-            <S.Input {...register("name")} $hasError={!!errors.name} />
-            {errors.name && <S.FieldError>{errors.name.message}</S.FieldError>}
-          </S.FormGroup>
+        <S.FormGroup $fullWidth>
+          <S.Label>Name *</S.Label>
+          <S.NameInput {...register("name")} $hasError={!!errors.name} />
+          {errors.name && <S.FieldError>{errors.name.message}</S.FieldError>}
+        </S.FormGroup>
 
-          <S.FormGroup>
-            <S.Label>Subtitle *</S.Label>
-            <S.Input {...register("subtitle")} $hasError={!!errors.subtitle} />
-            {errors.subtitle && (
-              <S.FieldError>{errors.subtitle.message}</S.FieldError>
-            )}
-          </S.FormGroup>
+        <S.FormGroup $fullWidth>
+          <S.Label>Subtitle *</S.Label>
+          <S.SubtitleInput
+            {...register("subtitle")}
+            $hasError={!!errors.subtitle}
+          />
+          {errors.subtitle && (
+            <S.FieldError>{errors.subtitle.message}</S.FieldError>
+          )}
+        </S.FormGroup>
 
-          <S.FormGroup $fullWidth>
-            <S.Label>Description *</S.Label>
-            <S.TextArea
-              {...register("description")}
-              rows={3}
-              $hasError={!!errors.description}
-            />
-            {errors.description && (
-              <S.FieldError>{errors.description.message}</S.FieldError>
-            )}
-          </S.FormGroup>
-        </S.FormGrid>
+        <S.FormGroup $fullWidth>
+          <S.Label>Description *</S.Label>
+          <S.TextArea
+            {...register("description")}
+            rows={3}
+            $hasError={!!errors.description}
+          />
+          {errors.description && (
+            <S.FieldError>{errors.description.message}</S.FieldError>
+          )}
+        </S.FormGroup>
       </S.Section>
 
       <S.Section>
