@@ -1,55 +1,21 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth } from "@/auth";
 
 /**
- * Middleware for adding security headers and handling authentication.
+ * Middleware for adding security headers to all responses.
  * Security headers help establish trust with security scanners and protect against common attacks.
- * 
- * This middleware:
- * 1. Checks authentication for protected routes
- * 2. Adds security headers to all responses
- * 
+ *
+ * Note: Authentication is handled separately by src/proxy.ts (Next.js 16 Proxy).
+ * This middleware only adds security headers.
+ *
  * Why security headers matter:
  * - Security scanners (like McAfee WebAdvisor) flag sites without proper headers as "unknown"
  * - Headers protect against XSS, clickjacking, MIME sniffing, and other attacks
  * - They establish trust and improve your site's security reputation
  */
-export default auth((req) => {
-  const pathname = req.nextUrl.pathname;
-
-  // Skip auth checks for API routes (including NextAuth routes)
-  if (pathname.startsWith("/api/")) {
-    const response = NextResponse.next();
-    addSecurityHeadersToResponse(response);
-    return response;
-  }
-
-  // Only protect dashboard routes
-  const isAdminRoute = pathname.startsWith("/dashboard");
-
-  if (isAdminRoute) {
-    const isLoggedIn = !!req.auth;
-
-    if (!isLoggedIn) {
-      const loginUrl = new URL("/login", req.nextUrl);
-      loginUrl.searchParams.set("callbackUrl", pathname);
-      const response = NextResponse.redirect(loginUrl);
-      return addSecurityHeadersToResponse(response);
-    }
-  }
-
-  // For all other routes, create a response and add security headers
+export function middleware(request: NextRequest): NextResponse {
   const response = NextResponse.next();
-  addSecurityHeadersToResponse(response);
-  
-  return response;
-});
 
-/**
- * Adds security headers to a NextResponse object
- */
-function addSecurityHeadersToResponse(response: NextResponse): NextResponse {
   // Prevent clickjacking attacks - don't allow site to be embedded in frames
   response.headers.set("X-Frame-Options", "DENY");
 
