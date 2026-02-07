@@ -15,8 +15,8 @@ const testimonialSchema = z.object({
   text: z.string().min(1, "Testimonial text is required"),
   customerName: z.string().min(1, "Customer name is required"),
   avatarColor: z.string().min(1, "Avatar color is required"),
-  rating: z.coerce.number().int().min(1).max(5).default(5),
-  order: z.coerce.number().int().min(0).default(0),
+  rating: z.coerce.number().int().min(1).max(5),
+  order: z.coerce.number().int().min(0),
 });
 
 type FormData = z.infer<typeof testimonialSchema>;

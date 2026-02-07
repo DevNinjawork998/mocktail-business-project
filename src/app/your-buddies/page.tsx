@@ -10,7 +10,13 @@ import * as S from "./page.styles";
 export default async function YourBuddiesPage() {
   const breadcrumbItems = [{ label: "Community" }];
 
-  let testimonials = [];
+  let testimonials: Array<{
+    id: string;
+    text: string;
+    customerName: string;
+    avatarColor: string;
+    rating: number;
+  }> = [];
   try {
     testimonials = await prisma.testimonial.findMany({
       orderBy: { order: "asc" },
@@ -27,7 +33,11 @@ export default async function YourBuddiesPage() {
     testimonials = [];
   }
 
-  let instagramPosts = [];
+  let instagramPosts: Array<{
+    id: string;
+    postUrl: string;
+    imageUrl: string | null;
+  }> = [];
   try {
     instagramPosts = await prisma.instagramPost.findMany({
       orderBy: { order: "asc" },

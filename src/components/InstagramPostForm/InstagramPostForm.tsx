@@ -26,7 +26,7 @@ const instagramPostSchema = z.object({
       "Must be a valid Instagram post URL",
     ),
   imageUrl: z.string().url("Image is required"),
-  order: z.coerce.number().int().min(0).default(0),
+  order: z.coerce.number().int().min(0),
 });
 
 type FormData = z.infer<typeof instagramPostSchema>;
