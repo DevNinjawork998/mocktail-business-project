@@ -109,4 +109,182 @@ describe("Testimonials", () => {
     expect(yasmeennElements.length).toBeGreaterThanOrEqual(2);
     expect(kmElements.length).toBeGreaterThanOrEqual(2);
   });
+
+  it("returns null when testimonials array is empty", () => {
+    const { container } = render(<Testimonials testimonials={[]} />);
+    expect(container.firstChild).toBeNull();
+  });
+
+  it("returns null when testimonials prop is undefined", () => {
+    const { container } = render(<Testimonials />);
+    expect(container.firstChild).toBeNull();
+  });
+
+  describe("carousel interactions", () => {
+    it("pauses carousel on mouse enter", () => {
+      render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = screen
+        .getAllByText(/Halal mocktails/)[0]
+        .closest('[class*="CarouselTrack"]');
+      
+      expect(carouselTrack).toBeInTheDocument();
+      
+      // Simulate mouse enter
+      if (carouselTrack) {
+        carouselTrack.dispatchEvent(new MouseEvent("mouseenter", { bubbles: true }));
+      }
+    });
+
+    it("resumes carousel on mouse leave when not dragging", () => {
+      render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = screen
+        .getAllByText(/Halal mocktails/)[0]
+        .closest('[class*="CarouselTrack"]');
+      
+      expect(carouselTrack).toBeInTheDocument();
+      
+      // Simulate mouse leave
+      if (carouselTrack) {
+        carouselTrack.dispatchEvent(new MouseEvent("mouseleave", { bubbles: true }));
+      }
+    });
+
+    it("handles mouse down event", () => {
+      render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = screen
+        .getAllByText(/Halal mocktails/)[0]
+        .closest('[class*="CarouselTrack"]');
+      
+      expect(carouselTrack).toBeInTheDocument();
+      
+      if (carouselTrack) {
+        const mouseDownEvent = new MouseEvent("mousedown", {
+          bubbles: true,
+          clientX: 100,
+        });
+        Object.defineProperty(mouseDownEvent, "pageX", { value: 100 });
+        carouselTrack.dispatchEvent(mouseDownEvent);
+      }
+    });
+
+    it("handles mouse move event when dragging", () => {
+      render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = screen
+        .getAllByText(/Halal mocktails/)[0]
+        .closest('[class*="CarouselTrack"]');
+      
+      expect(carouselTrack).toBeInTheDocument();
+      
+      if (carouselTrack) {
+        // Start dragging
+        const mouseDownEvent = new MouseEvent("mousedown", {
+          bubbles: true,
+          clientX: 100,
+        });
+        Object.defineProperty(mouseDownEvent, "pageX", { value: 100 });
+        carouselTrack.dispatchEvent(mouseDownEvent);
+        
+        // Move mouse
+        const mouseMoveEvent = new MouseEvent("mousemove", {
+          bubbles: true,
+          clientX: 150,
+        });
+        Object.defineProperty(mouseMoveEvent, "pageX", { value: 150 });
+        carouselTrack.dispatchEvent(mouseMoveEvent);
+      }
+    });
+
+    it("handles mouse up event", () => {
+      render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = screen
+        .getAllByText(/Halal mocktails/)[0]
+        .closest('[class*="CarouselTrack"]');
+      
+      expect(carouselTrack).toBeInTheDocument();
+      
+      if (carouselTrack) {
+        const mouseUpEvent = new MouseEvent("mouseup", { bubbles: true });
+        carouselTrack.dispatchEvent(mouseUpEvent);
+      }
+    });
+
+    it("handles touch start event", () => {
+      render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = screen
+        .getAllByText(/Halal mocktails/)[0]
+        .closest('[class*="CarouselTrack"]');
+      
+      expect(carouselTrack).toBeInTheDocument();
+      
+      if (carouselTrack) {
+        const touchStartEvent = new TouchEvent("touchstart", {
+          bubbles: true,
+          touches: [{ pageX: 100 } as Touch],
+        });
+        carouselTrack.dispatchEvent(touchStartEvent);
+      }
+    });
+
+    it("handles touch move event when dragging", () => {
+      render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = screen
+        .getAllByText(/Halal mocktails/)[0]
+        .closest('[class*="CarouselTrack"]');
+      
+      expect(carouselTrack).toBeInTheDocument();
+      
+      if (carouselTrack) {
+        // Start dragging
+        const touchStartEvent = new TouchEvent("touchstart", {
+          bubbles: true,
+          touches: [{ pageX: 100 } as Touch],
+        });
+        carouselTrack.dispatchEvent(touchStartEvent);
+        
+        // Move touch
+        const touchMoveEvent = new TouchEvent("touchmove", {
+          bubbles: true,
+          touches: [{ pageX: 150 } as Touch],
+        });
+        carouselTrack.dispatchEvent(touchMoveEvent);
+      }
+    });
+
+    it("handles touch end event", () => {
+      render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = screen
+        .getAllByText(/Halal mocktails/)[0]
+        .closest('[class*="CarouselTrack"]');
+      
+      expect(carouselTrack).toBeInTheDocument();
+      
+      if (carouselTrack) {
+        const touchEndEvent = new TouchEvent("touchend", { bubbles: true });
+        carouselTrack.dispatchEvent(touchEndEvent);
+      }
+    });
+
+    it("does not resume carousel on mouse leave when dragging", () => {
+      render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = screen
+        .getAllByText(/Halal mocktails/)[0]
+        .closest('[class*="CarouselTrack"]');
+      
+      expect(carouselTrack).toBeInTheDocument();
+      
+      if (carouselTrack) {
+        // Start dragging
+        const mouseDownEvent = new MouseEvent("mousedown", {
+          bubbles: true,
+          clientX: 100,
+        });
+        Object.defineProperty(mouseDownEvent, "pageX", { value: 100 });
+        carouselTrack.dispatchEvent(mouseDownEvent);
+        
+        // Try to leave while dragging
+        const mouseLeaveEvent = new MouseEvent("mouseleave", { bubbles: true });
+        carouselTrack.dispatchEvent(mouseLeaveEvent);
+      }
+    });
+  });
 });

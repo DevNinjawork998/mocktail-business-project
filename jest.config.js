@@ -48,6 +48,7 @@ const customJestConfig = {
     "!src/app/lib/**/*.{ts,tsx}",
     // Exclude admin dashboard client components (internal admin tools)
     "!src/app/(admin)/dashboard/**/*Client.tsx",
+    "!src/app/(admin)/dashboard/DashboardClient.tsx",
     "!src/components/InstagramPostForm/**/*.{ts,tsx}",
     "!src/components/TestimonialForm/**/*.{ts,tsx}",
     "!src/app/actions/instagramPosts.ts",
@@ -72,10 +73,10 @@ const customJestConfig = {
   // as they are internal admin tools that don't require extensive test coverage
   coverageThreshold: {
     global: {
-      branches: 65,
-      functions: 65,
-      lines: 65,
-      statements: 65,
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
     },
   },
 };
