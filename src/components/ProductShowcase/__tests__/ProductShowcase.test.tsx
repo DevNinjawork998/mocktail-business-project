@@ -276,7 +276,7 @@ describe("ProductShowcase", () => {
   });
 
   describe("Section Title Linking", () => {
-    it("extracts section title from longDescription with h3 tag", async () => {
+    it("uses section title as subtitle when h3 tag exists", async () => {
       const productsWithSectionTitle = [
         {
           ...mockProducts[0],
@@ -290,17 +290,19 @@ describe("ProductShowcase", () => {
       render(<ProductShowcase />);
 
       await waitFor(() => {
-        // Check that "Premium Quality" is rendered as a link with the correct href
+        // Check that "Premium Quality" (from section title) is rendered as a link
         const links = screen.getAllByRole("link");
         const subtitleLink = links.find(
           (link) => link.getAttribute("href") === "/shop/1#section-title",
         );
         expect(subtitleLink).toBeInTheDocument();
         expect(subtitleLink?.textContent).toBe("Premium Quality");
+        // Original subtitle should not be displayed
+        expect(screen.queryByText("Experience Premium Quality")).not.toBeInTheDocument();
       });
     });
 
-    it("renders subtitle as-is when section title is not found in subtitle", async () => {
+    it("uses section title even when it doesn't match original subtitle", async () => {
       const productsWithMismatch = [
         {
           ...mockProducts[0],
@@ -314,16 +316,16 @@ describe("ProductShowcase", () => {
       render(<ProductShowcase />);
 
       await waitFor(() => {
-        const subtitle = screen.getByText("This subtitle doesn't match");
-        expect(subtitle).toBeInTheDocument();
+        // Should use section title "Different Title" as subtitle
+        const links = screen.getAllByRole("link");
+        const subtitleLink = links.find(
+          (link) => link.getAttribute("href") === "/shop/1#section-title",
+        );
+        expect(subtitleLink).toBeInTheDocument();
+        expect(subtitleLink?.textContent).toBe("Different Title");
+        // Original subtitle should not be displayed
+        expect(screen.queryByText("This subtitle doesn't match")).not.toBeInTheDocument();
       });
-
-      // Should not have a link since the section title doesn't match
-      const links = screen.queryAllByRole("link");
-      const matchingLink = links.find(
-        (link) => link.getAttribute("href") === "/shop/1#section-title",
-      );
-      expect(matchingLink).toBeUndefined();
     });
 
     it("handles longDescription without h3 tag", async () => {
@@ -352,8 +354,8 @@ describe("ProductShowcase", () => {
       expect(matchingLink).toBeUndefined();
     });
 
-    it("handles case-insensitive section title matching", async () => {
-      const productsWithCaseMismatch = [
+    it("uses section title exactly as extracted from h3 tag", async () => {
+      const productsWithSectionTitle = [
         {
           ...mockProducts[0],
           longDescription: "<h3>Premium Quality</h3><p>Content</p>",
@@ -361,18 +363,18 @@ describe("ProductShowcase", () => {
         },
       ];
 
-      (getAllProducts as jest.Mock).mockResolvedValue(productsWithCaseMismatch);
+      (getAllProducts as jest.Mock).mockResolvedValue(productsWithSectionTitle);
 
       render(<ProductShowcase />);
 
       await waitFor(() => {
-        // The link should be created for "premium quality" (lowercase in subtitle)
+        // Should use section title "Premium Quality" (from h3) as subtitle
         const links = screen.getAllByRole("link");
         const subtitleLink = links.find(
           (link) => link.getAttribute("href") === "/shop/1#section-title",
         );
         expect(subtitleLink).toBeInTheDocument();
-        expect(subtitleLink?.textContent).toBe("premium quality");
+        expect(subtitleLink?.textContent).toBe("Premium Quality");
       });
     });
 
@@ -390,6 +392,7 @@ describe("ProductShowcase", () => {
       render(<ProductShowcase />);
 
       await waitFor(() => {
+        // Should use section title "Product (Premium)" (from h3) as subtitle
         const links = screen.getAllByRole("link");
         const subtitleLink = links.find(
           (link) => link.getAttribute("href") === "/shop/1#section-title",
@@ -418,7 +421,7 @@ describe("ProductShowcase", () => {
       });
     });
 
-    it("handles longDescription with HTML entities", async () => {
+    it("handles longDescription with HTML entities in section title", async () => {
       const productsWithEntities = [
         {
           ...mockProducts[0],
@@ -432,6 +435,7 @@ describe("ProductShowcase", () => {
       render(<ProductShowcase />);
 
       await waitFor(() => {
+        // HTML entities should be decoded (&nbsp; becomes space)
         const links = screen.getAllByRole("link");
         const subtitleLink = links.find(
           (link) => link.getAttribute("href") === "/shop/1#section-title",
