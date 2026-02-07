@@ -345,6 +345,18 @@ export const ProductSubtitle = styled.p`
   flex: 1;
   text-align: center;
   min-height: 2rem; /* Consistent minimum height */
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      color: ${({ theme }) => theme.colors.chocolateKisses.dark};
+      text-decoration: underline;
+    }
+  }
 `;
 
 export const ProductTags = styled.div`

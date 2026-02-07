@@ -94,11 +94,27 @@ export default function ProductDescriptionParser({
     return <S.EmptyDescription>No description available.</S.EmptyDescription>;
   }
 
+  // Generate a URL-friendly ID from section title
+  const generateSectionId = (title: string): string => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  };
+
   return (
     <S.DescriptionContainer>
-      {sections.map((section, sectionIndex) => (
-        <S.Section key={sectionIndex}>
-          {section.title && <S.SectionTitle>{section.title}</S.SectionTitle>}
+      {sections.map((section, sectionIndex) => {
+        const sectionId = section.title
+          ? generateSectionId(section.title)
+          : `section-${sectionIndex}`;
+        return (
+          <S.Section key={sectionIndex}>
+            {section.title && (
+              <S.SectionTitle id={sectionIndex === 0 ? "section-title" : sectionId}>
+                {section.title}
+              </S.SectionTitle>
+            )}
 
           {section.paragraphs.length > 0 && (
             <S.ContentWrapper>
@@ -139,8 +155,9 @@ export default function ProductDescriptionParser({
               )}
             </S.ContentWrapper>
           )}
-        </S.Section>
-      ))}
+          </S.Section>
+        );
+      })}
     </S.DescriptionContainer>
   );
 }
