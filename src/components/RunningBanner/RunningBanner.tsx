@@ -4,28 +4,22 @@ import {
   BannerContainer,
   BannerContent,
   BannerText,
-  ImageWrapper,
-  BannerImage,
 } from "./RunningBanner.styles";
 import { bannerData } from "@/data/bannerData";
 
 const RunningBanner: React.FC = () => {
+  // Filter out images, keep only messages for now
+  const messagesOnly = bannerData.filter((item) => item.type === "message");
   // Duplicate content to create a seamless loop
-  const duplicatedBannerData = [...bannerData, ...bannerData];
+  const duplicatedBannerData = [...messagesOnly, ...messagesOnly];
 
   return (
     <BannerContainer>
       <BannerContent>
         {duplicatedBannerData.map((item, index) => (
-          <React.Fragment key={`${item.type}-${index}`}>
-            {item.type === "message" ? (
-              <BannerText>{item.content}</BannerText>
-            ) : (
-              <ImageWrapper>
-                <BannerImage src={item.src} alt={item.alt} />
-              </ImageWrapper>
-            )}
-          </React.Fragment>
+          <BannerText key={`${item.type}-${index}`}>
+            {item.content}
+          </BannerText>
         ))}
       </BannerContent>
     </BannerContainer>
