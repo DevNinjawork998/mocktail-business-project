@@ -47,13 +47,38 @@ export async function getAllProducts(): Promise<Product[]> {
   }
 }
 
+/**
+ * Convert a product name to a slug format
+ */
+function nameToSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[&]/g, "") // Remove &
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/[^a-z0-9-]/g, "") // Remove special characters
+    .replace(/-+/g, "-") // Replace multiple hyphens with single
+    .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
+}
+
 export async function getProductById(id: string): Promise<Product | null> {
   try {
-    const product = await prisma.product.findUnique({
+    // First, try to find by ID directly (works for both CUIDs and slug IDs)
+    let product = await prisma.product.findUnique({
       where: {
         id: id,
       },
     });
+
+    // If not found and ID looks like a slug (contains hyphens), try finding by name
+    if (!product && id.includes("-")) {
+      const allProducts = await prisma.product.findMany();
+      product =
+        allProducts.find((p) => {
+          const slug = nameToSlug(p.name);
+          return slug === id || p.id === id;
+        }) || null;
+    }
+
     if (!product) return null;
 
     const mappedProduct = {
