@@ -26,50 +26,31 @@ function extractSectionTitle(longDescription: string): string | null {
 }
 
 /**
- * Render subtitle with section title as a link
+ * Render subtitle - use section title if available, otherwise use original subtitle
+ * If section title exists, make it a link to the product detail page
  */
-function renderSubtitleWithLink(
+function renderSubtitle(
   subtitle: string,
   sectionTitle: string | null,
   productId: string,
 ): React.ReactNode {
-  if (!sectionTitle) {
-    return subtitle;
+  // If we have a section title, use it as the subtitle and make it a link
+  if (sectionTitle) {
+    return (
+      <Link
+        href={`/shop/${productId}#section-title`}
+        onClick={(e) => {
+          // Allow the link to work, but prevent card navigation
+          e.stopPropagation();
+        }}
+      >
+        {sectionTitle}
+      </Link>
+    );
   }
 
-  // Find the section title in the subtitle (case-insensitive)
-  const regex = new RegExp(`(${sectionTitle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "i");
-  const match = subtitle.match(regex);
-
-  if (!match) {
-    // Section title not found in subtitle, return as-is
-    return subtitle;
-  }
-
-  const parts = subtitle.split(regex);
-  
-  return (
-    <>
-      {parts.map((part, index) => {
-        // Check if this part matches the section title (case-insensitive)
-        if (part.toLowerCase() === sectionTitle.toLowerCase()) {
-          return (
-            <Link
-              key={index}
-              href={`/shop/${productId}#section-title`}
-              onClick={(e) => {
-                // Allow the link to work, but prevent card navigation
-                e.stopPropagation();
-              }}
-            >
-              {part}
-            </Link>
-          );
-        }
-        return <span key={index}>{part}</span>;
-      })}
-    </>
-  );
+  // Otherwise, use the original subtitle
+  return subtitle;
 }
 
 const ProductShowcase = () => {
@@ -144,7 +125,7 @@ const ProductShowcase = () => {
                     {product.name}
                   </S.ProductName>
                   <S.ProductSubtitle>
-                    {renderSubtitleWithLink(
+                    {renderSubtitle(
                       product.subtitle,
                       extractSectionTitle(product.longDescription),
                       product.id,
