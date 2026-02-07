@@ -79,7 +79,7 @@ const Navigation: React.FC = () => {
               <Logo>
                 <LogoImage>
                   <Image
-                    src="/images/MOTG%20logo.png"
+                    src="/images/motg-logo.png"
                     alt="Mocktails On the Go"
                     width={40}
                     height={40}
