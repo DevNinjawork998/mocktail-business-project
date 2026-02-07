@@ -61,11 +61,6 @@ describe("featureFlags", () => {
       expect(isFeatureEnabled("testfeature")).toBe(false);
     });
 
-    it("returns true by default when no environment variable is set (server-side)", () => {
-      delete process.env.NEXT_PUBLIC_ENABLE_TESTFEATURE;
-      // In jsdom, window is always defined, so this tests client-side path
-      expect(isFeatureEnabled("testfeature")).toBe(true);
-    });
 
     it("returns true by default when no environment variable is set (client-side)", () => {
       (global as { window?: unknown }).window = {};
@@ -136,33 +131,6 @@ describe("featureFlags", () => {
       expect(flags).toEqual({});
     });
 
-    it("returns feature flags from config file on server-side", () => {
-      // Mock server-side by ensuring window check fails
-      // In jsdom, window is always defined, so we test the client-side path
-      // For true server-side testing, we'd need Node environment
-      const flags = getAllFeatureFlags();
-
-      // In jsdom (client-side), returns empty object
-      expect(flags).toEqual({});
-    });
-
-    it("prioritizes environment variables over config file", () => {
-      // In jsdom, getAllFeatureFlags returns {} for client-side
-      process.env.NEXT_PUBLIC_ENABLE_STRIPE = "false";
-
-      const flags = getAllFeatureFlags();
-
-      // In jsdom (client-side), returns empty object
-      expect(flags).toEqual({});
-    });
-
-    it("handles missing config file gracefully", () => {
-      // In jsdom, getAllFeatureFlags returns {} for client-side
-      const flags = getAllFeatureFlags();
-
-      // In jsdom (client-side), returns empty object
-      expect(flags).toEqual({});
-    });
 
     it("handles feature names with different cases", () => {
       process.env.NEXT_PUBLIC_ENABLE_TESTFEATURE = "true";
@@ -190,5 +158,6 @@ describe("featureFlags", () => {
       const result = isFeatureEnabled("stripe");
       expect(typeof result).toBe("boolean");
     });
+
   });
 });

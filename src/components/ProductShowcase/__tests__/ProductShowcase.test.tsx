@@ -274,4 +274,171 @@ describe("ProductShowcase", () => {
       expect(preventDefaultSpy).toHaveBeenCalled();
     });
   });
+
+  describe("Section Title Linking", () => {
+    it("extracts section title from longDescription with h3 tag", async () => {
+      const productsWithSectionTitle = [
+        {
+          ...mockProducts[0],
+          longDescription: "<h3>Premium Quality</h3><p>This is a premium product.</p>",
+          subtitle: "Experience Premium Quality",
+        },
+      ];
+
+      (getAllProducts as jest.Mock).mockResolvedValue(productsWithSectionTitle);
+
+      render(<ProductShowcase />);
+
+      await waitFor(() => {
+        // Check that "Premium Quality" is rendered as a link with the correct href
+        const links = screen.getAllByRole("link");
+        const subtitleLink = links.find(
+          (link) => link.getAttribute("href") === "/shop/1#section-title",
+        );
+        expect(subtitleLink).toBeInTheDocument();
+        expect(subtitleLink?.textContent).toBe("Premium Quality");
+      });
+    });
+
+    it("renders subtitle as-is when section title is not found in subtitle", async () => {
+      const productsWithMismatch = [
+        {
+          ...mockProducts[0],
+          longDescription: "<h3>Different Title</h3><p>Content</p>",
+          subtitle: "This subtitle doesn't match",
+        },
+      ];
+
+      (getAllProducts as jest.Mock).mockResolvedValue(productsWithMismatch);
+
+      render(<ProductShowcase />);
+
+      await waitFor(() => {
+        const subtitle = screen.getByText("This subtitle doesn't match");
+        expect(subtitle).toBeInTheDocument();
+      });
+
+      // Should not have a link since the section title doesn't match
+      const links = screen.queryAllByRole("link");
+      const matchingLink = links.find(
+        (link) => link.getAttribute("href") === "/shop/1#section-title",
+      );
+      expect(matchingLink).toBeUndefined();
+    });
+
+    it("handles longDescription without h3 tag", async () => {
+      const productsWithoutH3 = [
+        {
+          ...mockProducts[0],
+          longDescription: "<p>No section title here</p>",
+          subtitle: "Regular Subtitle",
+        },
+      ];
+
+      (getAllProducts as jest.Mock).mockResolvedValue(productsWithoutH3);
+
+      render(<ProductShowcase />);
+
+      await waitFor(() => {
+        const subtitle = screen.getByText("Regular Subtitle");
+        expect(subtitle).toBeInTheDocument();
+      });
+
+      // Should render subtitle as-is without link
+      const links = screen.queryAllByRole("link");
+      const matchingLink = links.find(
+        (link) => link.getAttribute("href") === "/shop/1#section-title",
+      );
+      expect(matchingLink).toBeUndefined();
+    });
+
+    it("handles case-insensitive section title matching", async () => {
+      const productsWithCaseMismatch = [
+        {
+          ...mockProducts[0],
+          longDescription: "<h3>Premium Quality</h3><p>Content</p>",
+          subtitle: "Experience premium quality today",
+        },
+      ];
+
+      (getAllProducts as jest.Mock).mockResolvedValue(productsWithCaseMismatch);
+
+      render(<ProductShowcase />);
+
+      await waitFor(() => {
+        // The link should be created for "premium quality" (lowercase in subtitle)
+        const links = screen.getAllByRole("link");
+        const subtitleLink = links.find(
+          (link) => link.getAttribute("href") === "/shop/1#section-title",
+        );
+        expect(subtitleLink).toBeInTheDocument();
+        expect(subtitleLink?.textContent).toBe("premium quality");
+      });
+    });
+
+    it("handles section title with special regex characters", async () => {
+      const productsWithSpecialChars = [
+        {
+          ...mockProducts[0],
+          longDescription: "<h3>Product (Premium)</h3><p>Content</p>",
+          subtitle: "Try our Product (Premium) today",
+        },
+      ];
+
+      (getAllProducts as jest.Mock).mockResolvedValue(productsWithSpecialChars);
+
+      render(<ProductShowcase />);
+
+      await waitFor(() => {
+        const links = screen.getAllByRole("link");
+        const subtitleLink = links.find(
+          (link) => link.getAttribute("href") === "/shop/1#section-title",
+        );
+        expect(subtitleLink).toBeInTheDocument();
+        expect(subtitleLink?.textContent).toBe("Product (Premium)");
+      });
+    });
+
+    it("handles empty longDescription", async () => {
+      const productsWithEmptyDesc = [
+        {
+          ...mockProducts[0],
+          longDescription: "",
+          subtitle: "Regular Subtitle",
+        },
+      ];
+
+      (getAllProducts as jest.Mock).mockResolvedValue(productsWithEmptyDesc);
+
+      render(<ProductShowcase />);
+
+      await waitFor(() => {
+        const subtitle = screen.getByText("Regular Subtitle");
+        expect(subtitle).toBeInTheDocument();
+      });
+    });
+
+    it("handles longDescription with HTML entities", async () => {
+      const productsWithEntities = [
+        {
+          ...mockProducts[0],
+          longDescription: "<h3>Premium&nbsp;Quality</h3><p>Content</p>",
+          subtitle: "Experience Premium Quality",
+        },
+      ];
+
+      (getAllProducts as jest.Mock).mockResolvedValue(productsWithEntities);
+
+      render(<ProductShowcase />);
+
+      await waitFor(() => {
+        const links = screen.getAllByRole("link");
+        const subtitleLink = links.find(
+          (link) => link.getAttribute("href") === "/shop/1#section-title",
+        );
+        expect(subtitleLink).toBeInTheDocument();
+        expect(subtitleLink?.textContent).toBe("Premium Quality");
+      });
+    });
+  });
 });
