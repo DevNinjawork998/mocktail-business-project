@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import * as S from "./ProductShowcase.styles";
 import { getAllProducts, Product } from "@/data/productService";
@@ -56,34 +55,42 @@ const ProductShowcase = () => {
 
         <S.ProductsGrid>
           {products.map((product) => (
-            <S.ProductCard key={product.id}>
-              <S.ProductImage>
-                {product.imageUrl ? (
-                  <Image
-                    src={product.imageUrl}
-                    alt={product.name}
-                    fill
-                    sizes="(max-width: 768px) 200px, 300px"
-                    style={{ objectFit: "cover", objectPosition: "center" }}
-                  />
-                ) : (
-                  <S.ProductImagePlaceholder $bgColor={product.imageColor}>
+            <S.ProductCardLink key={product.id} href={`/shop/${product.id}`}>
+              <S.ProductCard>
+                <S.ProductImage>
+                  {product.imageUrl ? (
+                    <Image
+                      src={product.imageUrl}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 768px) 200px, 300px"
+                      style={{ objectFit: "cover", objectPosition: "center" }}
+                    />
+                  ) : (
+                    <S.ProductImagePlaceholder $bgColor={product.imageColor}>
+                      {product.name}
+                    </S.ProductImagePlaceholder>
+                  )}
+                </S.ProductImage>
+                <S.ProductContent>
+                  <S.ProductName>
                     {product.name}
-                  </S.ProductImagePlaceholder>
-                )}
-              </S.ProductImage>
-              <S.ProductContent>
-                <S.ProductName>
-                  <Link href={`/shop/${product.id}`}>{product.name}</Link>
-                </S.ProductName>
-                <S.ProductDescription>
-                  {product.description}
-                </S.ProductDescription>
-                <S.AddToCartButton onClick={(e) => e.preventDefault()}>
-                  Add to Cart
-                </S.AddToCartButton>
-              </S.ProductContent>
-            </S.ProductCard>
+                  </S.ProductName>
+                  <S.ProductSubtitle>
+                    {product.subtitle}
+                  </S.ProductSubtitle>
+                  <S.AddToCartButton
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      // Add to cart functionality can be added here
+                    }}
+                  >
+                    Add to Cart
+                  </S.AddToCartButton>
+                </S.ProductContent>
+              </S.ProductCard>
+            </S.ProductCardLink>
           ))}
         </S.ProductsGrid>
       </S.Container>

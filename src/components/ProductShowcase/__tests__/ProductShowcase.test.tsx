@@ -179,7 +179,7 @@ describe("ProductShowcase", () => {
         expect(screen.getAllByText("Test Cocktail 1").length).toBeGreaterThan(
           0,
         );
-        expect(screen.getByText("Test Description 1")).toBeInTheDocument();
+        expect(screen.getByText("Test Subtitle 1")).toBeInTheDocument();
         // Add to Cart buttons appear multiple times (one per product)
         expect(screen.getAllByText("Add to Cart").length).toBeGreaterThan(0);
       });

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Link from "next/link";
 
 export const ShowcaseSection = styled.section`
   padding: ${({ theme }) => theme.spacing["4xl"]}
@@ -91,27 +92,29 @@ export const SectionSubtitle = styled.p`
 `;
 
 export const ProductsGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: ${({ theme }) => theme.spacing.xl};
-  justify-content: center;
+  justify-items: center;
   align-items: stretch;
 
   ${({ theme }) => `
     @media (min-width: ${theme.breakpoints.sm}) {
-      display: grid;
       grid-template-columns: repeat(2, 1fr);
-      justify-items: center;
     }
     
     @media (min-width: ${theme.breakpoints.lg}) {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      grid-template-columns: repeat(3, 1fr);
       max-width: 1000px;
       margin: 0 auto;
     }
   `}
+`;
+
+export const ProductCardLink = styled(Link)`
+  display: contents; /* Make link transparent to grid layout */
+  text-decoration: none;
+  color: inherit;
 `;
 
 export const ProductCard = styled.div`
@@ -130,8 +133,10 @@ export const ProductCard = styled.div`
     0 2px 4px -1px ${({ theme }) => theme.colors.mauvelous.base}08;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 280px;
+  width: 100%; /* Fill grid cell completely */
+  height: 100%; /* Fill grid cell height */
+  min-width: 0; /* Prevent grid overflow */
+  max-width: 100%; /* Don't exceed grid cell */
   position: relative;
 
   &::before {
@@ -150,18 +155,6 @@ export const ProductCard = styled.div`
     opacity: 0;
     transition: opacity 0.3s ease;
   }
-
-  ${({ theme }) => `
-    @media (min-width: ${theme.breakpoints.sm}) {
-      max-width: none;
-      width: 100%;
-    }
-    
-    @media (min-width: ${theme.breakpoints.lg}) {
-      max-width: 280px;
-      width: auto;
-    }
-  `}
 
   &:hover {
     transform: translateY(-8px) scale(1.02);
@@ -230,7 +223,7 @@ export const ProductCard = styled.div`
 
 export const ProductImage = styled.div`
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 3 / 4; /* Fixed aspect ratio for uniform sizing */
   overflow: hidden;
   background: linear-gradient(
     135deg,
@@ -244,6 +237,8 @@ export const ProductImage = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
   position: relative;
   transition: background 0.4s ease;
+  flex-shrink: 0; /* Prevent image container from shrinking */
+  box-sizing: border-box; /* Include padding in width calculation */
 
   &::after {
     content: "";
@@ -313,33 +308,43 @@ export const ProductContent = styled.div`
     transparent 0%,
     ${({ theme }) => theme.colors.caramel.light}05 100%
   );
+  min-height: 0; /* Allow flex item to shrink if needed */
+  justify-content: space-between; /* Distribute content evenly */
 `;
 
 export const ProductName = styled.h3`
   font-size: 1.25rem;
   font-weight: 600;
   color: ${({ theme }) => theme.semantic.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
+  padding: 0;
   text-align: center;
+  flex-shrink: 0; /* Prevent name from shrinking */
+  min-height: 1.5rem; /* Consistent height */
+  transition: color 0.2s ease;
 
-  a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: ${({ theme }) => theme.colors.royalOrange.base};
-    }
-  }
+  /* Card hover effect will handle color change */
 `;
 
 export const ProductDescription = styled.p`
   font-size: 0.875rem;
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
   line-height: 1.6;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin: 0 0 ${({ theme }) => theme.spacing.md} 0;
+  padding: 0;
   flex: 1;
   text-align: center;
+`;
+
+export const ProductSubtitle = styled.p`
+  font-size: 0.875rem;
+  color: ${({ theme }) => theme.colors.chocolateKisses.base};
+  line-height: 1.6;
+  margin: 0 0 ${({ theme }) => theme.spacing.md} 0;
+  padding: 0;
+  flex: 1;
+  text-align: center;
+  min-height: 2rem; /* Consistent minimum height */
 `;
 
 export const ProductTags = styled.div`

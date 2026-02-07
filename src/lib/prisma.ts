@@ -154,8 +154,19 @@ function getPrismaClient(): PrismaClient {
     globalForPrisma.prisma = createPrismaClient();
 
     // Graceful shutdown: disconnect Prisma on process termination
-    if (typeof process !== "undefined") {
-      process.on("beforeExit", async () => {
+    // Only register in Node.js runtime (not Edge Runtime)
+    // Edge Runtime statically analyzes code, so we need to avoid referencing process.on
+    // Check if we're NOT in Edge Runtime before attempting to use process.on
+    if (
+      typeof process !== "undefined" &&
+      process.env.NEXT_RUNTIME !== "edge" &&
+      typeof (process as { on?: unknown }).on === "function"
+    ) {
+      // Use type assertion to avoid static analysis issues
+      const processWithOn = process as {
+        on: (event: string, callback: () => Promise<void>) => void;
+      };
+      processWithOn.on("beforeExit", async () => {
         await globalForPrisma.prisma?.$disconnect();
       });
     }
