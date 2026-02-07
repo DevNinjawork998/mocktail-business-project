@@ -125,11 +125,10 @@ export default function ProductForm({ product }: ProductFormProps) {
     fields: ingredientFields,
     append: appendIngredient,
     remove: removeIngredient,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } = useFieldArray({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    control: control as any,
-    name: "ingredients" as any,
+    control,
+    // @ts-expect-error - ingredients is a valid field in FormData, but TypeScript's inference is too strict
+    name: "ingredients",
   });
 
   const imageUrl = watch("imageUrl");
@@ -424,7 +423,10 @@ export default function ProductForm({ product }: ProductFormProps) {
           ))}
           <S.AddButton
             type="button"
-            onClick={() => appendIngredient("")}
+            onClick={() => {
+              // @ts-expect-error - appendIngredient accepts string for ingredients array, but TypeScript infers wrong type
+              appendIngredient("" as string);
+            }}
           >
             + Add Ingredient
           </S.AddButton>
