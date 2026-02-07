@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   CommunitySection,
   Container,
@@ -9,12 +10,12 @@ import {
   Subtitle,
   PhotoGrid,
   PhotoCard,
-  Photo,
+  PhotoWrapper,
   PhotoOverlay,
-  InstagramIcon,
   CTAButton,
   HashtagText,
   CallToAction,
+  InstagramIcon,
 } from "./Community.styles";
 
 // Instagram Icon Component
@@ -28,47 +29,51 @@ const InstagramIconSVG = () => (
   </InstagramIcon>
 );
 
-// Community photos data (using placeholder images)
-const communityPhotos = [
-  {
-    id: 1,
-    src: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=600&h=600&fit=crop",
-    alt: "Mocktail in a glass with orange garnish",
-  },
-  {
-    id: 2,
-    src: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=600&fit=crop",
-    alt: "Overhead view of mocktails and food",
-  },
-  {
-    id: 3,
-    src: "https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=600&h=600&fit=crop",
-    alt: "Bottles and glasses on a table",
-  },
-  {
-    id: 4,
-    src: "https://images.unsplash.com/photo-1622597467836-f3c7ca9d7b17?w=600&h=600&fit=crop",
-    alt: "Yellow mocktail with bottle",
-  },
-  {
-    id: 5,
-    src: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=600&h=600&fit=crop",
-    alt: "Blueberry mocktail",
-  },
-  {
-    id: 6,
-    src: "https://images.unsplash.com/photo-1563089145-599997674d42?w=600&h=600&fit=crop",
-    alt: "Passion fruit flower",
-  },
-];
+interface InstagramPost {
+  id: string;
+  postUrl: string;
+  imageUrl: string | null;
+}
 
-const Community: React.FC = () => {
+interface CommunityProps {
+  instagramPosts?: InstagramPost[];
+}
+
+const Community: React.FC<CommunityProps> = ({ instagramPosts = [] }) => {
   const handleInstagramClick = () => {
     window.open(
       "https://www.instagram.com/mocktailsonthego_motg?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
       "_blank",
     );
   };
+
+  // If no posts, show empty state or placeholder
+  if (!instagramPosts || instagramPosts.length === 0) {
+    return (
+      <CommunitySection>
+        <Container>
+          <ContentWrapper>
+            <Title>Our Community</Title>
+            <Subtitle>
+              Join our vibrant community of mocktail lovers. Tag us in a picture
+              to be featured!
+            </Subtitle>
+          </ContentWrapper>
+
+          <ContentWrapper>
+            <CTAButton onClick={handleInstagramClick}>
+              <InstagramIconSVG />
+              <HashtagText>@MocktailsOnTheGo</HashtagText>
+            </CTAButton>
+            <CallToAction>
+              Share your mocktail moments with{" "}
+              <HashtagText>#MocktailsOnTheGo</HashtagText>
+            </CallToAction>
+          </ContentWrapper>
+        </Container>
+      </CommunitySection>
+    );
+  }
 
   return (
     <CommunitySection>
@@ -82,12 +87,41 @@ const Community: React.FC = () => {
         </ContentWrapper>
 
         <PhotoGrid>
-          {communityPhotos.map((photo) => (
-            <PhotoCard key={photo.id} onClick={handleInstagramClick}>
-              <Photo src={photo.src} alt={photo.alt} />
-              <PhotoOverlay>
-                <InstagramIconSVG />
-              </PhotoOverlay>
+          {instagramPosts.map((post) => (
+            <PhotoCard
+              key={post.id}
+              onClick={() => window.open(post.postUrl, "_blank")}
+            >
+              {post.imageUrl ? (
+                <>
+                  <PhotoWrapper>
+                    <Image
+                      src={post.imageUrl}
+                      alt="Instagram post"
+                      fill
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </PhotoWrapper>
+                  <PhotoOverlay>
+                    <InstagramIconSVG />
+                  </PhotoOverlay>
+                </>
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "#F4F4F4",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "rgba(69, 21, 21, 0.5)",
+                  }}
+                >
+                  <InstagramIconSVG />
+                </div>
+              )}
             </PhotoCard>
           ))}
         </PhotoGrid>

@@ -134,3 +134,14 @@ model Testimonial {
 
   @@map("testimonials")
 }
+
+model InstagramPost {
+  id              String   @id @default(cuid())
+  postUrl         String   // Full Instagram post URL
+  imageUrl        String?  // UploadThing URL for the post image (nullable for existing posts)
+  order           Int      @default(0) // For display ordering
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("instagram_posts")
+}

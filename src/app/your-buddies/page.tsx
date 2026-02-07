@@ -27,6 +27,21 @@ export default async function YourBuddiesPage() {
     testimonials = [];
   }
 
+  let instagramPosts = [];
+  try {
+    instagramPosts = await prisma.instagramPost.findMany({
+      orderBy: { order: "asc" },
+      select: {
+        id: true,
+        postUrl: true,
+        imageUrl: true,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching Instagram posts:", error);
+    instagramPosts = [];
+  }
+
   return (
     <S.PageContainer>
       <Navigation />
@@ -36,7 +51,7 @@ export default async function YourBuddiesPage() {
       <Testimonials testimonials={testimonials} />
 
       {/* Community Instagram Grid */}
-      <Community />
+      <Community instagramPosts={instagramPosts} />
 
       <Footer />
     </S.PageContainer>
