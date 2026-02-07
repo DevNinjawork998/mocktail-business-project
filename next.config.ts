@@ -48,6 +48,12 @@ const nextConfig: NextConfig = {
       loader: "ignore-loader",
     });
 
+    // Exclude scripts directory from compilation
+    config.module.rules.push({
+      test: /scripts\/.*\.ts$/,
+      loader: "ignore-loader",
+    });
+
     return config;
   },
 };
