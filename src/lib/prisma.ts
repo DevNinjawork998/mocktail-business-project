@@ -137,14 +137,10 @@ function getPrismaClient(): PrismaClient {
       process.env.DIRECT_URL ||
       process.env.PRISMA_DATABASE_URL;
 
-    if (
-      !hasDatabaseUrl &&
-      process.env.NODE_ENV === "production" &&
-      typeof window === "undefined"
-    ) {
-      // During build, if we don't have a database URL, we can't create a real client
-      // But we'll create a dummy one that will fail gracefully when actually used
-      // This prevents the module from throwing during static analysis
+    if (!hasDatabaseUrl) {
+      // During build/static generation, if we don't have a database URL,
+      // throw an error that can be caught by the calling code
+      // This prevents the module from creating an invalid client
       throw new Error(
         "DATABASE_URL, POSTGRES_URL, DIRECT_URL, or PRISMA_DATABASE_URL environment variable is required. " +
           "Please set it to your PostgreSQL connection string (postgres://...), Prisma Accelerate URL (prisma://... or prisma+postgres://...), or SQLite (file:...)",
@@ -154,8 +150,19 @@ function getPrismaClient(): PrismaClient {
     globalForPrisma.prisma = createPrismaClient();
 
     // Graceful shutdown: disconnect Prisma on process termination
-    if (typeof process !== "undefined") {
-      process.on("beforeExit", async () => {
+    // Only register in Node.js runtime (not Edge Runtime)
+    // Edge Runtime statically analyzes code, so we need to avoid referencing process.on
+    // Check if we're NOT in Edge Runtime before attempting to use process.on
+    if (
+      typeof process !== "undefined" &&
+      process.env.NEXT_RUNTIME !== "edge" &&
+      typeof (process as { on?: unknown }).on === "function"
+    ) {
+      // Use type assertion to avoid static analysis issues
+      const processWithOn = process as {
+        on: (event: string, callback: () => Promise<void>) => void;
+      };
+      processWithOn.on("beforeExit", async () => {
         await globalForPrisma.prisma?.$disconnect();
       });
     }

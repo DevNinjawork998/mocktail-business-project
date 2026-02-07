@@ -96,8 +96,6 @@ const products = [
 
 export async function POST() {
   try {
-    console.log("Start seeding production database...");
-
     // Get existing products to preserve UploadThing URLs
     const existingProducts = await prisma.product.findMany({
       where: {
@@ -143,15 +141,7 @@ export async function POST() {
         },
       });
       results.push(result.id);
-      console.log(`Created/Updated product with id: ${result.id}`);
-      if (existingImageUrls.has(product.id)) {
-        console.log(
-          `  Preserved UploadThing URL: ${existingImageUrls.get(product.id)}`,
-        );
-      }
     }
-
-    console.log("Production seeding finished.");
 
     return NextResponse.json({
       success: true,

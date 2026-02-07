@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "npx prisma generate && next build",
+    "dev": "next dev --webpack",
+    "build": "npx prisma generate && next build --webpack",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
@@ -20,7 +20,7 @@
     "db:backup:prod": "tsx scripts/backup-prod-db.ts",
     "db:dev": "cp prisma/schema.dev.prisma prisma/schema.prisma && npx prisma generate && npx prisma db push --schema prisma/schema.prisma --config prisma/prisma.config.ts",
     "db:prod": "cp prisma/schema.prod.prisma prisma/schema.prisma && npx prisma generate --config prisma/prisma.config.ts",
-    "build:prod": "npm run db:prod && npx prisma generate && next build"
+    "build:prod": "npm run db:prod && npx prisma generate && next build --webpack"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

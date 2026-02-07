@@ -11,6 +11,7 @@ interface Product {
   id: string;
   name: string;
   subtitle: string;
+  description: string;
   price: string;
   imageUrl: string | null;
   updatedAt: Date;
@@ -94,6 +95,7 @@ export default function ProductsListClient({
                     <S.ProductDetails>
                       <S.ProductName>{product.name}</S.ProductName>
                       <S.ProductSubtitle>{product.subtitle}</S.ProductSubtitle>
+                      <S.ProductDescription>{product.description}</S.ProductDescription>
                     </S.ProductDetails>
                   </S.ProductInfo>
                 </S.TableCell>

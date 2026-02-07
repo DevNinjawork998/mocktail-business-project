@@ -21,8 +21,6 @@ export const ourFileRouter = {
       return { userId: session.user.id, role: session.user.role };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Upload complete for user:", metadata.userId);
-      console.log("File URL:", file.url);
       return { url: file.url };
     }),
 
@@ -42,8 +40,6 @@ export const ourFileRouter = {
       return { userId: session.user.id, role: session.user.role };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Upload complete for user:", metadata.userId);
-      console.log("File URL:", file.url);
       return { url: file.url };
     }),
 
@@ -63,8 +59,6 @@ export const ourFileRouter = {
       return { userId: session.user.id, role: session.user.role };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log("Upload complete for user:", metadata.userId);
-      console.log("File URL:", file.url);
       return { url: file.url };
     }),
 } satisfies FileRouter;

@@ -30,12 +30,10 @@ export default function ImageUpload({
   // Use UploadThing hook for auto-upload functionality
   const { startUpload, isUploading: utIsUploading } = useUploadThing(endpoint, {
     onClientUploadComplete: (res) => {
-      console.log("Upload complete:", res);
       setIsUploading(false);
       setUploadProgress(0);
       onUploadComplete?.();
       if (res && Array.isArray(res) && res.length > 0 && res[0]?.url) {
-        console.log("Setting image URL:", res[0].url);
         onChange(res[0].url);
       } else {
         console.error("Invalid upload response:", res);
@@ -78,13 +76,11 @@ export default function ImageUpload({
       return;
     }
 
-    console.log("File selected, starting upload:", files[0].name);
     setIsUploading(true);
     onUploadStart?.();
 
     // Start upload immediately
-    const uploadedFiles = await startUpload(Array.from(files));
-    console.log("Upload result:", uploadedFiles);
+    await startUpload(Array.from(files));
   };
 
   const handleDropzoneClick = () => {
@@ -98,7 +94,6 @@ export default function ImageUpload({
       return;
     }
 
-    console.log("File dropped, starting upload:", files[0].name);
     setIsUploading(true);
     onUploadStart?.();
 

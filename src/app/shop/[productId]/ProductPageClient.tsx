@@ -11,6 +11,7 @@ import {
   ProductDetailsSection,
   ProductTitle,
   ProductSubtitle,
+  ProductDescription,
   PriceSection,
   Price,
   PriceSubtext,
@@ -266,6 +267,10 @@ export default function ProductPageClient({
               <ProductTitle>{product.name}</ProductTitle>
               <ProductSubtitle>{product.subtitle}</ProductSubtitle>
             </div>
+
+            {product.description && (
+              <ProductDescription>{product.description}</ProductDescription>
+            )}
 
             <ProductDescriptionParser htmlContent={product.longDescription} />
 

@@ -20,7 +20,6 @@ export async function POST() {
         select: { id: true, name: true, imageUrl: true },
       });
       results.push(product);
-      console.log(`Updated ${product.name} with image: ${imageUrl}`);
     }
 
     return NextResponse.json({

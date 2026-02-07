@@ -10,6 +10,7 @@ import {
   ShopTitle,
   ShopSubtitle,
   ProductsGrid,
+  ProductCardLink,
   ProductCard,
   ProductImageContainer,
   ProductImage,
@@ -44,6 +45,15 @@ const FounderStory = dynamic(
     ssr: false,
   },
 );
+
+// Helper function to extract section title (h3) from longDescription HTML
+function extractSectionTitle(longDescription: string): string {
+  if (!longDescription) return "";
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(longDescription, "text/html");
+  const h3Element = doc.querySelector("h3");
+  return h3Element?.textContent?.trim() || "";
+}
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -143,30 +153,36 @@ export default function ShopPage() {
 
         <ProductsGrid>
           {products.map((product) => (
-            <ProductCard key={product.id} href={`/shop/${product.id}`}>
-              <ProductImageContainer>
-                {product.imageUrl ? (
-                  <div>
-                    <Image
-                      src={product.imageUrl}
-                      alt={product.name}
-                      fill
-                      style={{
-                        objectFit: "cover",
-                        objectPosition: "center",
-                      }}
-                      sizes="(max-width: 768px) 150px, 200px"
-                    />
-                  </div>
-                ) : (
-                  <ProductImage $bgColor={product.imageColor}>
-                    {product.name}
-                  </ProductImage>
-                )}
-              </ProductImageContainer>
-              <ProductName>{product.name}</ProductName>
-              <ProductDescription>{product.description}</ProductDescription>
-            </ProductCard>
+            <ProductCardLink key={product.id} href={`/shop/${product.id}`}>
+              <ProductCard>
+                <ProductImageContainer>
+                  {product.imageUrl ? (
+                    <div>
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.name}
+                        fill
+                        style={{
+                          objectFit: "cover",
+                          objectPosition: "center",
+                        }}
+                        sizes="(max-width: 768px) 150px, 200px"
+                      />
+                    </div>
+                  ) : (
+                    <ProductImage $bgColor={product.imageColor}>
+                      {product.name}
+                    </ProductImage>
+                  )}
+                </ProductImageContainer>
+                <ProductName>
+                  {product.name}
+                </ProductName>
+                <ProductDescription>
+                  {extractSectionTitle(product.longDescription) || product.description}
+                </ProductDescription>
+              </ProductCard>
+            </ProductCardLink>
           ))}
         </ProductsGrid>
       </ShopContainer>

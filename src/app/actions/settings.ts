@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
 import { getEditorRoles } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
 import { UTApi } from "uploadthing/server";
@@ -54,6 +53,7 @@ const SETTINGS_KEY_LANDING_PHOTO = "landingPhotoUrl";
  */
 async function ensureSettingsTableExists(): Promise<boolean> {
   try {
+    const { prisma } = await import("@/lib/prisma");
     await prisma.$executeRawUnsafe(`
       CREATE TABLE IF NOT EXISTS "settings" (
         "id" TEXT NOT NULL,
@@ -81,6 +81,22 @@ export async function getLandingPhotoUrl(): Promise<
   ActionResult<string | null>
 > {
   try {
+    // Check if DATABASE_URL is available before attempting database access
+    // This prevents errors during static generation when DATABASE_URL is not set
+    const hasDatabaseUrl =
+      process.env.DATABASE_URL ||
+      process.env.POSTGRES_URL ||
+      process.env.DIRECT_URL ||
+      process.env.PRISMA_DATABASE_URL;
+
+    if (!hasDatabaseUrl) {
+      // During build/static generation, return null to use fallback
+      return { success: true, data: null };
+    }
+
+    // Dynamically import prisma only when DATABASE_URL is available
+    const { prisma } = await import("@/lib/prisma");
+
     // Check if settings table exists by trying to access it
     // If the table doesn't exist yet, return null (fallback to env/default)
     const setting = await prisma.settings
@@ -102,8 +118,8 @@ export async function getLandingPhotoUrl(): Promise<
       data: setting?.value || null,
     };
   } catch (error) {
-    console.error("Error getting landing photo URL:", error);
-    // Return null on error to allow fallback to environment variable/default
+    // Silently return null on error to allow fallback to environment variable/default
+    // Don't log errors during build when DATABASE_URL is not available
     return { success: true, data: null };
   }
 }
@@ -122,6 +138,9 @@ export async function updateLandingPhotoUrl(
   try {
     // Ensure the settings table exists
     await ensureSettingsTableExists();
+
+    // Dynamically import prisma
+    const { prisma } = await import("@/lib/prisma");
 
     // Get the current landing photo URL to delete the old file
     const currentSetting = await prisma.settings
@@ -172,6 +191,9 @@ export async function removeLandingPhoto(): Promise<ActionResult> {
   }
 
   try {
+    // Dynamically import prisma
+    const { prisma } = await import("@/lib/prisma");
+
     const currentSetting = await prisma.settings
       .findUnique({
         where: { key: SETTINGS_KEY_LANDING_PHOTO },
