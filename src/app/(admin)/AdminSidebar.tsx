@@ -18,6 +18,7 @@ const baseNavItems = [
   { href: "/dashboard", label: "Dashboard", icon: "📊" },
   { href: "/dashboard/products", label: "Products", icon: "🍹" },
   { href: "/dashboard/ingredients", label: "Ingredients", icon: "🌿" },
+  { href: "/dashboard/community", label: "Community", icon: "👥" },
   { href: "/dashboard/settings", label: "Settings", icon: "⚙️" },
 ];
 
@@ -44,20 +45,27 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
       </S.LogoSection>
 
       <S.Nav>
-        {navItems.map((item) => (
-          <S.NavItem
-            key={item.href}
-            $isActive={
-              pathname === item.href ||
-              (item.href !== "/dashboard" && pathname.startsWith(item.href))
-            }
-          >
-            <Link href={item.href}>
-              <S.NavIcon>{item.icon}</S.NavIcon>
-              <span>{item.label}</span>
-            </Link>
-          </S.NavItem>
-        ))}
+        {navItems.map((item) => {
+          const isActive =
+            pathname === item.href ||
+            (item.href === "/dashboard/community" &&
+              (pathname.startsWith("/dashboard/testimonials") ||
+                pathname.startsWith("/dashboard/instagram-posts"))) ||
+            (item.href !== "/dashboard" &&
+              item.href !== "/dashboard/community" &&
+              pathname.startsWith(item.href));
+
+          return (
+            <S.NavItem key={item.href} $isActive={isActive}>
+              <Link href={item.href}>
+                <S.NavIcon>
+                  {typeof item.icon === "string" ? item.icon : item.icon}
+                </S.NavIcon>
+                <span>{item.label}</span>
+              </Link>
+            </S.NavItem>
+          );
+        })}
       </S.Nav>
 
       <S.UserSection>

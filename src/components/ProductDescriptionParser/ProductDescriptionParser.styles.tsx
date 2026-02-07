@@ -6,6 +6,8 @@ export const DescriptionContainer = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xl};
   margin-bottom: ${({ theme }) => theme.spacing.xl};
+  width: 100%;
+  text-align: left;
 `;
 
 export const Section = styled.div`

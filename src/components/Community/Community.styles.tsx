@@ -89,10 +89,10 @@ export const PhotoCard = styled.div`
   }
 `;
 
-export const Photo = styled.img`
+export const PhotoWrapper = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
-  object-fit: cover;
 `;
 
 export const PhotoOverlay = styled.div`
@@ -105,6 +105,7 @@ export const PhotoOverlay = styled.div`
   opacity: 0;
   transition: opacity 0.3s ease;
 `;
+
 
 export const InstagramIcon = styled.svg`
   width: 3rem;

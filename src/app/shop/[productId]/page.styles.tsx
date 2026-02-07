@@ -87,13 +87,19 @@ export const ProductDetailsSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.lg};
+  text-align: left;
+
+  & > * {
+    width: 100%;
+  }
 `;
 
 export const ProductTitle = styled.h1`
   font-size: 2.5rem;
   font-weight: bold;
   color: ${({ theme }) => theme.currentSemantic.text};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
+  line-height: 1.2;
 
   ${media.md} {
     font-size: 3rem;
@@ -101,9 +107,16 @@ export const ProductTitle = styled.h1`
 `;
 
 export const ProductSubtitle = styled.p`
-  font-size: 1.125rem;
-  color: ${({ theme }) => theme.currentSemantic.textSecondary};
+  font-size: 1.35rem;
+  font-weight: 600;
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.royalOrange.base};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+  line-height: 1.4;
+
+  ${media.md} {
+    font-size: 1.5rem;
+  }
 `;
 
 export const ProductDescription = styled.div`

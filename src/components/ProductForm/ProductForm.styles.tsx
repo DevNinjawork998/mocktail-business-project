@@ -69,6 +69,20 @@ export const Input = styled.input<{ $hasError?: boolean }>`
   }
 `;
 
+export const NameInput = styled(Input)`
+  font-size: 1.75rem;
+  font-weight: 700;
+  padding: ${({ theme }) => theme.spacing.lg};
+  color: ${({ theme }) => theme.semantic.primary};
+`;
+
+export const SubtitleInput = styled(Input)`
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
+  color: ${({ theme }) => theme.colors.royalOrange.base};
+`;
+
 export const TextArea = styled.textarea<{ $hasError?: boolean }>`
   padding: ${({ theme }) => theme.spacing.md};
   border: 2px solid

@@ -1,8 +1,13 @@
 import styled from "styled-components";
+import { semanticColors } from "@/theme/colors";
 
 export const PageContainer = styled.div`
   min-height: 100vh;
-  background-color: ${({ theme }) => theme.currentSemantic.background};
+  background-color: ${({ theme }) =>
+    theme?.currentSemantic?.background ||
+    theme?.semantic?.background ||
+    semanticColors.background ||
+    "#edcfb9"};
 `;
 
 export const HeroSection = styled.section`
@@ -68,8 +73,12 @@ export const SectionTitle = styled.h2`
 export const IntroText = styled.p`
   font-size: 1.125rem;
   line-height: 1.8;
-  color: ${({ theme }) => theme.currentSemantic.foregroundMuted};
+  color: ${({ theme }) =>
+    theme?.currentSemantic?.foregroundMuted ||
+    theme?.semantic?.foregroundMuted ||
+    semanticColors.foregroundMuted ||
+    "rgba(69, 21, 21, 0.7)"};
   text-align: center;
   max-width: 800px;
-  margin: 0 auto ${({ theme }) => theme.spacing["3xl"]};
+  margin: 0 auto ${({ theme }) => theme?.spacing?.["3xl"] || "4rem"};
 `;

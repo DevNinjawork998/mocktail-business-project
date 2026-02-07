@@ -53,6 +53,14 @@ export const NavItem = styled.div<{ $isActive?: boolean }>`
 
 export const NavIcon = styled.span`
   font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
 `;
 
 export const UserSection = styled.div`

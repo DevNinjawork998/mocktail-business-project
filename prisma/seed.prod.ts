@@ -2,9 +2,26 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
+/**
+ * Ensures sslmode=verify-full to suppress the pg-connection-string security warning.
+ */
+function ensureVerifyFullSsl(connectionString: string): string {
+  try {
+    const url = new URL(connectionString);
+    const sslmode = url.searchParams.get("sslmode");
+    if (sslmode && sslmode !== "verify-full" && sslmode !== "disable") {
+      url.searchParams.set("sslmode", "verify-full");
+      return url.toString();
+    }
+    return connectionString;
+  } catch {
+    return connectionString;
+  }
+}
+
 // Use PostgreSQL adapter for production seeding
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: ensureVerifyFullSsl(process.env.DATABASE_URL || ""),
 });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
@@ -14,42 +31,47 @@ const products = [
     id: "tequila-sundown",
     name: "Tequila Sundown",
     subtitle: "Refreshing, tart and citrusy",
-    description: "Very refreshing, tart and citrusy. Perfect for a hot weather",
-    longDescription: `
-      <h3>Gut health & Immunity support</h3>
-      <ul>
-        <li>Fresh orange and cranberry are high in oxidants which protects cell damages from free radical linking to heart diseases, cancer and diabetes.</li>
-        <li>Baobab is high in iron and vitamin C which is good for immunity and gut support.</li>
-        <li>Pairing iron rich food with vitamin C rich fruits enhances iron uptake and aiding in iron deficiency anaemia.</li>
-      </ul>
-    `,
-    price: "$35.99",
-    priceSubtext: "12 cans delivered one time",
+    description:
+      "Whether you're the life of the party, the quiet observer, or somewhere in between, this drink has your back (and your cells). Fresh orange and cranberry bring the immunity boost and antioxidant armor, while mighty Baobab swoops in with fiber and a vitamin lineup worthy of a standing ovation. It's basically your glow-up in a glass. Proof that looking radiant starts from the inside out.",
+    longDescription:
+      "<h3>Gut health & Immunity support</h3>\n  <p>Fresh orange and cranberry are high in oxidants which protects cell damages from free radical linking to heart diseases, cancer and diabetes. Baobab is high in iron and vitamin C which is good for immunity and gut support. Pairing iron rich food with vitamin C rich fruits enhances iron absorption in the body</p>",
+    price: "RM11.50",
+    priceSubtext: "Min total order 3 bottles. Can mix with other flavours.",
     imageColor: "#FF6347",
-    imageUrl: "/images/products/tequila-sundown.jpg",
+    imageUrl:
+      "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLO6VqBvKnPKYEgeG0tm78wrchLAJHQUl5RDZB",
     features: [
-      { text: "Good Vit C", color: "#FF6B6B" },
+      { text: "Good Vitamin C", color: "#FF6B6B" },
       { text: "Good Iron", color: "#DC143C" },
     ],
     ingredients: ["Orange juice", "cranberry", "peach", "carbonated water"],
     productBrief:
       "A refreshing, tart and citrusy mocktail with orange and cranberry. High in antioxidants and vitamin C for gut health and immunity support.",
+    nutritionFacts: [
+      { label: "Calories", value: "50" },
+      { label: "Total Fat", value: "0g" },
+      { label: "Sodium", value: "30mg" },
+      { label: "Total Carbohydrate", value: "17g" },
+      { label: "Dietary Fiber", value: "5g" },
+      { label: "Total Sugars", value: "5g" },
+      { label: "Includes Added Sugars", value: "0g" },
+      { label: "Protein", value: "0g" },
+      { label: "Vitamin C", value: "20%" },
+    ],
   },
   {
     id: "dark-stormy",
     name: "Dark & Stormy",
-    subtitle: "Smooth & complex",
+    subtitle: "Aged old acquired taste",
     description:
-      "Acquired and aged taste from the perfect blend of ginger & our homemade non-alcoholic rum",
-    longDescription: `
-      <h3>Digestion & Stress Relief</h3>
-      <p>The perfect blend of ashwagandha, tea, cinnamon and ginger supports digestion & relieves stress. This sophisticated mocktail offers an acquired and aged taste from our carefully crafted combination of warming spices.</p>
-      <p>Our homemade non-alcoholic rum base is enhanced with adaptogenic ashwagandha to help manage stress, while ginger and cinnamon work together to soothe your digestive system and provide anti-inflammatory benefits.</p>
-    `,
-    price: "$35.99",
-    priceSubtext: "12 cans delivered one time",
+      "The classic rum rebel, now with extra bite. We've spiced things up with fiery ginger, bold cinnamon, and a lime twist sharp enough to cut through the chaos. Then we slipped in ashwagandha because even rebels deserve stress relief and a clear head. It's a storm in a glass, balanced yet untamed, paying cheeky homage to the Cuban original.",
+    longDescription:
+      "<h3>Digestion & Stress Relief</h3>\n  <p>Our homemade non-alcoholic rum base is enhanced with adaptogen, ashwagandha to help manage stress, while ginger and cinnamon work together to soothe your digestive system and provide anti-inflammatory benefits.</p>",
+    price: "RM10.50",
+    priceSubtext: "Min total order 3 bottles. Can mix with other flavours.",
     imageColor: "#8B4513",
-    imageUrl: "/images/products/dark-stormy.jpg",
+    imageUrl:
+      "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGL9LVbzkKUo2NbcLsEyGnV6TeMA1KkvQU5hzmg",
     features: [
       { text: "Less sugar", color: "#9B7653" },
       { text: "Antioxidant", color: "#CD853F" },
@@ -70,21 +92,31 @@ const products = [
     ],
     productBrief:
       "Acquired and aged taste from the perfect blend of ginger & our homemade non-alcoholic rum. The perfect blend of ashwagandha, tea, cinnamon and ginger supports digestion & relieves stress.",
+    nutritionFacts: [
+      { label: "Calories", value: "45" },
+      { label: "Total Fat", value: "0g" },
+      { label: "Sodium", value: "25mg" },
+      { label: "Total Carbohydrate", value: "15g" },
+      { label: "Dietary Fiber", value: "4g" },
+      { label: "Total Sugars", value: "4g" },
+      { label: "Includes Added Sugars", value: "0g" },
+      { label: "Protein", value: "0g" },
+      { label: "Vitamin C", value: "15%" },
+    ],
   },
   {
     id: "maca-martini",
     name: "Maca Martini",
-    subtitle: "Creamy & chocolaty",
-    description: "Creamy & Chocolaty to keep your spirits & mood up",
-    longDescription: `
-      <h3>Stamina & Libido Boost</h3>
-      <p>Maca root, cocoa & coffee increases stamina & libido. This indulgent mocktail combines the rich, earthy flavors of maca root with decadent dark chocolate and aromatic coffee for a truly sophisticated experience.</p>
-      <p>Maca root is an ancient Peruvian superfood known for its energy-boosting properties and natural support for hormonal balance and vitality. Combined with mood-enhancing cocoa and energizing coffee, this creamy blend keeps your spirits high and your energy sustained.</p>
-    `,
-    price: "$37.99",
-    priceSubtext: "12 cans delivered one time",
+    subtitle: "Creamy & Chocolaty",
+    description:
+      "Where earthy maca meets a cheeky trio of coffee and chocolate. It's bold, it's smooth, and it's basically liquid charisma. Sip it when you want to feel like James Bond with a gym membership, libido up, stamina strong, and ready to conquer both boardrooms and ball games. Your ultimate wingman for work and play.",
+    longDescription:
+      "<h3>Stamina & Libido Boost</h3>\n  <p>Maca root is an ancient Peruvian superfood known for its energy-boosting properties and natural support for hormonal balance and vitality. Combined with mood-enhancing cocoa and energizing coffee, this creamy blend keeps your spirits high and your energy sustained.</p>",
+    price: "RM11.50",
+    priceSubtext: "Min total order 3 bottles. Can mix with other flavours.",
     imageColor: "#654321",
-    imageUrl: "/images/products/maca-martini.jpg",
+    imageUrl:
+      "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGL3uSvvjZSIC7hAszGimOtgLuxFbKZRQVjwy2N",
     features: [
       { text: "Antioxidant", color: "#DEB887" },
       { text: "Calcium", color: "#6F4E37" },
@@ -93,6 +125,17 @@ const products = [
     ingredients: ["tea", "apple juice", "cinnamon", "star anise"],
     productBrief:
       "Creamy & Chocolaty to keep your spirits & mood up. Maca root, cocoa & coffee increases stamina & libido.",
+    nutritionFacts: [
+      { label: "Calories", value: "55" },
+      { label: "Total Fat", value: "0.5g" },
+      { label: "Sodium", value: "35mg" },
+      { label: "Total Carbohydrate", value: "18g" },
+      { label: "Dietary Fiber", value: "6g" },
+      { label: "Total Sugars", value: "6g" },
+      { label: "Includes Added Sugars", value: "0g" },
+      { label: "Protein", value: "1g" },
+      { label: "Vitamin C", value: "10%" },
+    ],
   },
 ];
 
@@ -209,6 +252,37 @@ const ingredients = [
   },
 ];
 
+const testimonials = [
+  {
+    text: "Halal mocktails & so healthy. Tried Tequila Sundown & Maca Martini sedap sangat!! 😍",
+    customerName: "yasmeenn",
+    avatarColor: "#FF6B6B",
+    rating: 5,
+    order: 0,
+  },
+  {
+    text: "My favourite flavour of the 3 is Tequila Sundown 😊. As for Dark & Stormy, I like how it gives my throat a nice warm hug with the ginger kick",
+    customerName: "KM",
+    avatarColor: "#4ECDC4",
+    rating: 5,
+    order: 1,
+  },
+  {
+    text: "We finished the Tequila Sundown and it was still f** madddd as the first day we drank it. We both really fell in love with it",
+    customerName: "Avi",
+    avatarColor: "#9B59B6",
+    rating: 5,
+    order: 2,
+  },
+  {
+    text: "Anna the drinks are top notch. My girlfriend finished the Tequila Sundown and my favourite is the Martini",
+    customerName: "Yudesh",
+    avatarColor: "#E67E22",
+    rating: 5,
+    order: 3,
+  },
+];
+
 async function main() {
   console.log("Start seeding production database...");
 
@@ -241,6 +315,7 @@ async function main() {
         features: product.features,
         ingredients: product.ingredients,
         productBrief: product.productBrief,
+        nutritionFacts: product.nutritionFacts || null,
       },
       create: product,
     });
@@ -261,6 +336,54 @@ async function main() {
       create: ingredient,
     });
     console.log(`Created/Updated ingredient: ${result.name}`);
+  }
+
+  // Seed testimonials (only create if they don't exist to avoid duplicates)
+  for (const testimonial of testimonials) {
+    try {
+      const existing = await prisma.testimonial.findFirst({
+        where: {
+          customerName: testimonial.customerName,
+          text: testimonial.text,
+        },
+      });
+
+      if (!existing) {
+        const result = await prisma.testimonial.create({
+          data: testimonial,
+        });
+        console.log(`Created testimonial from: ${result.customerName}`);
+      } else {
+        console.log(
+          `Testimonial from ${testimonial.customerName} already exists, skipping`,
+        );
+      }
+    } catch (error) {
+      console.error(
+        `Error seeding testimonial from ${testimonial.customerName}:`,
+        error,
+      );
+    }
+  }
+
+  // Seed settings
+  const settings = [
+    {
+      key: "landingPhotoUrl",
+      value:
+        "https://utfs.io/f/2frRLzpx3hGLjWVpCCfZQIXdpLxkgCvfS124tNw9z7cD6rOF",
+    },
+  ];
+
+  for (const setting of settings) {
+    const result = await prisma.settings.upsert({
+      where: { key: setting.key },
+      update: {
+        value: setting.value,
+      },
+      create: setting,
+    });
+    console.log(`Created/Updated setting: ${result.key}`);
   }
 
   console.log("Production seeding finished.");

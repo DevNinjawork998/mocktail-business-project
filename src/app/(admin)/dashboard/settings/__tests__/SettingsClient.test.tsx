@@ -25,7 +25,7 @@ jest.mock("@/components/ImageUpload", () => {
     onChange,
     onUploadStart,
     onUploadComplete,
-    endpoint,
+    endpoint: _endpoint,
     label,
   }: {
     value?: string;
