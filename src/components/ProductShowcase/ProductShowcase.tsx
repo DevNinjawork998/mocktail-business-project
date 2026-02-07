@@ -56,11 +56,7 @@ const ProductShowcase = () => {
 
         <S.ProductsGrid>
           {products.map((product) => (
-            <S.ProductCard
-              key={product.id}
-              href={`/shop/${product.id}`}
-              as={Link}
-            >
+            <S.ProductCard key={product.id}>
               <S.ProductImage>
                 {product.imageUrl ? (
                   <Image
@@ -77,7 +73,9 @@ const ProductShowcase = () => {
                 )}
               </S.ProductImage>
               <S.ProductContent>
-                <S.ProductName>{product.name}</S.ProductName>
+                <S.ProductName>
+                  <Link href={`/shop/${product.id}`}>{product.name}</Link>
+                </S.ProductName>
                 <S.ProductDescription>
                   {product.description}
                 </S.ProductDescription>

@@ -114,7 +114,7 @@ export const ProductsGrid = styled.div`
   `}
 `;
 
-export const ProductCard = styled.a`
+export const ProductCard = styled.div`
   background: linear-gradient(
     180deg,
     ${({ theme }) => theme.currentSemantic.surface} 0%,
@@ -128,7 +128,6 @@ export const ProductCard = styled.a`
   box-shadow:
     0 4px 6px -1px ${({ theme }) => theme.colors.mauvelous.base}15,
     0 2px 4px -1px ${({ theme }) => theme.colors.mauvelous.base}08;
-  text-decoration: none;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -322,6 +321,16 @@ export const ProductName = styled.h3`
   color: ${({ theme }) => theme.semantic.primary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   text-align: center;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: ${({ theme }) => theme.colors.royalOrange.base};
+    }
+  }
 `;
 
 export const ProductDescription = styled.p`

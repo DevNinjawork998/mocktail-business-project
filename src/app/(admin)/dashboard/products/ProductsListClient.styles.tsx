@@ -141,6 +141,18 @@ export const ProductSubtitle = styled.div`
   color: ${({ theme }) => theme.currentSemantic.foregroundMuted};
 `;
 
+export const ProductDescription = styled.div`
+  font-size: 0.875rem;
+  color: ${({ theme }) => theme.currentSemantic.foregroundMuted};
+  margin-top: ${({ theme }) => theme.spacing.xs};
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
 export const Actions = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.sm};

@@ -16,6 +16,7 @@ import {
   ProductName,
   ProductDescription,
 } from "./page.styles";
+import Link from "next/link";
 import Footer from "@/components/Footer/Footer";
 import dynamic from "next/dynamic";
 import { getAllProducts, Product } from "@/data/productService";
@@ -143,7 +144,7 @@ export default function ShopPage() {
 
         <ProductsGrid>
           {products.map((product) => (
-            <ProductCard key={product.id} href={`/shop/${product.id}`}>
+            <ProductCard key={product.id}>
               <ProductImageContainer>
                 {product.imageUrl ? (
                   <div>
@@ -164,7 +165,9 @@ export default function ShopPage() {
                   </ProductImage>
                 )}
               </ProductImageContainer>
-              <ProductName>{product.name}</ProductName>
+              <ProductName>
+                <Link href={`/shop/${product.id}`}>{product.name}</Link>
+              </ProductName>
               <ProductDescription>{product.description}</ProductDescription>
             </ProductCard>
           ))}

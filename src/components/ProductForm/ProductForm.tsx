@@ -31,7 +31,7 @@ const productSchema = z.object({
   imageColor: z.string().min(1, "Image color is required"),
   imageUrl: z.string().optional().nullable(),
   features: z.array(z.object({ text: z.string(), color: z.string() })),
-  ingredients: z.array(z.string()).optional().nullable(),
+  ingredients: z.array(z.string()),
   productBrief: z.string().optional().nullable(),
 });
 
@@ -98,7 +98,7 @@ export default function ProductForm({ product }: ProductFormProps) {
       imageColor: product?.imageColor || "#451515",
       imageUrl: product?.imageUrl || null,
       features: product?.features || [{ text: "", color: "#451515" }],
-      ingredients: product?.ingredients || [],
+      ingredients: (product?.ingredients ?? []) as string[],
       productBrief: product?.productBrief || "",
     },
   });
@@ -116,6 +116,20 @@ export default function ProductForm({ product }: ProductFormProps) {
   } = useFieldArray({
     control,
     name: "longDescriptionParagraphs",
+  });
+
+  // TypeScript incorrectly infers that only "longDescriptionParagraphs" | "features" are valid
+  // field array names, but "ingredients" is a valid string[] field in FormData.
+  // This is a known limitation with react-hook-form's type inference for optional array fields.
+  const {
+    fields: ingredientFields,
+    append: appendIngredient,
+    remove: removeIngredient,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } = useFieldArray({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    control: control as any,
+    name: "ingredients" as any,
   });
 
   const imageUrl = watch("imageUrl");
@@ -183,7 +197,9 @@ export default function ProductForm({ product }: ProductFormProps) {
       imageColor: data.imageColor,
       imageUrl: currentImageUrl || null,
       features: data.features,
-      ingredients: data.ingredients?.filter((i) => i.trim()) || null,
+      ingredients: data.ingredients.filter((i) => i.trim()).length > 0
+        ? data.ingredients.filter((i) => i.trim())
+        : null,
       productBrief: data.productBrief || null,
     };
 
@@ -388,7 +404,33 @@ export default function ProductForm({ product }: ProductFormProps) {
       <S.Section>
         <S.SectionTitle>Additional Information</S.SectionTitle>
 
-        <S.FormGroup>
+        <S.FormGroup $fullWidth>
+          <S.Label>Ingredients</S.Label>
+          {ingredientFields.map((field, index) => (
+            <S.DynamicRow key={field.id}>
+              <S.Input
+                {...register(`ingredients.${index}`)}
+                placeholder="Ingredient name"
+              />
+              {ingredientFields.length > 1 && (
+                <S.RemoveButton
+                  type="button"
+                  onClick={() => removeIngredient(index)}
+                >
+                  ×
+                </S.RemoveButton>
+              )}
+            </S.DynamicRow>
+          ))}
+          <S.AddButton
+            type="button"
+            onClick={() => appendIngredient("")}
+          >
+            + Add Ingredient
+          </S.AddButton>
+        </S.FormGroup>
+
+        <S.FormGroup $fullWidth>
           <S.Label>Product Brief</S.Label>
           <S.TextArea {...register("productBrief")} rows={3} />
         </S.FormGroup>

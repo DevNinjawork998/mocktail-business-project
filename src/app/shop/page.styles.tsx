@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { media } from "@/theme/styled-theme";
-import Link from "next/link";
 
 export const ShopContainer = styled.div`
   min-height: 100vh;
@@ -93,9 +92,8 @@ export const ProductsGrid = styled.div`
   }
 `;
 
-// ProductCard can be rendered as a link (default) or as a div/button using the 'as' prop.
-// Example: <ProductCard as="div">...</ProductCard> or <ProductCard href="...">...</ProductCard>
-export const ProductCard = styled(Link)`
+// ProductCard is now a div container, not a link
+export const ProductCard = styled.div`
   background: linear-gradient(
     180deg,
     ${({ theme }) => theme.currentSemantic.surface} 0%,
@@ -243,19 +241,17 @@ export const ProductName = styled.h3`
   font-weight: 600;
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.chocolateKisses.base};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
   text-align: center;
   transition: color 0.3s ease;
 
-  ${ProductCard}:hover & {
-    color: ${({ theme }) => theme.colors.bittersweetShimmer.base};
-  }
-  transition: color 0.3s ease;
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
 
-  ${ProductCard}:hover & {
-    color: ${({ theme }) => theme.colors.bittersweetShimmer.base};
+    &:hover {
+      color: ${({ theme }) => theme.colors.bittersweetShimmer.base};
+    }
   }
 `;
 
