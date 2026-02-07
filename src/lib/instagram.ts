@@ -57,7 +57,7 @@ export function isValidInstagramPostUrl(url: string): boolean {
     ];
 
     return instagramPatterns.some((pattern) => pattern.test(url));
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 }

@@ -13,7 +13,7 @@ jest.mock("next/image", () => ({
     alt,
     width,
     height,
-    priority,
+    priority: _priority,
     style,
   }: {
     src: string;

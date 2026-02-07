@@ -11,15 +11,9 @@ interface StyledThemeWrapperProps {
 }
 
 export function StyledThemeWrapper({ children }: StyledThemeWrapperProps) {
-  let themeMode: "light" | "dark" = "light";
-  
-  try {
-    const { theme } = useTheme();
-    themeMode = theme || "light";
-  } catch (error) {
-    // Fallback for SSR or when theme context is not available
-    themeMode = "light";
-  }
+  // Always call useTheme hook unconditionally (React Hooks rule)
+  const { theme } = useTheme();
+  const themeMode: "light" | "dark" = theme || "light";
 
   // Ensure semantic colors are always available, with fallback
   const semantic = styledTheme.semantic || semanticColors;

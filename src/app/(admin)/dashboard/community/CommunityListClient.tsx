@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { deleteTestimonial } from "@/app/actions/testimonials";
 import { deleteInstagramPost } from "@/app/actions/instagramPosts";
@@ -252,14 +253,15 @@ export default function CommunityListClient({
                             borderRadius: "8px",
                             overflow: "hidden",
                             padding: 0,
+                            position: "relative",
                           }}
                         >
-                          <img
+                          <Image
                             src={post.imageUrl}
                             alt="Instagram post"
+                            fill
+                            sizes="60px"
                             style={{
-                              width: "100%",
-                              height: "100%",
                               objectFit: "cover",
                             }}
                           />
