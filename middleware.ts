@@ -8,6 +8,13 @@ import type { NextRequest } from "next/server";
  * Note: Authentication is handled separately by src/proxy.ts (Next.js 16 Proxy).
  * This middleware only adds security headers.
  *
+ * Required Security Headers (all implemented):
+ * ✅ Content-Security-Policy - Prevents XSS attacks by controlling resource loading
+ * ✅ X-Frame-Options: SAMEORIGIN - Prevents clickjacking (allows same-origin framing)
+ * ✅ X-Content-Type-Options: nosniff - Prevents MIME sniffing attacks
+ * ✅ Referrer-Policy - Controls referrer information sent with requests
+ * ✅ Permissions-Policy - Restricts access to browser features and APIs
+ *
  * Why security headers matter:
  * - Security scanners (like McAfee WebAdvisor) flag sites without proper headers as "unknown"
  * - Headers protect against XSS, clickjacking, MIME sniffing, and other attacks
@@ -16,8 +23,9 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest): NextResponse {
   const response = NextResponse.next();
 
-  // Prevent clickjacking attacks - don't allow site to be embedded in frames
-  response.headers.set("X-Frame-Options", "DENY");
+  // Prevent clickjacking attacks - allow framing only from same origin
+  // Recommended value: SAMEORIGIN (allows same-origin framing, blocks cross-origin)
+  response.headers.set("X-Frame-Options", "SAMEORIGIN");
 
   // Prevent MIME type sniffing - browser must respect Content-Type header
   response.headers.set("X-Content-Type-Options", "nosniff");
@@ -51,7 +59,7 @@ export function middleware(request: NextRequest): NextResponse {
     "font-src 'self' data: https://fonts.gstatic.com",
     "connect-src 'self' https://*.stripe.com https://api.stripe.com https://*.utfs.io https://*.ufs.sh https://*.vercel-insights.com https://*.vercel.com",
     "frame-src https://js.stripe.com https://checkout.stripe.com https://hooks.stripe.com",
-    "frame-ancestors 'none'",
+    "frame-ancestors 'self'",
     "base-uri 'self'",
     "form-action 'self' https://checkout.stripe.com",
   ].join("; ");

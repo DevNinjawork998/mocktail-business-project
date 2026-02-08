@@ -6,14 +6,20 @@ import StyledComponentsRegistry from "./lib/registry";
 import { Analytics } from "@vercel/analytics/next";
 import { CartProvider } from "@/contexts/CartContext";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import StructuredData from "@/components/StructuredData/StructuredData";
 
 export const metadata: Metadata = {
   title: "Mocktails On The Go - Malaysia's 1st Ever Adaptogenic Mocktails",
   description:
     "Mocktails On The Go - Malaysia's 1st ever adaptogenic mocktails. 100% Halal Ingredients 0% Alcohol",
   icons: {
-    icon: "/images/motg-logo.png",
-    apple: "/images/motg-logo.png",
+    icon: [
+      { url: "/images/motg-logo.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/images/motg-logo.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/images/motg-logo.png",
   },
   openGraph: {
     title: "Mocktails On The Go - Malaysia's 1st Ever Adaptogenic Mocktails",
@@ -23,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "Mocktails On The Go",
     images: [
       {
-        url: "/images/motg-logo.png",
+        url: "https://mocktailsonthego.com/images/motg-logo.png",
         width: 512,
         height: 512,
         alt: "Mocktails On The Go Logo",
@@ -37,7 +43,10 @@ export const metadata: Metadata = {
     title: "Mocktails On The Go - Malaysia's 1st Ever Adaptogenic Mocktails",
     description:
       "Malaysia's 1st ever adaptogenic mocktails. 100% Halal Ingredients 0% Alcohol",
-    images: ["/images/motg-logo.png"],
+    images: ["https://mocktailsonthego.com/images/motg-logo.png"],
+  },
+  verification: {
+    google: "NCiw_EkhS8vfwJG6nu_cuQo-s1ROyOicPo5w-pKPpBM",
   },
   metadataBase: new URL("https://mocktailsonthego.com"),
 };
@@ -49,7 +58,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+
       <body>
+        {/* Structured Data for Organization Logo - Google uses this for site logo in search results */}
+        <StructuredData />
         <StyledComponentsRegistry>
           <ThemeProvider>
             <StyledThemeWrapper>
