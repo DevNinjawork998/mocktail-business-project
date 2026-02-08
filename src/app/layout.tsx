@@ -45,6 +45,9 @@ export const metadata: Metadata = {
       "Malaysia's 1st ever adaptogenic mocktails. 100% Halal Ingredients 0% Alcohol",
     images: ["https://mocktailsonthego.com/images/motg-logo.png"],
   },
+  verification: {
+    google: "NCiw_EkhS8vfwJG6nu_cuQo-s1ROyOicPo5w-pKPpBM",
+  },
   metadataBase: new URL("https://mocktailsonthego.com"),
 };
 
@@ -55,6 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+
       <body>
         {/* Structured Data for Organization Logo - Google uses this for site logo in search results */}
         <StructuredData />
