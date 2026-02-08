@@ -21,6 +21,20 @@ import type { NextRequest } from "next/server";
  * - They establish trust and improve your site's security reputation
  */
 export function middleware(request: NextRequest): NextResponse {
+  // Force HTTPS redirect in production (Vercel sets x-forwarded-proto header)
+  const protocol = request.headers.get("x-forwarded-proto");
+  const host = request.headers.get("host");
+  
+  if (
+    process.env.NODE_ENV === "production" &&
+    protocol === "http" &&
+    host
+  ) {
+    const url = request.nextUrl.clone();
+    url.protocol = "https:";
+    return NextResponse.redirect(url, 301);
+  }
+
   const response = NextResponse.next();
 
   // Prevent clickjacking attacks - allow framing only from same origin

@@ -13,8 +13,14 @@ export interface Product {
 
 export async function getAllProducts(): Promise<Product[]> {
   try {
+    // Use environment variable for base URL in production, fallback to localhost for development
     const baseUrl =
-      typeof window !== "undefined" ? "" : "http://localhost:3000";
+      typeof window !== "undefined"
+        ? ""
+        : process.env.NEXT_PUBLIC_SITE_URL ||
+          process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}`
+          : "http://localhost:3000";
     const response = await fetch(`${baseUrl}/api/products`, {
       method: "GET",
       headers: {
@@ -36,8 +42,14 @@ export async function getAllProducts(): Promise<Product[]> {
 
 export async function getProductById(id: string): Promise<Product | null> {
   try {
+    // Use environment variable for base URL in production, fallback to localhost for development
     const baseUrl =
-      typeof window !== "undefined" ? "" : "http://localhost:3000";
+      typeof window !== "undefined"
+        ? ""
+        : process.env.NEXT_PUBLIC_SITE_URL ||
+          process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}`
+          : "http://localhost:3000";
     const response = await fetch(`${baseUrl}/api/products/${id}`, {
       method: "GET",
       headers: {
