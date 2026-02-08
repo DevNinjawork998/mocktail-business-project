@@ -1,9 +1,11 @@
+import React from "react";
+
 /**
  * Structured Data Component
  * Adds JSON-LD structured data for SEO and Google Search features
  * This helps Google display site logo and rich snippets in search results
  */
-export default function StructuredData(): JSX.Element {
+export default function StructuredData(): React.ReactElement {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
