@@ -14,12 +14,15 @@ export const metadata: Metadata = {
     "Mocktails On The Go - Malaysia's 1st ever adaptogenic mocktails. 100% Halal Ingredients 0% Alcohol",
   icons: {
     icon: [
-      { url: "/images/motg-logo.png", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [
-      { url: "/images/motg-logo.png", sizes: "512x512", type: "image/png" },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
-    shortcut: "/images/motg-logo.png",
+    shortcut: "/favicon.ico",
   },
   openGraph: {
     title: "Mocktails On The Go - Malaysia's 1st Ever Adaptogenic Mocktails",
