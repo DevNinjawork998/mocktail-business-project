@@ -58,7 +58,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-
       <body>
         {/* Structured Data for Organization Logo - Google uses this for site logo in search results */}
         <StructuredData />
