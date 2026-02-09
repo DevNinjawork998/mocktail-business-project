@@ -28,13 +28,32 @@ const nextConfig: NextConfig = {
   },
   transpilePackages: ["styled-components"],
   async headers() {
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://checkout.stripe.com https://vercel.live https://*.vercel-insights.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: https: blob:",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "connect-src 'self' https://*.stripe.com https://api.stripe.com https://*.utfs.io https://*.ufs.sh https://*.vercel-insights.com https://*.vercel.com",
+      "frame-src https://js.stripe.com https://checkout.stripe.com https://hooks.stripe.com",
+      "frame-ancestors 'self'",
+      "base-uri 'self'",
+      "form-action 'self' https://checkout.stripe.com",
+      "upgrade-insecure-requests",
+    ].join("; ");
+
     return [
       {
+        // Apply security headers to ALL routes (pages, API, static files)
         source: "/:path*",
         headers: [
           {
             key: "Content-Security-Policy",
-            value: `default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://images.unsplash.com https://utfs.io https://qchbny9v2p.ufs.sh; media-src 'self' https://*.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;`,
+            value: csp,
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains; preload",
           },
           {
             key: "X-Frame-Options",
@@ -45,12 +64,16 @@ const nextConfig: NextConfig = {
             value: "nosniff",
           },
           {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          {
             key: "Referrer-Policy",
-            value: "no-referrer-when-downgrade",
+            value: "strict-origin-when-cross-origin",
           },
           {
             key: "Permissions-Policy",
-            value: "", // More specific policies can be added here as needed
+            value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
           },
         ],
       },
