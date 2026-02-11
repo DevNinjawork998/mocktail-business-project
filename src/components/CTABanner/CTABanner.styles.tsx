@@ -6,13 +6,15 @@ export const CTASection = styled.section`
     ${({ theme }) => theme.colors.royalOrange.base} 0%,
     ${({ theme }) => theme.colors.bittersweetShimmer.base} 100%
   );
-  padding: ${({ theme }) => theme.spacing["4xl"]}
-    ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.sm};
   text-align: center;
   position: relative;
   overflow: hidden;
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      padding: ${theme.spacing["2xl"]} ${theme.spacing.md};
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       padding: ${theme.spacing["4xl"]} ${theme.spacing.xl};
     }
@@ -28,13 +30,16 @@ export const Container = styled.div`
 `;
 
 export const Heading = styled.h2`
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: bold;
   color: white;
   margin-bottom: ${({ theme }) => theme.spacing.md};
   font-family: serif;
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 2.25rem;
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       font-size: 3.5rem;
     }
@@ -42,14 +47,20 @@ export const Heading = styled.h2`
 `;
 
 export const Subtext = styled.p`
-  font-size: 1.125rem;
+  font-size: 0.9375rem;
   color: white;
-  margin-bottom: ${({ theme }) => theme.spacing["2xl"]};
-  max-width: 600px;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 ${({ theme }) => theme.spacing.sm};
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 1.0625rem;
+      margin-bottom: ${theme.spacing["2xl"]};
+      max-width: 600px;
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       font-size: 1.25rem;
     }

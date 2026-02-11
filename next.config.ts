@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: https: blob:",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "connect-src 'self' https://*.stripe.com https://api.stripe.com https://*.utfs.io https://*.ufs.sh https://*.vercel-insights.com https://*.vercel.com",
+      "connect-src 'self' https://*.stripe.com https://api.stripe.com https://*.utfs.io https://*.ufs.sh https://*.ingest.uploadthing.com https://*.vercel-insights.com https://*.vercel.com",
       "frame-src https://js.stripe.com https://checkout.stripe.com https://hooks.stripe.com",
       "frame-ancestors 'self'",
       "base-uri 'self'",

@@ -24,14 +24,13 @@ const LandingPage = () => {
             <S.Badge>Fresh. Functional. Delicious.</S.Badge>
             <S.ContentSection>
               <S.Title>
-                Mocktails Made
+                Mocktails that
                 <br />
-                <S.TitleAccent>for Movement</S.TitleAccent>
+                <S.TitleAccent>Fuel your day</S.TitleAccent>
               </S.Title>
 
               <S.Subtitle>
-                Mocktails Made for Movement. These aren&apos;t just mocktails.
-                They&apos;re your mid-day reset, your pre & post-gym treat, your
+                These aren&apos;t just mocktails.They&apos;re your mid-day reset, your pre & post-gym treat, your
                 bring-to-the-party bottle. Healthy but full of tasty flavour.
               </S.Subtitle>
             </S.ContentSection>

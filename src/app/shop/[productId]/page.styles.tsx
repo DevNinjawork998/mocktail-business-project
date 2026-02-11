@@ -6,16 +6,22 @@ import Image from "next/image";
 export const ProductPageContainer = styled.div`
   min-height: 100vh;
   background: ${({ theme }) => theme.currentSemantic.background};
-  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.sm};
+  overflow-x: hidden;
+
+  ${media.md} {
+    padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
+  }
 
   ${media.lg} {
-    padding: ${({ theme }) => theme.spacing["2xl"]};
-    ${({ theme }) => theme.spacing.xl};
+    padding: ${({ theme }) => theme.spacing["2xl"]} ${({ theme }) => theme.spacing.xl};
   }
 `;
 
 export const ProductLayout = styled.div`
   max-width: 1400px;
+  width: 100%;
+  min-width: 0;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
@@ -41,24 +47,27 @@ export const MainContent = styled.div`
 export const ProductImageSection = styled.div`
   background: transparent;
   border-radius: ${({ theme }) => theme.radii.xl};
-  padding: ${({ theme }) => theme.spacing["3xl"]};
+  padding: ${({ theme }) => theme.spacing.lg};
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 500px;
+  min-height: 320px;
+  min-width: 0;
 
   ${media.md} {
-    min-height: 700px;
+    padding: ${({ theme }) => theme.spacing["3xl"]};
+    min-height: 500px;
   }
 
   ${media.lg} {
-    min-height: 800px;
+    min-height: 700px;
   }
 `;
 
 export const ProductImagePlaceholder = styled.div<{ $bgColor: string }>`
-  width: 300px;
-  height: 450px;
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 2 / 3;
   background: ${({ $bgColor }) => $bgColor};
   border-radius: ${({ theme }) => theme.radii.lg};
   display: flex;
@@ -66,19 +75,17 @@ export const ProductImagePlaceholder = styled.div<{ $bgColor: string }>`
   justify-content: center;
   color: white;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 0.875rem;
   text-align: center;
   box-shadow: ${({ theme }) => theme.shadows.xl};
 
   ${media.md} {
-    width: 400px;
-    height: 600px;
+    max-width: 400px;
     font-size: 1.25rem;
   }
 
   ${media.lg} {
-    width: 450px;
-    height: 675px;
+    max-width: 450px;
     font-size: 1.5rem;
   }
 `;
@@ -88,33 +95,47 @@ export const ProductDetailsSection = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.lg};
   text-align: left;
+  min-width: 0;
 
   & > * {
     width: 100%;
+    min-width: 0;
   }
 `;
 
 export const ProductTitle = styled.h1`
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: bold;
   color: ${({ theme }) => theme.currentSemantic.text};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
   line-height: 1.2;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
   ${media.md} {
+    font-size: 2.5rem;
+  }
+
+  ${media.lg} {
     font-size: 3rem;
   }
 `;
 
 export const ProductSubtitle = styled.p`
-  font-size: 1.35rem;
+  font-size: 1.0625rem;
   font-weight: 600;
   font-style: italic;
   color: ${({ theme }) => theme.colors.royalOrange.base};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   line-height: 1.4;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
   ${media.md} {
+    font-size: 1.35rem;
+  }
+
+  ${media.lg} {
     font-size: 1.5rem;
   }
 `;
@@ -123,6 +144,8 @@ export const ProductDescription = styled.div`
   color: ${({ theme }) => theme.currentSemantic.text};
   line-height: 1.6;
   margin-bottom: ${({ theme }) => theme.spacing.xl};
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
   h3 {
     font-size: 1.25rem;
@@ -150,6 +173,8 @@ export const Price = styled.div`
 export const PriceSubtext = styled.div`
   font-size: 0.875rem;
   color: ${({ theme }) => theme.currentSemantic.textSecondary};
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 `;
 
 export const BuyNowButton = styled.button`
@@ -210,12 +235,11 @@ export const AddToCartButton = styled.button`
 export const WhatsAppButton = styled.button`
   background: #25d366;
   color: white;
-  padding: ${({ theme }) => theme.spacing.lg}
-    ${({ theme }) => theme.spacing["2xl"]};
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
   border-radius: ${({ theme }) => theme.radii.full};
   border: none;
   font-weight: bold;
-  font-size: 1.125rem;
+  font-size: 0.9375rem;
   text-align: center;
   transition: all 0.3s ease;
   box-shadow: ${({ theme }) => theme.shadows.lg};
@@ -225,6 +249,9 @@ export const WhatsAppButton = styled.button`
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.sm};
   width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  white-space: normal;
 
   &:hover {
     transform: translateY(-2px);
@@ -234,6 +261,12 @@ export const WhatsAppButton = styled.button`
 
   &:active {
     transform: translateY(0);
+  }
+
+  ${media.md} {
+    padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing["2xl"]};
+    font-size: 1.125rem;
+    flex-wrap: nowrap;
   }
 `;
 
@@ -369,7 +402,7 @@ export const ProductBriefText = styled.p`
 
 export const ProductInfoSection = styled.section`
   margin: 3rem auto 0 auto;
-  padding: 2.5rem 2rem;
+  padding: 1.5rem 1rem;
   background: rgba(237, 207, 185, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -379,12 +412,14 @@ export const ProductInfoSection = styled.section`
     0 8px 32px 0 rgba(69, 21, 21, 0.15),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
   max-width: 1400px;
+  width: 100%;
+  min-width: 0;
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 2.5rem;
   align-items: flex-start;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
   
   &::before {
     content: "";
@@ -408,21 +443,36 @@ export const ProductInfoSection = styled.section`
   }
 `;
 
-export const ProductInfoLeft = styled.div``;
+export const ProductInfoLeft = styled.div`
+  min-width: 0;
+`;
 
 export const ProductInfoTitle = styled.h2`
-  font-size: 2rem;
+  font-size: 1.375rem;
   font-weight: 700;
   color: ${({ theme }) => theme.semantic.primary};
   margin-bottom: 1rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
 `;
 
 export const ProductInfoIngredients = styled.div`
-  font-size: 1rem;
+  font-size: 0.9375rem;
   color: ${({ theme }) => theme.semantic.text};
   margin-bottom: 1.5rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
   & strong {
     color: ${({ theme }) => theme.semantic.primary};
+  }
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
   }
 `;
 
@@ -502,18 +552,17 @@ export const QuantityInput = styled.input`
 
 export const ProductImageContainer = styled.div`
   position: relative;
-  width: 300px;
-  height: 450px;
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 2 / 3;
   transition: transform 0.3s ease;
 
   ${media.md} {
-    width: 400px;
-    height: 600px;
+    max-width: 400px;
   }
 
   ${media.lg} {
-    width: 450px;
-    height: 675px;
+    max-width: 450px;
   }
 
   &:hover {
@@ -752,7 +801,7 @@ export const MainImageLoadingPlaceholder = styled.div`
 
 export const ProductDisclaimerSection = styled.div`
   margin: 2rem auto 0 auto;
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1rem;
   background: rgba(237, 207, 185, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -762,11 +811,18 @@ export const ProductDisclaimerSection = styled.div`
     0 8px 32px 0 rgba(69, 21, 21, 0.15),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
   max-width: 1400px;
-  font-size: 0.875rem;
+  width: 100%;
+  min-width: 0;
+  font-size: 0.8125rem;
   line-height: 1.6;
   color: ${({ theme }) => theme.currentSemantic.textSecondary};
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+
+  @media (min-width: 768px) {
+    padding: 1.25rem 1.5rem;
+    font-size: 0.875rem;
+  }
   
   &::before {
     content: "";
@@ -786,9 +842,11 @@ export const ProductDisclaimerSection = styled.div`
 
 export const ProductDisclaimerText = styled.p`
   margin: 0;
-  font-size: 0.875rem;
+  font-size: inherit;
   line-height: 1.6;
   color: ${({ theme }) => theme.currentSemantic.textSecondary};
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 
   a {
     color: ${({ theme }) => theme.semantic.primary};

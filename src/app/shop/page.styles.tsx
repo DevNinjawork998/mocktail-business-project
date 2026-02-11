@@ -5,34 +5,38 @@ import { media } from "@/theme/styled-theme";
 export const ShopContainer = styled.div`
   min-height: 100vh;
   background: #d4aab3;
-  padding: ${({ theme }) => theme.spacing["2xl"]};
-  ${({ theme }) => theme.spacing.md};
-  padding-top: calc(
-    4rem + ${({ theme }) => theme.spacing["2xl"]}
-  ); /* Account for fixed navigation bar + existing padding */
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  padding-top: calc(4rem + ${({ theme }) => theme.spacing.lg});
   position: relative;
   overflow: hidden;
 
+  ${({ theme }) => `
+    @media (min-width: ${theme.breakpoints.md}) {
+      padding: ${theme.spacing["2xl"]} ${theme.spacing.md};
+      padding-top: calc(4rem + ${theme.spacing["2xl"]});
+    }
+  `}
   ${media.lg} {
-    padding: ${({ theme }) => theme.spacing["4xl"]};
-    ${({ theme }) => theme.spacing.xl};
-    padding-top: calc(
-      4rem + ${({ theme }) => theme.spacing["4xl"]}
-    ); /* Account for fixed navigation bar + existing padding */
+    padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.xl};
+    padding-top: calc(4rem + ${({ theme }) => theme.spacing["4xl"]});
   }
 `;
 
 export const ShopHeader = styled.div`
   text-align: center;
-  margin-bottom: ${({ theme }) => theme.spacing["3xl"]};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   position: relative;
   z-index: 1;
-  position: relative;
-  z-index: 1;
+
+  ${({ theme }) => `
+    @media (min-width: ${theme.breakpoints.md}) {
+      margin-bottom: ${theme.spacing["3xl"]};
+    }
+  `}
 `;
 
 export const ShopTitle = styled.h1`
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: bold;
   background: linear-gradient(
     135deg,
@@ -56,34 +60,53 @@ export const ShopTitle = styled.h1`
   font-family: serif;
   font-family: serif;
 
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 2.25rem;
+    }
+  `}
   ${media.lg} {
     font-size: 3.5rem;
   }
 `;
 
 export const ShopSubtitle = styled.p`
-  font-size: 1.125rem;
+  font-size: 0.9375rem;
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
-  color: ${({ theme }) => theme.colors.chocolateKisses.base};
-  max-width: 600px;
+  max-width: 100%;
   margin: 0 auto;
   font-weight: 500;
   opacity: 0.85;
-  font-weight: 500;
-  opacity: 0.85;
+  padding: 0 ${({ theme }) => theme.spacing.sm};
+
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 1.0625rem;
+      max-width: 600px;
+    }
+  `}
+  ${media.md} {
+    font-size: 1.125rem;
+  }
 `;
 
 export const ProductsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({ theme }) => theme.spacing.xl};
+  gap: ${({ theme }) => theme.spacing.md};
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
 
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      gap: ${theme.spacing.lg};
+    }
+  `}
   ${media.md} {
     grid-template-columns: repeat(2, 1fr);
+    gap: ${({ theme }) => theme.spacing.xl};
   }
 
   ${media.lg} {
@@ -157,30 +180,50 @@ export const ProductCard = styled.div`
 export const ProductImageContainer = styled.div`
   background: transparent;
   border-radius: ${({ theme }) => theme.radii.lg};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.lg};
-  height: 350px;
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.sm};
+  height: 280px;
   width: 100%;
 
-  /* Standardize image wrapper - fixed dimensions for consistent sizing */
+  /* Standardize image wrapper - responsive dimensions */
   > div {
     position: relative;
-    width: 200px;
-    height: 280px;
+    width: 140px;
+    height: 200px;
     margin: 0 auto;
   }
+
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      padding: ${theme.spacing.lg} ${theme.spacing.md};
+      height: 320px;
+      > div {
+        width: 180px;
+        height: 250px;
+      }
+    }
+    @media (min-width: ${theme.breakpoints.md}) {
+      padding: ${theme.spacing.xl} ${theme.spacing.lg};
+      height: 350px;
+      margin-bottom: ${theme.spacing.lg};
+      > div {
+        width: 200px;
+        height: 280px;
+      }
+    }
+  `}
 `;
 
 export const ProductImage = styled.div<{ $bgColor: string }>`
   width: 100%;
   height: 100%;
-  max-width: 200px;
-  max-height: 280px;
+  max-width: 100%;
+  max-height: 100%;
   background: ${({ $bgColor }) => $bgColor};
   border-radius: ${({ theme }) => theme.radii.md};
   display: flex;
@@ -195,21 +238,31 @@ export const ProductImage = styled.div<{ $bgColor: string }>`
 `;
 
 export const ProductName = styled.h3`
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
   margin-bottom: ${({ theme }) => theme.spacing.xs};
   text-align: center;
   transition: color 0.3s ease;
-  /* Card hover effect will handle color change */
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 1.25rem;
+    }
+  `}
 `;
 
 export const ProductDescription = styled.p`
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
   text-align: center;
   line-height: 1.6;
   flex: 1;
   opacity: 0.8;
   font-weight: 500;
+
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 0.875rem;
+    }
+  `}
 `;

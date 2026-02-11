@@ -1,55 +1,89 @@
 import styled from "styled-components";
 
 export const Section = styled.section`
-  margin: 2rem auto 0 auto;
+  margin: 1rem auto 0 auto;
   max-width: 1400px;
-  padding: 3rem 1.5rem;
+  padding: 1.5rem 1rem;
   background: ${({ theme }) => theme.semantic.background};
-  border-radius: 1.5rem;
+  border-radius: 1rem;
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
+
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      padding: 2rem 1.25rem;
+      border-radius: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    @media (min-width: ${theme.breakpoints.md}) {
+      margin: 2rem auto 0 auto;
+      padding: 3rem 1.5rem;
+      border-radius: 1.5rem;
+      margin-bottom: 4rem;
+    }
+  `}
 `;
 
 export const Headline = styled.h2`
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: ${({ theme }) => theme.semantic.primary};
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 2.25rem;
+      margin-bottom: 1.25rem;
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       font-size: 3rem;
+      margin-bottom: 1.5rem;
     }
   `}
 `;
 
 export const Intro = styled.p`
-  font-size: 1.1rem;
+  font-size: 0.9375rem;
   color: ${({ theme }) => theme.semantic.text};
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   text-align: center;
-  max-width: 800px;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 ${({ theme }) => theme.spacing.sm};
+
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 1.05rem;
+      max-width: 800px;
+      margin-bottom: 2rem;
+    }
+    @media (min-width: ${theme.breakpoints.md}) {
+      font-size: 1.1rem;
+      margin-bottom: 3rem;
+    }
+  `}
 `;
 
 export const IngredientsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1.25rem;
   max-width: 1400px;
   margin: 0 auto;
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      gap: 1.5rem;
+    }
     @media (min-width: ${theme.breakpoints.sm}) {
       grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
     }
-    
     @media (min-width: ${theme.breakpoints.md}) {
       grid-template-columns: repeat(3, 1fr);
     }
-    
     @media (min-width: ${theme.breakpoints.lg}) {
       grid-template-columns: repeat(5, 1fr);
     }

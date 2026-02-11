@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as S from "./ProductShowcase.styles";
 import { getAllProducts, Product } from "@/data/productService";
 
@@ -27,33 +28,47 @@ function extractSectionTitle(longDescription: string): string | null {
 
 /**
  * Render subtitle - use section title if available, otherwise use original subtitle
- * If section title exists, make it a link to the product detail page
+ * If section title exists, make it a clickable span (not Link) to avoid nested <a> tags
+ * since the subtitle is inside ProductCardLink which is already an anchor
  */
-function renderSubtitle(
-  subtitle: string,
-  sectionTitle: string | null,
-  productId: string,
-): React.ReactNode {
-  // If we have a section title, use it as the subtitle and make it a link
+function SubtitleWithLink({
+  subtitle,
+  sectionTitle,
+  productId,
+  onNavigate,
+}: {
+  subtitle: string;
+  sectionTitle: string | null;
+  productId: string;
+  onNavigate: (url: string) => void;
+}): React.ReactNode {
   if (sectionTitle) {
     return (
-      <Link
-        href={`/shop/${productId}#section-title`}
+      <span
+        role="link"
+        tabIndex={0}
         onClick={(e) => {
-          // Allow the link to work, but prevent card navigation
+          e.preventDefault();
           e.stopPropagation();
+          onNavigate(`/shop/${productId}#section-title`);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            e.stopPropagation();
+            onNavigate(`/shop/${productId}#section-title`);
+          }
         }}
       >
         {sectionTitle}
-      </Link>
+      </span>
     );
   }
-
-  // Otherwise, use the original subtitle
   return subtitle;
 }
 
 const ProductShowcase = () => {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,11 +140,12 @@ const ProductShowcase = () => {
                     {product.name}
                   </S.ProductName>
                   <S.ProductSubtitle>
-                    {renderSubtitle(
-                      product.subtitle,
-                      extractSectionTitle(product.longDescription),
-                      product.id,
-                    )}
+                    <SubtitleWithLink
+                      subtitle={product.subtitle}
+                      sectionTitle={extractSectionTitle(product.longDescription)}
+                      productId={product.id}
+                      onNavigate={(url) => router.push(url)}
+                    />
                   </S.ProductSubtitle>
                   <S.AddToCartButton
                     onClick={(e) => {

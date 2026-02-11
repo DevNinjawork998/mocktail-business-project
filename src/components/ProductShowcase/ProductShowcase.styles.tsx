@@ -2,8 +2,7 @@ import styled from "styled-components";
 import Link from "next/link";
 
 export const ShowcaseSection = styled.section`
-  padding: ${({ theme }) => theme.spacing["4xl"]}
-    ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.sm};
   background: linear-gradient(
     135deg,
     ${({ theme }) => theme.colors.mauvelous.light}25 0%,
@@ -40,6 +39,18 @@ export const ShowcaseSection = styled.section`
       );
     pointer-events: none;
   }
+
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      padding: ${theme.spacing["2xl"]} ${theme.spacing.md};
+    }
+    @media (min-width: ${theme.breakpoints.md}) {
+      padding: ${theme.spacing["3xl"]} ${theme.spacing.md};
+    }
+    @media (min-width: ${theme.breakpoints.lg}) {
+      padding: ${theme.spacing["4xl"]} ${theme.spacing.md};
+    }
+  `}
 `;
 
 export const Container = styled.div`
@@ -56,7 +67,7 @@ export const SectionHeader = styled.div`
 `;
 
 export const SectionTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: bold;
   background: linear-gradient(
     135deg,
@@ -71,6 +82,9 @@ export const SectionTitle = styled.h2`
   font-family: serif;
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 2.25rem;
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       font-size: 3rem;
     }
@@ -78,13 +92,18 @@ export const SectionTitle = styled.h2`
 `;
 
 export const SectionSubtitle = styled.p`
-  font-size: 1.125rem;
+  font-size: 0.9375rem;
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
-  max-width: 700px;
+  max-width: 100%;
   margin: 0 auto;
   font-weight: 500;
+  padding: 0 ${({ theme }) => theme.spacing.sm};
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 1.0625rem;
+      max-width: 700px;
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       font-size: 1.25rem;
     }
@@ -94,15 +113,20 @@ export const SectionSubtitle = styled.p`
 export const ProductsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({ theme }) => theme.spacing.xl};
+  gap: ${({ theme }) => theme.spacing.md};
   justify-items: center;
   align-items: stretch;
+  padding: 0 ${({ theme }) => theme.spacing.xs};
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      gap: ${theme.spacing.lg};
+      padding: 0;
+    }
     @media (min-width: ${theme.breakpoints.sm}) {
       grid-template-columns: repeat(2, 1fr);
+      gap: ${theme.spacing.xl};
     }
-    
     @media (min-width: ${theme.breakpoints.lg}) {
       grid-template-columns: repeat(3, 1fr);
       max-width: 1000px;
@@ -346,7 +370,8 @@ export const ProductSubtitle = styled.p`
   text-align: center;
   min-height: 2rem; /* Consistent minimum height */
 
-  a {
+  a,
+  span[role="link"] {
     text-decoration: none;
     color: inherit;
     transition: color 0.2s ease;
