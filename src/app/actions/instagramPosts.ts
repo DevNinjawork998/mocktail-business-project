@@ -48,7 +48,7 @@ export async function createInstagramPost(
     });
 
     revalidatePath("/your-buddies");
-    revalidatePath("/dashboard/instagram-posts");
+    revalidatePath("/dashboard/community");
     return { success: true, data: { id: instagramPost.id } };
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -69,7 +69,7 @@ export async function deleteInstagramPost(id: string): Promise<ActionResult> {
     await prisma.instagramPost.delete({ where: { id } });
 
     revalidatePath("/your-buddies");
-    revalidatePath("/dashboard/instagram-posts");
+    revalidatePath("/dashboard/community");
     return { success: true };
   } catch (error) {
     console.error("Error deleting Instagram post:", error);

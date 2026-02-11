@@ -67,7 +67,7 @@ export default function InstagramPostForm() {
     const result = await createInstagramPost(formData);
 
     if (result.success) {
-      router.push("/dashboard/instagram-posts");
+      router.push("/dashboard/community");
       router.refresh();
     } else {
       setError(result.error);

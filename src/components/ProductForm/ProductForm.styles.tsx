@@ -95,6 +95,10 @@ export const TextArea = styled.textarea<{ $hasError?: boolean }>`
   color: ${({ theme }) => theme.currentSemantic.foreground};
   resize: vertical;
   transition: border-color 0.2s ease;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
 
   &:focus {
     outline: none;
