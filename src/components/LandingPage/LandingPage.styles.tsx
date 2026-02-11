@@ -67,19 +67,29 @@ export const Container = styled.div`
       padding: ${theme.spacing.sm};
       padding-top: 3rem;
     }
+    @media (max-width: 480px) {
+      padding: ${theme.spacing.xs} ${theme.spacing.sm};
+      padding-top: 2.5rem;
+    }
   `}
 `;
 
 export const MainGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${({ theme }) => theme.spacing["3xl"]};
+  gap: ${({ theme }) => theme.spacing.xl};
   align-items: center;
-  min-height: 70vh;
+  min-height: 60vh;
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      gap: ${theme.spacing["2xl"]};
+      min-height: 65vh;
+    }
     @media (min-width: ${theme.breakpoints.lg}) {
       grid-template-columns: 1fr 1fr;
+      gap: ${theme.spacing["3xl"]};
+      min-height: 70vh;
     }
   `}
 `;
@@ -97,12 +107,15 @@ export const ContentSection = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: bold;
   color: ${({ theme }) => theme.semantic.primary};
-  line-height: 1.1;
+  line-height: 1.2;
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 2.5rem;
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       font-size: 3.75rem;
     }
@@ -117,12 +130,16 @@ export const TitleAccent = styled.span`
 `;
 
 export const Subtitle = styled.p`
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
   line-height: 1.6;
-  max-width: 32rem;
+  max-width: 100%;
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 1.125rem;
+      max-width: 32rem;
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       font-size: 1.5rem;
     }
@@ -131,25 +148,47 @@ export const Subtitle = styled.p`
 
 export const CTAContainer = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.spacing.sm};
   flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch;
   padding-top: ${({ theme }) => theme.spacing.md};
+  width: 100%;
+
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      gap: ${theme.spacing.md};
+      width: auto;
+    }
+  `}
 `;
 
 export const CTAButton = styled.div`
   background-color: #451515;
   color: white;
-  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
   border-radius: ${({ theme }) => theme.radii.full};
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1rem;
   transition: all 0.3s ease;
   transform: scale(1);
   box-shadow: ${({ theme }) => theme.shadows.lg};
   border: none;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+
+  ${({ theme }) => `
+    @media (max-width: 480px) {
+      flex: 1;
+      min-width: 0;
+    }
+    @media (min-width: 480px) {
+      padding: ${theme.spacing.md} ${theme.spacing.xl};
+      font-size: 1.125rem;
+    }
+  `}
 
   &:hover {
     background-color: #3a1111;

@@ -4,9 +4,12 @@ import styled from "styled-components";
 export const FooterContainer = styled.footer`
   background-color: ${({ theme }) => theme.colors.chocolateKisses.base};
   color: white;
-  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.sm};
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      padding: ${theme.spacing.xl} ${theme.spacing.md};
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       padding: ${theme.spacing["2xl"]} ${theme.spacing.lg};
     }
@@ -55,20 +58,30 @@ export const BrandSection = styled.div`
 `;
 
 export const BrandLogo = styled.h3`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.caramel.base};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
+
+  ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 1.5rem;
+    }
+  `}
 `;
 
 export const BrandDescription = styled.p`
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: ${({ theme }) => theme.colors.mauvelous.base};
   line-height: 1.6;
-  max-width: 400px;
+  max-width: 100%;
   margin: 0 auto;
 
   ${({ theme }) => `
+    @media (min-width: 480px) {
+      font-size: 0.875rem;
+      max-width: 400px;
+    }
     @media (min-width: ${theme.breakpoints.md}) {
       margin: 0;
       max-width: 100%;

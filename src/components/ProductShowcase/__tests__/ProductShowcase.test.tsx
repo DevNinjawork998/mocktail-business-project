@@ -290,13 +290,10 @@ describe("ProductShowcase", () => {
       render(<ProductShowcase />);
 
       await waitFor(() => {
-        // Check that "Premium Quality" (from section title) is rendered as a link
-        const links = screen.getAllByRole("link");
-        const subtitleLink = links.find(
-          (link) => link.getAttribute("href") === "/shop/1#section-title",
-        );
+        // Check that "Premium Quality" (from section title) is rendered as clickable span (role="link")
+        const subtitleLink = screen.getByRole("link", { name: "Premium Quality" });
         expect(subtitleLink).toBeInTheDocument();
-        expect(subtitleLink?.textContent).toBe("Premium Quality");
+        expect(subtitleLink.tagName).toBe("SPAN");
         // Original subtitle should not be displayed
         expect(screen.queryByText("Experience Premium Quality")).not.toBeInTheDocument();
       });
@@ -317,12 +314,9 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Should use section title "Different Title" as subtitle
-        const links = screen.getAllByRole("link");
-        const subtitleLink = links.find(
-          (link) => link.getAttribute("href") === "/shop/1#section-title",
-        );
+        const subtitleLink = screen.getByRole("link", { name: "Different Title" });
         expect(subtitleLink).toBeInTheDocument();
-        expect(subtitleLink?.textContent).toBe("Different Title");
+        expect(subtitleLink.tagName).toBe("SPAN");
         // Original subtitle should not be displayed
         expect(screen.queryByText("This subtitle doesn't match")).not.toBeInTheDocument();
       });
@@ -346,12 +340,9 @@ describe("ProductShowcase", () => {
         expect(subtitle).toBeInTheDocument();
       });
 
-      // Should render subtitle as-is without link
-      const links = screen.queryAllByRole("link");
-      const matchingLink = links.find(
-        (link) => link.getAttribute("href") === "/shop/1#section-title",
-      );
-      expect(matchingLink).toBeUndefined();
+      // Should render subtitle as plain text, not as a link (no section title when no h3)
+      expect(screen.getByText("Regular Subtitle")).toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: "Regular Subtitle" })).not.toBeInTheDocument();
     });
 
     it("uses section title exactly as extracted from h3 tag", async () => {
@@ -369,12 +360,9 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Should use section title "Premium Quality" (from h3) as subtitle
-        const links = screen.getAllByRole("link");
-        const subtitleLink = links.find(
-          (link) => link.getAttribute("href") === "/shop/1#section-title",
-        );
+        const subtitleLink = screen.getByRole("link", { name: "Premium Quality" });
         expect(subtitleLink).toBeInTheDocument();
-        expect(subtitleLink?.textContent).toBe("Premium Quality");
+        expect(subtitleLink.tagName).toBe("SPAN");
       });
     });
 
@@ -393,12 +381,9 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Should use section title "Product (Premium)" (from h3) as subtitle
-        const links = screen.getAllByRole("link");
-        const subtitleLink = links.find(
-          (link) => link.getAttribute("href") === "/shop/1#section-title",
-        );
+        const subtitleLink = screen.getByRole("link", { name: "Product (Premium)" });
         expect(subtitleLink).toBeInTheDocument();
-        expect(subtitleLink?.textContent).toBe("Product (Premium)");
+        expect(subtitleLink.tagName).toBe("SPAN");
       });
     });
 
@@ -436,12 +421,9 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // HTML entities should be decoded (&nbsp; becomes space)
-        const links = screen.getAllByRole("link");
-        const subtitleLink = links.find(
-          (link) => link.getAttribute("href") === "/shop/1#section-title",
-        );
+        const subtitleLink = screen.getByRole("link", { name: "Premium Quality" });
         expect(subtitleLink).toBeInTheDocument();
-        expect(subtitleLink?.textContent).toBe("Premium Quality");
+        expect(subtitleLink.tagName).toBe("SPAN");
       });
     });
   });

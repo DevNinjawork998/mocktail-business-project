@@ -46,14 +46,17 @@ describe("LandingPage", () => {
   it("renders main title", () => {
     render(<LandingPage />);
     const title = screen.getByRole("heading", { level: 1 });
-    expect(title).toHaveTextContent(/Mocktails Made/i);
-    expect(title).toHaveTextContent(/for Movement/i);
+    expect(title).toHaveTextContent(/Mocktails that/i);
+    expect(title).toHaveTextContent(/Fuel your day/i);
   });
 
   it("renders subtitle", () => {
     render(<LandingPage />);
     expect(
-      screen.getByText(/Mocktails Made for Movement/i),
+      screen.getByText(/These aren't just mocktails/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/mid-day reset/i),
     ).toBeInTheDocument();
   });
 
