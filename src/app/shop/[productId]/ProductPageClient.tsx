@@ -76,7 +76,10 @@ export default function ProductPageClient({
   // Build image URLs array: main imageUrl first, then supporting photos from ProductImage (order 1, 2)
   const imageUrls = useMemo(() => {
     // #region agent log
-    if (typeof fetch !== "undefined") {
+    if (
+      typeof fetch !== "undefined" &&
+      process.env.NODE_ENV === "development"
+    ) {
       fetch(
         "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
         {
@@ -111,7 +114,10 @@ export default function ProductPageClient({
       urlSet.add(product.imageUrl);
       orderSet.add(0); // Mark order 0 as used
       // #region agent log
-      if (typeof fetch !== "undefined") {
+      if (
+        typeof fetch !== "undefined" &&
+        process.env.NODE_ENV === "development"
+      ) {
         fetch(
           "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
           {
@@ -134,7 +140,10 @@ export default function ProductPageClient({
       // #endregion
     } else {
       // #region agent log
-      if (typeof fetch !== "undefined") {
+      if (
+        typeof fetch !== "undefined" &&
+        process.env.NODE_ENV === "development"
+      ) {
         fetch(
           "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
           {
@@ -207,7 +216,10 @@ export default function ProductPageClient({
     });
 
     // #region agent log
-    if (typeof fetch !== "undefined") {
+    if (
+      typeof fetch !== "undefined" &&
+      process.env.NODE_ENV === "development"
+    ) {
       fetch(
         "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
         {
