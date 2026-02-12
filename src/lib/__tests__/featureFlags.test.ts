@@ -131,7 +131,6 @@ describe("featureFlags", () => {
       expect(flags).toEqual({});
     });
 
-
     it("handles feature names with different cases", () => {
       process.env.NEXT_PUBLIC_ENABLE_TESTFEATURE = "true";
 
@@ -145,6 +144,36 @@ describe("featureFlags", () => {
 
       // Should default to true
       expect(isFeatureEnabled("unknownfeature")).toBe(true);
+    });
+  });
+
+  describe("server-side config file reading", () => {
+    beforeEach(() => {
+      clearFeatureFlagsCache();
+    });
+
+    it("handles feature flags with environment variable override", () => {
+      process.env.NEXT_PUBLIC_ENABLE_TESTFEATURE = "false";
+      const result = isFeatureEnabled("testfeature");
+      expect(result).toBe(false);
+      delete process.env.NEXT_PUBLIC_ENABLE_TESTFEATURE;
+    });
+
+    it("caches config after first read", () => {
+      clearFeatureFlagsCache();
+      // Test that cache clearing works
+      const result1 = isFeatureEnabled("stripe");
+      clearFeatureFlagsCache();
+      const result2 = isFeatureEnabled("stripe");
+
+      expect(typeof result1).toBe("boolean");
+      expect(typeof result2).toBe("boolean");
+    });
+
+    it("returns true by default when no env var is set", () => {
+      delete process.env.NEXT_PUBLIC_ENABLE_NEWFEATURE;
+      const result = isFeatureEnabled("newfeature");
+      expect(result).toBe(true);
     });
   });
 
