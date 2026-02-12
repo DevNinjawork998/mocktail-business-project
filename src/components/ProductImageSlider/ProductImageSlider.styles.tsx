@@ -32,19 +32,18 @@ export const SliderWrapper = styled.div<{
   -webkit-overflow-scrolling: touch;
   cursor: ${({ $isDragging, $hasMultipleImages }) =>
     $hasMultipleImages ? ($isDragging ? "grabbing" : "grab") : "pointer"};
-  
+
   /* Hide scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
 
   /* Prevent text selection while dragging */
   user-select: ${({ $isDragging }) => ($isDragging ? "none" : "auto")};
-  -webkit-user-select: ${({ $isDragging }) =>
-    $isDragging ? "none" : "auto"};
+  -webkit-user-select: ${({ $isDragging }) => ($isDragging ? "none" : "auto")};
 `;
 
 export const ImageSlide = styled.div`

@@ -125,12 +125,12 @@ export const LogoImage = styled.div`
   align-items: center;
   height: 40px;
   margin-right: ${({ theme }) => theme.spacing.sm};
-  
+
   img {
     height: 100%;
     width: auto;
   }
-  
+
   ${({ theme }) => `
     @media (max-width: ${theme.breakpoints.md}) {
       height: 35px;
@@ -144,7 +144,7 @@ export const LogoText = styled.div`
   font-weight: 600;
   color: white;
   white-space: nowrap;
-  
+
   ${({ theme }) => `
     @media (max-width: ${theme.breakpoints.md}) {
       font-size: 1.125rem;

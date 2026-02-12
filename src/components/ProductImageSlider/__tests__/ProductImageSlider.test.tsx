@@ -38,7 +38,10 @@ describe("ProductImageSlider", () => {
 
     it("renders null when images is undefined", () => {
       const { container } = render(
-        <ProductImageSlider images={undefined as unknown as string[]} productName="Test Product" />,
+        <ProductImageSlider
+          images={undefined as unknown as string[]}
+          productName="Test Product"
+        />,
       );
       expect(container.firstChild).toBeNull();
     });
@@ -132,7 +135,7 @@ describe("ProductImageSlider", () => {
       // Find the slider wrapper element by finding the parent of images
       const firstImage = screen.getByAltText("Test Product - Image 1");
       const slider = firstImage.closest("div")?.parentElement?.parentElement;
-      
+
       if (slider) {
         // Mock scrollTo method
         Object.defineProperty(slider, "scrollTo", {
@@ -159,7 +162,9 @@ describe("ProductImageSlider", () => {
         <ProductImageSlider images={mockImages} productName="Test Product" />,
       );
 
-      const slider = screen.getByAltText("Test Product - Image 1").closest("div")?.parentElement;
+      const slider = screen
+        .getByAltText("Test Product - Image 1")
+        .closest("div")?.parentElement;
       if (slider) {
         fireEvent.mouseDown(slider, { pageX: 100 });
         // Should not throw error
@@ -172,7 +177,9 @@ describe("ProductImageSlider", () => {
         <ProductImageSlider images={mockImages} productName="Test Product" />,
       );
 
-      const slider = screen.getByAltText("Test Product - Image 1").closest("div")?.parentElement;
+      const slider = screen
+        .getByAltText("Test Product - Image 1")
+        .closest("div")?.parentElement;
       if (slider) {
         fireEvent.mouseDown(slider, { pageX: 100 });
         fireEvent.mouseMove(slider, { pageX: 200 });
@@ -186,7 +193,9 @@ describe("ProductImageSlider", () => {
         <ProductImageSlider images={mockImages} productName="Test Product" />,
       );
 
-      const slider = screen.getByAltText("Test Product - Image 1").closest("div")?.parentElement;
+      const slider = screen
+        .getByAltText("Test Product - Image 1")
+        .closest("div")?.parentElement;
       if (slider) {
         fireEvent.mouseDown(slider, { pageX: 100 });
         fireEvent.mouseUp(slider);
@@ -200,7 +209,9 @@ describe("ProductImageSlider", () => {
         <ProductImageSlider images={mockImages} productName="Test Product" />,
       );
 
-      const slider = screen.getByAltText("Test Product - Image 1").closest("div")?.parentElement;
+      const slider = screen
+        .getByAltText("Test Product - Image 1")
+        .closest("div")?.parentElement;
       if (slider) {
         fireEvent.mouseDown(slider, { pageX: 100 });
         fireEvent.mouseLeave(slider);
@@ -216,7 +227,9 @@ describe("ProductImageSlider", () => {
         <ProductImageSlider images={mockImages} productName="Test Product" />,
       );
 
-      const slider = screen.getByAltText("Test Product - Image 1").closest("div")?.parentElement;
+      const slider = screen
+        .getByAltText("Test Product - Image 1")
+        .closest("div")?.parentElement;
       if (slider) {
         fireEvent.touchStart(slider, {
           touches: [{ pageX: 100 }],
@@ -231,7 +244,9 @@ describe("ProductImageSlider", () => {
         <ProductImageSlider images={mockImages} productName="Test Product" />,
       );
 
-      const slider = screen.getByAltText("Test Product - Image 1").closest("div")?.parentElement;
+      const slider = screen
+        .getByAltText("Test Product - Image 1")
+        .closest("div")?.parentElement;
       if (slider) {
         fireEvent.touchStart(slider, {
           touches: [{ pageX: 100 }],
@@ -249,7 +264,9 @@ describe("ProductImageSlider", () => {
         <ProductImageSlider images={mockImages} productName="Test Product" />,
       );
 
-      const slider = screen.getByAltText("Test Product - Image 1").closest("div")?.parentElement;
+      const slider = screen
+        .getByAltText("Test Product - Image 1")
+        .closest("div")?.parentElement;
       if (slider) {
         fireEvent.touchStart(slider, {
           touches: [{ pageX: 100 }],
@@ -267,7 +284,9 @@ describe("ProductImageSlider", () => {
         <ProductImageSlider images={mockImages} productName="Test Product" />,
       );
 
-      const slider = screen.getByAltText("Test Product - Image 1").closest("div")?.parentElement;
+      const slider = screen
+        .getByAltText("Test Product - Image 1")
+        .closest("div")?.parentElement;
       if (slider) {
         // Mock scrollLeft property
         Object.defineProperty(slider, "scrollLeft", {

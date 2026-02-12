@@ -17,8 +17,7 @@ export async function getAllProducts(): Promise<Product[]> {
     const baseUrl =
       typeof window !== "undefined"
         ? ""
-        : process.env.NEXT_PUBLIC_SITE_URL ||
-          process.env.VERCEL_URL
+        : process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL
           ? `https://${process.env.VERCEL_URL}`
           : "http://localhost:3000";
     const response = await fetch(`${baseUrl}/api/products`, {
@@ -46,8 +45,7 @@ export async function getProductById(id: string): Promise<Product | null> {
     const baseUrl =
       typeof window !== "undefined"
         ? ""
-        : process.env.NEXT_PUBLIC_SITE_URL ||
-          process.env.VERCEL_URL
+        : process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL
           ? `https://${process.env.VERCEL_URL}`
           : "http://localhost:3000";
     const response = await fetch(`${baseUrl}/api/products/${id}`, {

@@ -30,8 +30,9 @@ const LandingPage = () => {
               </S.Title>
 
               <S.Subtitle>
-                These aren&apos;t just mocktails.They&apos;re your mid-day reset, your pre & post-gym treat, your
-                bring-to-the-party bottle. Healthy but full of tasty flavour.
+                These aren&apos;t just mocktails.They&apos;re your mid-day
+                reset, your pre & post-gym treat, your bring-to-the-party
+                bottle. Healthy but full of tasty flavour.
               </S.Subtitle>
             </S.ContentSection>
 

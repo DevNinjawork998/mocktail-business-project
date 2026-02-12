@@ -123,7 +123,10 @@ export default function ProductImageSlider({
                 }}
                 priority={index === 0}
                 onError={() => {
-                  console.error(`Failed to load image ${index + 1} for ${productName}:`, url);
+                  console.error(
+                    `Failed to load image ${index + 1} for ${productName}:`,
+                    url,
+                  );
                 }}
               />
             </S.ImageContainer>

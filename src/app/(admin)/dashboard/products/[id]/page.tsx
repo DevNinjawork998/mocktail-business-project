@@ -26,26 +26,24 @@ export default async function EditProductPage({
         },
       },
     },
-  })) as
-    | {
-        id: string;
-        name: string;
-        subtitle: string;
-        description: string;
-        longDescription: string;
-        price: string;
-        priceSubtext: string;
-        imageColor: string;
-        imageUrl: string | null;
-        features: unknown;
-        ingredients: unknown;
-        productBrief: string | null;
-        nutritionFacts: unknown;
-        images: Array<{ url: string; order: number }>;
-        createdAt: Date;
-        updatedAt: Date;
-      }
-    | null;
+  })) as {
+    id: string;
+    name: string;
+    subtitle: string;
+    description: string;
+    longDescription: string;
+    price: string;
+    priceSubtext: string;
+    imageColor: string;
+    imageUrl: string | null;
+    features: unknown;
+    ingredients: unknown;
+    productBrief: string | null;
+    nutritionFacts: unknown;
+    images: Array<{ url: string; order: number }>;
+    createdAt: Date;
+    updatedAt: Date;
+  } | null;
 
   if (!product) {
     notFound();

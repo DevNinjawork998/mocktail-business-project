@@ -105,7 +105,7 @@ describe("Testimonials", () => {
     // Each testimonial should appear at least twice (original + duplicate)
     const yasmeennElements = screen.getAllByText("yasmeenn");
     const kmElements = screen.getAllByText("KM");
-    
+
     // Should have at least 2 of each (original + duplicate for seamless loop)
     expect(yasmeennElements.length).toBeGreaterThanOrEqual(2);
     expect(kmElements.length).toBeGreaterThanOrEqual(2);
@@ -125,16 +125,20 @@ describe("Testimonials", () => {
     const getCarouselTrack = (container: HTMLElement): HTMLElement | null => {
       // Find the scrollable container - it should be a direct child of TestimonialsContainer
       // Look for an element that has overflow-x or scroll behavior
-      const allDivs = container.querySelectorAll('div');
+      const allDivs = container.querySelectorAll("div");
       for (const div of Array.from(allDivs)) {
         const style = window.getComputedStyle(div);
-        if (style.overflowX === 'auto' || style.overflowX === 'scroll' || 
-            style.overflow === 'auto' || style.overflow === 'scroll') {
+        if (
+          style.overflowX === "auto" ||
+          style.overflowX === "scroll" ||
+          style.overflow === "auto" ||
+          style.overflow === "scroll"
+        ) {
           return div;
         }
       }
       // Fallback: find the container that wraps all testimonials
-      const testimonialText = container.querySelector('p');
+      const testimonialText = container.querySelector("p");
       if (testimonialText) {
         let parent = testimonialText.parentElement;
         let depth = 0;
@@ -150,11 +154,13 @@ describe("Testimonials", () => {
     };
 
     it("pauses carousel on mouse enter", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
         // Simulate mouse enter
         userEvent.hover(carouselTrack);
@@ -162,11 +168,13 @@ describe("Testimonials", () => {
     });
 
     it("resumes carousel on mouse leave when not dragging", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
         // Simulate mouse leave
         userEvent.unhover(carouselTrack);
@@ -174,14 +182,22 @@ describe("Testimonials", () => {
     });
 
     it("handles mouse down event", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
-        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "offsetLeft", {
+          value: 0,
+          writable: true,
+        });
+        Object.defineProperty(carouselTrack, "scrollLeft", {
+          value: 0,
+          writable: true,
+        });
         fireEvent.mouseDown(carouselTrack, { pageX: 100 });
         // Should not throw error
         expect(carouselTrack).toBeInTheDocument();
@@ -189,14 +205,22 @@ describe("Testimonials", () => {
     });
 
     it("handles mouse move event when dragging", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
-        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "offsetLeft", {
+          value: 0,
+          writable: true,
+        });
+        Object.defineProperty(carouselTrack, "scrollLeft", {
+          value: 0,
+          writable: true,
+        });
         // Start dragging
         fireEvent.mouseDown(carouselTrack, { pageX: 100 });
         // Move mouse
@@ -207,14 +231,22 @@ describe("Testimonials", () => {
     });
 
     it("handles mouse up event", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
-        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "offsetLeft", {
+          value: 0,
+          writable: true,
+        });
+        Object.defineProperty(carouselTrack, "scrollLeft", {
+          value: 0,
+          writable: true,
+        });
         fireEvent.mouseDown(carouselTrack, { pageX: 100 });
         fireEvent.mouseUp(carouselTrack);
         // Should not throw error
@@ -223,14 +255,22 @@ describe("Testimonials", () => {
     });
 
     it("handles touch start event", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
-        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "offsetLeft", {
+          value: 0,
+          writable: true,
+        });
+        Object.defineProperty(carouselTrack, "scrollLeft", {
+          value: 0,
+          writable: true,
+        });
         fireEvent.touchStart(carouselTrack, {
           touches: [{ pageX: 100 }],
         });
@@ -240,14 +280,22 @@ describe("Testimonials", () => {
     });
 
     it("handles touch move event when dragging", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
-        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "offsetLeft", {
+          value: 0,
+          writable: true,
+        });
+        Object.defineProperty(carouselTrack, "scrollLeft", {
+          value: 0,
+          writable: true,
+        });
         // Start dragging
         fireEvent.touchStart(carouselTrack, {
           touches: [{ pageX: 100 }],
@@ -262,14 +310,22 @@ describe("Testimonials", () => {
     });
 
     it("handles touch end event", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
-        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "offsetLeft", {
+          value: 0,
+          writable: true,
+        });
+        Object.defineProperty(carouselTrack, "scrollLeft", {
+          value: 0,
+          writable: true,
+        });
         fireEvent.touchStart(carouselTrack, {
           touches: [{ pageX: 100 }],
         });
@@ -280,14 +336,22 @@ describe("Testimonials", () => {
     });
 
     it("does not resume carousel on mouse leave when dragging", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
-        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "offsetLeft", {
+          value: 0,
+          writable: true,
+        });
+        Object.defineProperty(carouselTrack, "scrollLeft", {
+          value: 0,
+          writable: true,
+        });
         // Start dragging
         fireEvent.mouseDown(carouselTrack, { pageX: 100 });
         // Try to leave while dragging
@@ -298,11 +362,13 @@ describe("Testimonials", () => {
     });
 
     it("handles mouse enter to pause carousel", () => {
-      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const { container } = render(
+        <Testimonials testimonials={mockTestimonials} />,
+      );
       const carouselTrack = getCarouselTrack(container);
-      
+
       expect(carouselTrack).not.toBeNull();
-      
+
       if (carouselTrack) {
         fireEvent.mouseEnter(carouselTrack);
         // Should not throw error

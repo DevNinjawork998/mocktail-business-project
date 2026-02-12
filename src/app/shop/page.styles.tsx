@@ -17,7 +17,8 @@ export const ShopContainer = styled.div`
     }
   `}
   ${media.lg} {
-    padding: ${({ theme }) => theme.spacing["4xl"]} ${({ theme }) => theme.spacing.xl};
+    padding: ${({ theme }) => theme.spacing["4xl"]}
+      ${({ theme }) => theme.spacing.xl};
     padding-top: calc(4rem + ${({ theme }) => theme.spacing["4xl"]});
   }
 `;

@@ -106,7 +106,6 @@ export const PhotoOverlay = styled.div`
   transition: opacity 0.3s ease;
 `;
 
-
 export const InstagramIcon = styled.svg`
   width: 3rem;
   height: 3rem;

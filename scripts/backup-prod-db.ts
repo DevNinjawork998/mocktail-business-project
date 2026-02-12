@@ -37,7 +37,9 @@ config({ path: resolve(__dirname, "../.env") });
 const databaseUrl = process.env.DATABASE_URL || process.env.DIRECT_URL;
 
 if (!databaseUrl) {
-  console.error("❌ Error: DATABASE_URL or DIRECT_URL environment variable is required");
+  console.error(
+    "❌ Error: DATABASE_URL or DIRECT_URL environment variable is required",
+  );
   process.exit(1);
 }
 
@@ -88,7 +90,10 @@ async function main() {
     };
 
     // Generate filename with timestamp
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-").split("T")[0];
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[:.]/g, "-")
+      .split("T")[0];
     const filename = `prisma/prod-backup-${timestamp}.json`;
 
     // Write backup to file

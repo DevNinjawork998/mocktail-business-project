@@ -280,7 +280,8 @@ describe("ProductShowcase", () => {
       const productsWithSectionTitle = [
         {
           ...mockProducts[0],
-          longDescription: "<h3>Premium Quality</h3><p>This is a premium product.</p>",
+          longDescription:
+            "<h3>Premium Quality</h3><p>This is a premium product.</p>",
           subtitle: "Experience Premium Quality",
         },
       ];
@@ -291,11 +292,15 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Check that "Premium Quality" (from section title) is rendered as clickable span (role="link")
-        const subtitleLink = screen.getByRole("link", { name: "Premium Quality" });
+        const subtitleLink = screen.getByRole("link", {
+          name: "Premium Quality",
+        });
         expect(subtitleLink).toBeInTheDocument();
         expect(subtitleLink.tagName).toBe("SPAN");
         // Original subtitle should not be displayed
-        expect(screen.queryByText("Experience Premium Quality")).not.toBeInTheDocument();
+        expect(
+          screen.queryByText("Experience Premium Quality"),
+        ).not.toBeInTheDocument();
       });
     });
 
@@ -314,11 +319,15 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Should use section title "Different Title" as subtitle
-        const subtitleLink = screen.getByRole("link", { name: "Different Title" });
+        const subtitleLink = screen.getByRole("link", {
+          name: "Different Title",
+        });
         expect(subtitleLink).toBeInTheDocument();
         expect(subtitleLink.tagName).toBe("SPAN");
         // Original subtitle should not be displayed
-        expect(screen.queryByText("This subtitle doesn't match")).not.toBeInTheDocument();
+        expect(
+          screen.queryByText("This subtitle doesn't match"),
+        ).not.toBeInTheDocument();
       });
     });
 
@@ -342,7 +351,9 @@ describe("ProductShowcase", () => {
 
       // Should render subtitle as plain text, not as a link (no section title when no h3)
       expect(screen.getByText("Regular Subtitle")).toBeInTheDocument();
-      expect(screen.queryByRole("link", { name: "Regular Subtitle" })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("link", { name: "Regular Subtitle" }),
+      ).not.toBeInTheDocument();
     });
 
     it("uses section title exactly as extracted from h3 tag", async () => {
@@ -360,7 +371,9 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Should use section title "Premium Quality" (from h3) as subtitle
-        const subtitleLink = screen.getByRole("link", { name: "Premium Quality" });
+        const subtitleLink = screen.getByRole("link", {
+          name: "Premium Quality",
+        });
         expect(subtitleLink).toBeInTheDocument();
         expect(subtitleLink.tagName).toBe("SPAN");
       });
@@ -381,7 +394,9 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // Should use section title "Product (Premium)" (from h3) as subtitle
-        const subtitleLink = screen.getByRole("link", { name: "Product (Premium)" });
+        const subtitleLink = screen.getByRole("link", {
+          name: "Product (Premium)",
+        });
         expect(subtitleLink).toBeInTheDocument();
         expect(subtitleLink.tagName).toBe("SPAN");
       });
@@ -421,7 +436,9 @@ describe("ProductShowcase", () => {
 
       await waitFor(() => {
         // HTML entities should be decoded (&nbsp; becomes space)
-        const subtitleLink = screen.getByRole("link", { name: "Premium Quality" });
+        const subtitleLink = screen.getByRole("link", {
+          name: "Premium Quality",
+        });
         expect(subtitleLink).toBeInTheDocument();
         expect(subtitleLink.tagName).toBe("SPAN");
       });

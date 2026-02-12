@@ -17,9 +17,7 @@ const RunningBanner: React.FC = () => {
     <BannerContainer>
       <BannerContent>
         {duplicatedBannerData.map((item, index) => (
-          <BannerText key={`${item.type}-${index}`}>
-            {item.content}
-          </BannerText>
+          <BannerText key={`${item.type}-${index}`}>{item.content}</BannerText>
         ))}
       </BannerContent>
     </BannerContainer>

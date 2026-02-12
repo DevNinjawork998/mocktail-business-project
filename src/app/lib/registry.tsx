@@ -2,7 +2,11 @@
 
 import React, { useState } from "react";
 import { useServerInsertedHTML } from "next/navigation";
-import { ServerStyleSheet, StyleSheetManager, ThemeProvider } from "styled-components";
+import {
+  ServerStyleSheet,
+  StyleSheetManager,
+  ThemeProvider,
+} from "styled-components";
 import { styledTheme } from "@/theme/styled-theme";
 import { semanticColors } from "@/theme/colors";
 
@@ -34,18 +38,12 @@ export default function StyledComponentsRegistry({
   if (typeof window === "undefined") {
     return (
       <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
-        <ThemeProvider theme={defaultTheme}>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>
       </StyleSheetManager>
     );
   }
 
   // On client, provide default theme as fallback
   // StyledThemeWrapper will override this once it initializes
-  return (
-    <ThemeProvider theme={defaultTheme}>
-      {children}
-    </ThemeProvider>
-  );
+  return <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>;
 }

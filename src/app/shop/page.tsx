@@ -175,11 +175,10 @@ export default function ShopPage() {
                     </ProductImage>
                   )}
                 </ProductImageContainer>
-                <ProductName>
-                  {product.name}
-                </ProductName>
+                <ProductName>{product.name}</ProductName>
                 <ProductDescription>
-                  {extractSectionTitle(product.longDescription) || product.description}
+                  {extractSectionTitle(product.longDescription) ||
+                    product.description}
                 </ProductDescription>
               </ProductCard>
             </ProductCardLink>
