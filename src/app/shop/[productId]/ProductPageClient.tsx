@@ -76,7 +76,10 @@ export default function ProductPageClient({
   // Build image URLs array: main imageUrl first, then supporting photos from ProductImage (order 1, 2)
   const imageUrls = useMemo(() => {
     // #region agent log
-    if (typeof fetch !== "undefined") {
+    if (
+      typeof fetch !== "undefined" &&
+      process.env.NODE_ENV === "development"
+    ) {
       fetch(
         "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
         {
@@ -105,13 +108,17 @@ export default function ProductPageClient({
     const urlSet = new Set<string>(); // Track URLs to prevent duplicates
     const orderSet = new Set<number>(); // Track orders to ensure only one image per order
 
+
     // Always start with main imageUrl (this is the primary source for the main photo)
     if (product.imageUrl) {
       urls.push(product.imageUrl);
       urlSet.add(product.imageUrl);
       orderSet.add(0); // Mark order 0 as used
       // #region agent log
-      if (typeof fetch !== "undefined") {
+      if (
+        typeof fetch !== "undefined" &&
+        process.env.NODE_ENV === "development"
+      ) {
         fetch(
           "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
           {
@@ -134,7 +141,10 @@ export default function ProductPageClient({
       // #endregion
     } else {
       // #region agent log
-      if (typeof fetch !== "undefined") {
+      if (
+        typeof fetch !== "undefined" &&
+        process.env.NODE_ENV === "development"
+      ) {
         fetch(
           "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
           {
@@ -154,12 +164,14 @@ export default function ProductPageClient({
       // #endregion
     }
 
+
     // Then add supporting photos from ProductImage records (order 1, 2 only)
     // We skip order 0 because it's the same as imageUrl
     // Also ensure no ProductImage URL matches imageUrl (even if order > 0)
     if (product.images && product.images.length > 0) {
       // Group by order and take only the first occurrence of each order
       const orderMap = new Map<number, string>();
+
 
       product.images.forEach((img) => {
         // Only process order 1 and 2 (strictly)
@@ -180,6 +192,7 @@ export default function ProductPageClient({
         }
       });
 
+
       // Sort by order and add to URLs
       const sortedOrders = Array.from(orderMap.keys()).sort((a, b) => a - b);
       sortedOrders.forEach((order) => {
@@ -192,9 +205,11 @@ export default function ProductPageClient({
       });
     }
 
+
     // Safety limit: Only return max 3 images (main + 2 supporting)
     // This prevents issues if there are ProductImage records with order > 2
     const limitedUrls = urls.slice(0, 3);
+
 
     // Final deduplication check: ensure no duplicate URLs in final array
     const finalDeduplicatedUrls: string[] = [];
@@ -207,7 +222,10 @@ export default function ProductPageClient({
     });
 
     // #region agent log
-    if (typeof fetch !== "undefined") {
+    if (
+      typeof fetch !== "undefined" &&
+      process.env.NODE_ENV === "development"
+    ) {
       fetch(
         "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
         {
@@ -584,68 +602,6 @@ export default function ProductPageClient({
                 </button>
               </>
             )}
-            {imageUrls.length > 1 && (
-              <>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setZoomedImageIndex((prev) =>
-                      prev > 0 ? prev - 1 : imageUrls.length - 1,
-                    );
-                  }}
-                  style={{
-                    position: "absolute",
-                    left: "1rem",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "rgba(0, 0, 0, 0.6)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "50%",
-                    width: "48px",
-                    height: "48px",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "1.5rem",
-                    zIndex: 20,
-                  }}
-                  aria-label="Previous image"
-                >
-                  ‹
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setZoomedImageIndex((prev) =>
-                      prev < imageUrls.length - 1 ? prev + 1 : 0,
-                    );
-                  }}
-                  style={{
-                    position: "absolute",
-                    right: "1rem",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "rgba(0, 0, 0, 0.6)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "50%",
-                    width: "48px",
-                    height: "48px",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "1.5rem",
-                    zIndex: 20,
-                  }}
-                  aria-label="Next image"
-                >
-                  ›
-                </button>
-              </>
-            )}
             <div
               style={{
                 position: "relative",
@@ -662,24 +618,6 @@ export default function ProductPageClient({
                 priority
               />
             </div>
-            {imageUrls.length > 1 && (
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "1rem",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  background: "rgba(0, 0, 0, 0.6)",
-                  color: "white",
-                  padding: "0.5rem 1rem",
-                  borderRadius: "8px",
-                  fontSize: "0.875rem",
-                  zIndex: 20,
-                }}
-              >
-                {zoomedImageIndex + 1} / {imageUrls.length}
-              </div>
-            )}
             {imageUrls.length > 1 && (
               <div
                 style={{
