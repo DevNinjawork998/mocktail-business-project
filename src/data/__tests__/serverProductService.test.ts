@@ -39,6 +39,7 @@ describe("serverProductService", () => {
         { label: "Calories", value: "100" },
         { label: "Sugar", value: "5g" },
       ],
+      images: [],
       createdAt: new Date(),
     },
     {
@@ -54,6 +55,7 @@ describe("serverProductService", () => {
       ingredients: ["Ingredient 3"],
       productBrief: "Another product brief",
       nutritionFacts: [],
+      images: [],
       createdAt: new Date(),
     },
   ];
@@ -165,6 +167,13 @@ describe("serverProductService", () => {
       expect(prisma.product.findUnique).toHaveBeenCalledWith({
         where: {
           id: "1",
+        },
+        include: {
+          images: {
+            orderBy: {
+              order: "asc",
+            },
+          },
         },
       });
     });

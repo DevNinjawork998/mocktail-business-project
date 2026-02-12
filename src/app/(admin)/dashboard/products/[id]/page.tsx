@@ -17,6 +17,13 @@ export default async function EditProductPage({
 
   const product = await prisma.product.findUnique({
     where: { id },
+    include: {
+      images: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
   });
 
   if (!product) {
@@ -27,6 +34,10 @@ export default async function EditProductPage({
     ...product,
     features: product.features as Array<{ text: string; color: string }>,
     ingredients: product.ingredients as string[] | null,
+    images: product.images.map((img) => ({
+      url: img.url,
+      order: img.order,
+    })),
   };
 
   return (

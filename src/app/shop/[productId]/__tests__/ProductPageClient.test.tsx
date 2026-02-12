@@ -121,7 +121,8 @@ describe("ProductPageClient", () => {
         />,
       );
 
-      const image = screen.getByAltText("Test Cocktail");
+      // ProductImageSlider formats alt text as "{productName} - Image {index}"
+      const image = screen.getByAltText("Test Cocktail - Image 1");
       expect(image).toBeInTheDocument();
       expect(image).toHaveAttribute("src", "/test-image.jpg");
     });

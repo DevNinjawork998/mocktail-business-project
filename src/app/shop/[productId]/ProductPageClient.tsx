@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type MouseEvent } from "react";
+import { useState, useMemo, type MouseEvent } from "react";
 import { Product } from "@/data/serverProductService";
+import ProductImageSlider from "@/components/ProductImageSlider/ProductImageSlider";
 import {
   ProductPageContainer,
   ProductLayout,
@@ -29,8 +30,6 @@ import {
   ProductInfoFeatureRow,
   ProductInfoFeatureIcon,
   ProductInfoFeatureLabel,
-  ProductImageContainer,
-  ProductImage,
   SidebarProductImageContainer,
   SidebarProductImageStyled,
   FeatureItemContainer,
@@ -72,6 +71,75 @@ export default function ProductPageClient({
   const [showModal, setShowModal] = useState(false);
   const [consentGiven, setConsentGiven] = useState(false);
   const [showImageZoom, setShowImageZoom] = useState(false);
+  const [zoomedImageIndex, setZoomedImageIndex] = useState(0);
+
+  // Build image URLs array: main imageUrl first, then supporting photos from ProductImage (order 1, 2)
+  const imageUrls = useMemo(() => {
+    const urls: string[] = [];
+    const urlSet = new Set<string>(); // Track URLs to prevent duplicates
+    const orderSet = new Set<number>(); // Track orders to ensure only one image per order
+    
+    // Always start with main imageUrl (this is the primary source for the main photo)
+    if (product.imageUrl) {
+      urls.push(product.imageUrl);
+      urlSet.add(product.imageUrl);
+      orderSet.add(0); // Mark order 0 as used
+    }
+    
+    // Then add supporting photos from ProductImage records (order 1, 2 only)
+    // We skip order 0 because it's the same as imageUrl
+    // Also ensure no ProductImage URL matches imageUrl (even if order > 0)
+    if (product.images && product.images.length > 0) {
+      // Group by order and take only the first occurrence of each order
+      const orderMap = new Map<number, string>();
+      
+      product.images.forEach((img) => {
+        // Only process order 1 and 2 (strictly)
+        if (img.order <= 0 || img.order > 2) {
+          return;
+        }
+        // Skip if URL matches imageUrl
+        if (product.imageUrl && img.url === product.imageUrl) {
+          return;
+        }
+        // Skip if URL already exists (duplicate URL check)
+        if (urlSet.has(img.url)) {
+          return;
+        }
+        // Only keep the first occurrence of each order
+        if (!orderMap.has(img.order)) {
+          orderMap.set(img.order, img.url);
+        }
+      });
+      
+      // Sort by order and add to URLs
+      const sortedOrders = Array.from(orderMap.keys()).sort((a, b) => a - b);
+      sortedOrders.forEach((order) => {
+        const url = orderMap.get(order);
+        if (url && !urlSet.has(url)) {
+          urls.push(url);
+          urlSet.add(url);
+          orderSet.add(order);
+        }
+      });
+    }
+    
+    // Safety limit: Only return max 3 images (main + 2 supporting)
+    // This prevents issues if there are ProductImage records with order > 2
+    const limitedUrls = urls.slice(0, 3);
+    
+    // Final deduplication check: ensure no duplicate URLs in final array
+    const finalDeduplicatedUrls: string[] = [];
+    const finalUrlSet = new Set<string>();
+    limitedUrls.forEach((url) => {
+      if (!finalUrlSet.has(url)) {
+        finalDeduplicatedUrls.push(url);
+        finalUrlSet.add(url);
+      }
+    });
+    
+    return finalDeduplicatedUrls;
+  }, [product.images, product.imageUrl]);
 
   const handleWhatsAppInquiry = () => {
     setShowModal(true);
@@ -240,21 +308,15 @@ export default function ProductPageClient({
       <ProductLayout>
         <MainContent>
           <ProductImageSection>
-            {product.imageUrl ? (
-              <ProductImageContainer
-                onClick={() => setShowImageZoom(true)}
-                style={{ cursor: "pointer" }}
-              >
-                <ProductImage
-                  src={product.imageUrl}
-                  alt={product.name}
-                  fill
-                  style={{
-                    objectFit: "contain",
-                  }}
-                  sizes="(max-width: 768px) 300px, (max-width: 1024px) 400px, 450px"
-                />
-              </ProductImageContainer>
+            {imageUrls.length > 0 ? (
+              <ProductImageSlider
+                images={imageUrls}
+                productName={product.name}
+                onImageClick={(index) => {
+                  setZoomedImageIndex(index);
+                  setShowImageZoom(true);
+                }}
+              />
             ) : (
               <ProductImagePlaceholder $bgColor={product.imageColor}>
                 {product.name}
@@ -362,32 +424,108 @@ export default function ProductPageClient({
       </ProductDisclaimerSection>
 
       {/* Image Zoom Modal */}
-      {showImageZoom && product.imageUrl && (
+      {showImageZoom && imageUrls.length > 0 && (
         <ImageZoomOverlay onClick={() => setShowImageZoom(false)}>
           <ImageZoomContainer onClick={(e) => e.stopPropagation()}>
             <ImageZoomCloseButton onClick={() => setShowImageZoom(false)}>
               ×
             </ImageZoomCloseButton>
+            {imageUrls.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setZoomedImageIndex((prev) =>
+                      prev > 0 ? prev - 1 : imageUrls.length - 1
+                    );
+                  }}
+                  style={{
+                    position: "absolute",
+                    left: "1rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "rgba(0, 0, 0, 0.6)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "48px",
+                    height: "48px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    zIndex: 20,
+                  }}
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setZoomedImageIndex((prev) =>
+                      prev < imageUrls.length - 1 ? prev + 1 : 0
+                    );
+                  }}
+                  style={{
+                    position: "absolute",
+                    right: "1rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "rgba(0, 0, 0, 0.6)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "48px",
+                    height: "48px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    zIndex: 20,
+                  }}
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+              </>
+            )}
             <div
               style={{
                 position: "relative",
                 width: "100%",
                 height: "100%",
-                minWidth: "300px",
-                minHeight: "400px",
-                maxWidth: "90vw",
-                maxHeight: "90vh",
               }}
             >
               <ImageZoomImage
-                src={product.imageUrl}
-                alt={product.name}
+                src={imageUrls[zoomedImageIndex]}
+                alt={`${product.name} - Image ${zoomedImageIndex + 1}`}
                 fill
                 style={{ objectFit: "contain" }}
-                sizes="90vw"
+                sizes="95vw"
                 priority
               />
             </div>
+            {imageUrls.length > 1 && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "1rem",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  background: "rgba(0, 0, 0, 0.6)",
+                  color: "white",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "8px",
+                  fontSize: "0.875rem",
+                  zIndex: 20,
+                }}
+              >
+                {zoomedImageIndex + 1} / {imageUrls.length}
+              </div>
+            )}
           </ImageZoomContainer>
         </ImageZoomOverlay>
       )}
