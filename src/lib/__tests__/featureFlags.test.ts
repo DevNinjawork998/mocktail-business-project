@@ -61,7 +61,6 @@ describe("featureFlags", () => {
       expect(isFeatureEnabled("testfeature")).toBe(false);
     });
 
-
     it("returns true by default when no environment variable is set (client-side)", () => {
       (global as { window?: unknown }).window = {};
       delete process.env.NEXT_PUBLIC_ENABLE_TESTFEATURE;
@@ -187,6 +186,5 @@ describe("featureFlags", () => {
       const result = isFeatureEnabled("stripe");
       expect(typeof result).toBe("boolean");
     });
-
   });
 });

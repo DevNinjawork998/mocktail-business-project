@@ -135,7 +135,8 @@ const Testimonials: React.FC<TestimonialsProps> = ({ testimonials = [] }) => {
             }}
           >
             {duplicatedTestimonials.map((testimonial, index) => {
-              const customerInitial = testimonial.customerName[0]?.toUpperCase() || "?";
+              const customerInitial =
+                testimonial.customerName[0]?.toUpperCase() || "?";
               return (
                 <TestimonialCard key={`${testimonial.id}-${index}`}>
                   <TestimonialContent>

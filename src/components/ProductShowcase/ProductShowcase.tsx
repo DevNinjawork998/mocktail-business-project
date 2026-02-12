@@ -11,7 +11,7 @@ import { getAllProducts, Product } from "@/data/productService";
  */
 function extractSectionTitle(longDescription: string): string | null {
   if (!longDescription) return null;
-  
+
   // Try to extract h3 tag content
   const h3Match = longDescription.match(/<h3[^>]*>(.*?)<\/h3>/i);
   if (h3Match) {
@@ -21,7 +21,7 @@ function extractSectionTitle(longDescription: string): string | null {
       .replace(/&nbsp;/g, " ")
       .trim();
   }
-  
+
   return null;
 }
 
@@ -135,13 +135,13 @@ const ProductShowcase = () => {
                   )}
                 </S.ProductImage>
                 <S.ProductContent>
-                  <S.ProductName>
-                    {product.name}
-                  </S.ProductName>
+                  <S.ProductName>{product.name}</S.ProductName>
                   <S.ProductSubtitle>
                     <SubtitleWithLink
                       subtitle={product.subtitle}
-                      sectionTitle={extractSectionTitle(product.longDescription)}
+                      sectionTitle={extractSectionTitle(
+                        product.longDescription,
+                      )}
                       productId={product.id}
                       onNavigate={(url) => router.push(url)}
                     />

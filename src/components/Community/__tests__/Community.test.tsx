@@ -10,32 +10,38 @@ const mockInstagramPosts = [
   {
     id: "1",
     postUrl: "https://www.instagram.com/p/test1/",
-    imageUrl: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=600&h=600&fit=crop",
+    imageUrl:
+      "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=600&h=600&fit=crop",
   },
   {
     id: "2",
     postUrl: "https://www.instagram.com/p/test2/",
-    imageUrl: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=600&fit=crop",
+    imageUrl:
+      "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=600&fit=crop",
   },
   {
     id: "3",
     postUrl: "https://www.instagram.com/p/test3/",
-    imageUrl: "https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=600&h=600&fit=crop",
+    imageUrl:
+      "https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=600&h=600&fit=crop",
   },
   {
     id: "4",
     postUrl: "https://www.instagram.com/p/test4/",
-    imageUrl: "https://images.unsplash.com/photo-1622597467836-f3c7ca9d7b17?w=600&h=600&fit=crop",
+    imageUrl:
+      "https://images.unsplash.com/photo-1622597467836-f3c7ca9d7b17?w=600&h=600&fit=crop",
   },
   {
     id: "5",
     postUrl: "https://www.instagram.com/p/test5/",
-    imageUrl: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=600&h=600&fit=crop",
+    imageUrl:
+      "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=600&h=600&fit=crop",
   },
   {
     id: "6",
     postUrl: "https://www.instagram.com/p/test6/",
-    imageUrl: "https://images.unsplash.com/photo-1563089145-599997674d42?w=600&h=600&fit=crop",
+    imageUrl:
+      "https://images.unsplash.com/photo-1563089145-599997674d42?w=600&h=600&fit=crop",
   },
 ];
 

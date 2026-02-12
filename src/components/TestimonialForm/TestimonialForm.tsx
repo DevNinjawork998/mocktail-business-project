@@ -139,9 +139,7 @@ export default function TestimonialForm() {
             {errors.order && (
               <S.FieldError>{errors.order.message}</S.FieldError>
             )}
-            <S.HelpText>
-              Lower numbers appear first. Default is 0.
-            </S.HelpText>
+            <S.HelpText>Lower numbers appear first. Default is 0.</S.HelpText>
           </S.FormGroup>
         </S.FormGrid>
       </S.Section>
@@ -177,7 +175,9 @@ export default function TestimonialForm() {
                     borderRadius: "8px",
                     backgroundColor: color,
                     border:
-                      avatarColor === color ? "3px solid #000" : "2px solid #ccc",
+                      avatarColor === color
+                        ? "3px solid #000"
+                        : "2px solid #ccc",
                     cursor: "pointer",
                   }}
                   aria-label={`Select color ${color}`}

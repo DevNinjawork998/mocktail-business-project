@@ -29,7 +29,10 @@ const productSchema = z.object({
   price: z.string().min(1, "Price is required"),
   priceSubtext: z.string().min(1, "Price subtext is required"),
   imageColor: z.string().min(1, "Image color is required"),
-  imageUrl: z.string().url("Main photo is required").min(1, "Main photo is required"),
+  imageUrl: z
+    .string()
+    .url("Main photo is required")
+    .min(1, "Main photo is required"),
   supportingPhoto1Url: z.string().url().optional().nullable(),
   supportingPhoto2Url: z.string().url().optional().nullable(),
   features: z.array(z.object({ text: z.string(), color: z.string() })),
@@ -63,22 +66,37 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [isMainImageUploading, setIsMainImageUploading] = useState(false);
   // Supporting image upload states are kept for future use
-  const [_isSupportingImage1Uploading, setIsSupportingImage1Uploading] = useState(false);
-  const [_isSupportingImage2Uploading, setIsSupportingImage2Uploading] = useState(false);
-  
+  const [_isSupportingImage1Uploading, setIsSupportingImage1Uploading] =
+    useState(false);
+  const [_isSupportingImage2Uploading, setIsSupportingImage2Uploading] =
+    useState(false);
+
   // Load images from product.images array (ordered by order field)
-  const initialMainPhotoUrl = product?.imageUrl || product?.images?.find(img => img.order === 0)?.url || null;
-  const initialSupportingPhoto1Url = product?.images?.find(img => img.order === 1)?.url || null;
-  const initialSupportingPhoto2Url = product?.images?.find(img => img.order === 2)?.url || null;
-  
-  const [uploadedMainPhotoUrl, setUploadedMainPhotoUrl] = useState<string | null>(initialMainPhotoUrl);
-  const [uploadedSupportingPhoto1Url, setUploadedSupportingPhoto1Url] = useState<string | null>(initialSupportingPhoto1Url);
-  const [uploadedSupportingPhoto2Url, setUploadedSupportingPhoto2Url] = useState<string | null>(initialSupportingPhoto2Url);
-  
+  const initialMainPhotoUrl =
+    product?.imageUrl ||
+    product?.images?.find((img) => img.order === 0)?.url ||
+    null;
+  const initialSupportingPhoto1Url =
+    product?.images?.find((img) => img.order === 1)?.url || null;
+  const initialSupportingPhoto2Url =
+    product?.images?.find((img) => img.order === 2)?.url || null;
+
+  const [uploadedMainPhotoUrl, setUploadedMainPhotoUrl] = useState<
+    string | null
+  >(initialMainPhotoUrl);
+  const [uploadedSupportingPhoto1Url, setUploadedSupportingPhoto1Url] =
+    useState<string | null>(initialSupportingPhoto1Url);
+  const [uploadedSupportingPhoto2Url, setUploadedSupportingPhoto2Url] =
+    useState<string | null>(initialSupportingPhoto2Url);
+
   // Use refs to ensure we always have the latest values
   const mainPhotoUrlRef = useRef<string | null>(initialMainPhotoUrl);
-  const supportingPhoto1UrlRef = useRef<string | null>(initialSupportingPhoto1Url);
-  const supportingPhoto2UrlRef = useRef<string | null>(initialSupportingPhoto2Url);
+  const supportingPhoto1UrlRef = useRef<string | null>(
+    initialSupportingPhoto1Url,
+  );
+  const supportingPhoto2UrlRef = useRef<string | null>(
+    initialSupportingPhoto2Url,
+  );
 
   // Parse existing longDescription if editing
   const parsedDescription = useMemo(() => {
@@ -192,7 +210,8 @@ export default function ProductForm({ product }: ProductFormProps) {
 
   // Sync hidden inputs with current values
   useEffect(() => {
-    const currentMainPhoto = imageUrl || uploadedMainPhotoUrl || mainPhotoUrlRef.current;
+    const currentMainPhoto =
+      imageUrl || uploadedMainPhotoUrl || mainPhotoUrlRef.current;
     if (currentMainPhoto) {
       setValue("imageUrl", currentMainPhoto, {
         shouldValidate: true,
@@ -202,7 +221,10 @@ export default function ProductForm({ product }: ProductFormProps) {
   }, [imageUrl, uploadedMainPhotoUrl, setValue]);
 
   useEffect(() => {
-    const currentPhoto1 = supportingPhoto1Url || uploadedSupportingPhoto1Url || supportingPhoto1UrlRef.current;
+    const currentPhoto1 =
+      supportingPhoto1Url ||
+      uploadedSupportingPhoto1Url ||
+      supportingPhoto1UrlRef.current;
     setValue("supportingPhoto1Url", currentPhoto1 || undefined, {
       shouldValidate: false,
       shouldDirty: false,
@@ -210,7 +232,10 @@ export default function ProductForm({ product }: ProductFormProps) {
   }, [supportingPhoto1Url, uploadedSupportingPhoto1Url, setValue]);
 
   useEffect(() => {
-    const currentPhoto2 = supportingPhoto2Url || uploadedSupportingPhoto2Url || supportingPhoto2UrlRef.current;
+    const currentPhoto2 =
+      supportingPhoto2Url ||
+      uploadedSupportingPhoto2Url ||
+      supportingPhoto2UrlRef.current;
     setValue("supportingPhoto2Url", currentPhoto2 || undefined, {
       shouldValidate: false,
       shouldDirty: false,
@@ -247,7 +272,9 @@ export default function ProductForm({ product }: ProductFormProps) {
 
     // Validate main photo is required
     if (!currentImageUrl) {
-      setError("Main photo is required. Please upload a main photo before submitting.");
+      setError(
+        "Main photo is required. Please upload a main photo before submitting.",
+      );
       setIsSubmitting(false);
       return;
     }
@@ -283,9 +310,10 @@ export default function ProductForm({ product }: ProductFormProps) {
       supportingPhoto1Url: currentSupportingPhoto1Url || null,
       supportingPhoto2Url: currentSupportingPhoto2Url || null,
       features: data.features,
-      ingredients: data.ingredients.filter((i) => i.trim()).length > 0
-        ? data.ingredients.filter((i) => i.trim())
-        : null,
+      ingredients:
+        data.ingredients.filter((i) => i.trim()).length > 0
+          ? data.ingredients.filter((i) => i.trim())
+          : null,
       productBrief: data.productBrief || null,
     };
 
@@ -303,7 +331,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   };
 
   return (
-      <S.Form onSubmit={handleSubmit(onSubmit)}>
+    <S.Form onSubmit={handleSubmit(onSubmit)}>
       {/* Hidden inputs to ensure image URLs are tracked by react-hook-form */}
       <input type="hidden" {...register("imageUrl")} />
       <input type="hidden" {...register("supportingPhoto1Url")} />

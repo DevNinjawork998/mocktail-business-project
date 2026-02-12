@@ -111,50 +111,54 @@ export default function ProductDescriptionParser({
         return (
           <S.Section key={sectionIndex}>
             {section.title && (
-              <S.SectionTitle id={sectionIndex === 0 ? "section-title" : sectionId}>
+              <S.SectionTitle
+                id={sectionIndex === 0 ? "section-title" : sectionId}
+              >
                 {section.title}
               </S.SectionTitle>
             )}
 
-          {section.paragraphs.length > 0 && (
-            <S.ContentWrapper>
-              {section.isList ? (
-                // Render as bullet list if it came from a <ul>
-                <S.KeyPointsList>
-                  {section.paragraphs.map((item, itemIndex) => (
-                    <S.KeyPoint key={itemIndex}>
-                      <S.BulletIcon>•</S.BulletIcon>
-                      <S.KeyPointText>{item}</S.KeyPointText>
-                    </S.KeyPoint>
-                  ))}
-                </S.KeyPointsList>
-              ) : (
-                // Render as paragraphs
-                section.paragraphs.map((paragraph, paraIndex) => {
-                  // For longer paragraphs, break into key points for better readability
-                  if (paragraph.length > 120) {
-                    const keyPoints = extractKeyPoints(paragraph);
-                    // Only use bullet points if we got meaningful splits
-                    if (keyPoints.length > 1) {
-                      return (
-                        <S.KeyPointsList key={paraIndex}>
-                          {keyPoints.map((point, pointIndex) => (
-                            <S.KeyPoint key={pointIndex}>
-                              <S.BulletIcon>•</S.BulletIcon>
-                              <S.KeyPointText>{point}.</S.KeyPointText>
-                            </S.KeyPoint>
-                          ))}
-                        </S.KeyPointsList>
-                      );
+            {section.paragraphs.length > 0 && (
+              <S.ContentWrapper>
+                {section.isList ? (
+                  // Render as bullet list if it came from a <ul>
+                  <S.KeyPointsList>
+                    {section.paragraphs.map((item, itemIndex) => (
+                      <S.KeyPoint key={itemIndex}>
+                        <S.BulletIcon>•</S.BulletIcon>
+                        <S.KeyPointText>{item}</S.KeyPointText>
+                      </S.KeyPoint>
+                    ))}
+                  </S.KeyPointsList>
+                ) : (
+                  // Render as paragraphs
+                  section.paragraphs.map((paragraph, paraIndex) => {
+                    // For longer paragraphs, break into key points for better readability
+                    if (paragraph.length > 120) {
+                      const keyPoints = extractKeyPoints(paragraph);
+                      // Only use bullet points if we got meaningful splits
+                      if (keyPoints.length > 1) {
+                        return (
+                          <S.KeyPointsList key={paraIndex}>
+                            {keyPoints.map((point, pointIndex) => (
+                              <S.KeyPoint key={pointIndex}>
+                                <S.BulletIcon>•</S.BulletIcon>
+                                <S.KeyPointText>{point}.</S.KeyPointText>
+                              </S.KeyPoint>
+                            ))}
+                          </S.KeyPointsList>
+                        );
+                      }
                     }
-                  }
 
-                  // For shorter paragraphs or if splitting didn't work well, display as regular text
-                  return <S.Paragraph key={paraIndex}>{paragraph}</S.Paragraph>;
-                })
-              )}
-            </S.ContentWrapper>
-          )}
+                    // For shorter paragraphs or if splitting didn't work well, display as regular text
+                    return (
+                      <S.Paragraph key={paraIndex}>{paragraph}</S.Paragraph>
+                    );
+                  })
+                )}
+              </S.ContentWrapper>
+            )}
           </S.Section>
         );
       })}

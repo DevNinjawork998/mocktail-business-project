@@ -10,11 +10,13 @@ export const ProductPageContainer = styled.div`
   overflow-x: hidden;
 
   ${media.md} {
-    padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.xl}
+      ${({ theme }) => theme.spacing.md};
   }
 
   ${media.lg} {
-    padding: ${({ theme }) => theme.spacing["2xl"]} ${({ theme }) => theme.spacing.xl};
+    padding: ${({ theme }) => theme.spacing["2xl"]}
+      ${({ theme }) => theme.spacing.xl};
   }
 `;
 
@@ -264,7 +266,8 @@ export const WhatsAppButton = styled.button`
   }
 
   ${media.md} {
-    padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing["2xl"]};
+    padding: ${({ theme }) => theme.spacing.lg}
+      ${({ theme }) => theme.spacing["2xl"]};
     font-size: 1.125rem;
     flex-wrap: nowrap;
   }
@@ -408,7 +411,7 @@ export const ProductInfoSection = styled.section`
   -webkit-backdrop-filter: blur(10px);
   border-radius: 1.5rem;
   border: 1px solid rgba(212, 170, 179, 0.3);
-  box-shadow: 
+  box-shadow:
     0 8px 32px 0 rgba(69, 21, 21, 0.15),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
   max-width: 1400px;
@@ -420,7 +423,7 @@ export const ProductInfoSection = styled.section`
   align-items: flex-start;
   position: relative;
   overflow-x: hidden;
-  
+
   &::before {
     content: "";
     position: absolute;
@@ -435,7 +438,7 @@ export const ProductInfoSection = styled.section`
       transparent
     );
   }
-  
+
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -807,7 +810,7 @@ export const ProductDisclaimerSection = styled.div`
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(212, 170, 179, 0.3);
   border-radius: 0.75rem;
-  box-shadow: 
+  box-shadow:
     0 8px 32px 0 rgba(69, 21, 21, 0.15),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
   max-width: 1400px;
@@ -823,7 +826,7 @@ export const ProductDisclaimerSection = styled.div`
     padding: 1.25rem 1.5rem;
     font-size: 0.875rem;
   }
-  
+
   &::before {
     content: "";
     position: absolute;

@@ -15,11 +15,7 @@ export function middleware(request: NextRequest): NextResponse {
   const protocol = request.headers.get("x-forwarded-proto");
   const host = request.headers.get("host");
 
-  if (
-    process.env.NODE_ENV === "production" &&
-    protocol === "http" &&
-    host
-  ) {
+  if (process.env.NODE_ENV === "production" && protocol === "http" && host) {
     const url = request.nextUrl.clone();
     url.protocol = "https:";
     return NextResponse.redirect(url, 301);

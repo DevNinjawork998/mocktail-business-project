@@ -61,7 +61,10 @@ const productSchema = z.object({
   price: z.string().min(1, "Price is required"),
   priceSubtext: z.string().min(1, "Price subtext is required"),
   imageColor: z.string().min(1, "Image color is required"),
-  imageUrl: z.string().url("Main photo is required").min(1, "Main photo is required"),
+  imageUrl: z
+    .string()
+    .url("Main photo is required")
+    .min(1, "Main photo is required"),
   supportingPhoto1Url: z.preprocess(
     (val) => (val === "" || val === null || val === undefined ? null : val),
     z.string().url().nullable().optional(),
@@ -87,7 +90,7 @@ export async function createProduct(
 
   try {
     const validated = productSchema.parse(data);
-    
+
     // Validate main photo is required
     if (!validated.imageUrl) {
       return { success: false, error: "Main photo is required" };
@@ -182,21 +185,25 @@ export async function updateProduct(
           },
         },
       },
-    })) as
-      | {
-          imageUrl: string | null;
-          images: Array<{ id: string; url: string; order: number }>;
-        }
-      | null;
+    })) as {
+      imageUrl: string | null;
+      images: Array<{ id: string; url: string; order: number }>;
+    } | null;
 
     if (!currentProduct) {
       return { success: false, error: "Product not found" };
     }
 
     // Find existing ProductImage records by order
-    const existingMainPhoto = currentProduct.images.find((img) => img.order === 0);
-    const existingSupportingPhoto1 = currentProduct.images.find((img) => img.order === 1);
-    const existingSupportingPhoto2 = currentProduct.images.find((img) => img.order === 2);
+    const existingMainPhoto = currentProduct.images.find(
+      (img) => img.order === 0,
+    );
+    const existingSupportingPhoto1 = currentProduct.images.find(
+      (img) => img.order === 1,
+    );
+    const existingSupportingPhoto2 = currentProduct.images.find(
+      (img) => img.order === 2,
+    );
 
     // Track URLs to delete from UploadThing
     const urlsToDelete: string[] = [];
@@ -364,18 +371,16 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
           },
         },
       },
-    })) as
-      | {
-          imageUrl: string | null;
-          images: Array<{ url: string }>;
-        }
-      | null;
+    })) as {
+      imageUrl: string | null;
+      images: Array<{ url: string }>;
+    } | null;
 
     // Delete all images from UploadThing
     if (product?.imageUrl) {
       await deleteUploadThingFile(product.imageUrl);
     }
-    
+
     // Delete all ProductImage records (cascade delete should handle this, but we'll delete files first)
     for (const image of product?.images || []) {
       await deleteUploadThingFile(image.url);

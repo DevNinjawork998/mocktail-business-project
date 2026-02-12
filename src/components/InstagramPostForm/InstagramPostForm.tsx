@@ -16,15 +16,10 @@ const instagramPostSchema = z.object({
   postUrl: z
     .string()
     .min(1, "Instagram post URL is required")
-    .refine(
-      (url) => {
-        // Basic validation - full validation happens on server
-        return (
-          url.includes("instagram.com/p/") || url.includes("instagr.am/p/")
-        );
-      },
-      "Must be a valid Instagram post URL",
-    ),
+    .refine((url) => {
+      // Basic validation - full validation happens on server
+      return url.includes("instagram.com/p/") || url.includes("instagr.am/p/");
+    }, "Must be a valid Instagram post URL"),
   imageUrl: z.string().url("Image is required"),
   order: z.coerce.number().int().min(0),
 });
@@ -106,12 +101,8 @@ export default function InstagramPostForm() {
             placeholder="0"
             $hasError={!!errors.order}
           />
-          {errors.order && (
-            <S.FieldError>{errors.order.message}</S.FieldError>
-          )}
-          <S.HelpText>
-            Lower numbers appear first. Default is 0.
-          </S.HelpText>
+          {errors.order && <S.FieldError>{errors.order.message}</S.FieldError>}
+          <S.HelpText>Lower numbers appear first. Default is 0.</S.HelpText>
         </S.FormGroup>
       </S.Section>
 
@@ -136,7 +127,8 @@ export default function InstagramPostForm() {
             <S.FieldError>{errors.imageUrl.message}</S.FieldError>
           )}
           <S.HelpText>
-            Upload the image from the Instagram post. This will be displayed in the community section.
+            Upload the image from the Instagram post. This will be displayed in
+            the community section.
           </S.HelpText>
         </S.FormGroup>
       </S.Section>

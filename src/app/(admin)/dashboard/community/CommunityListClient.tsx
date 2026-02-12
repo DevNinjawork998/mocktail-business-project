@@ -40,14 +40,11 @@ export default function CommunityListClient({
   const [deletingTestimonialId, setDeletingTestimonialId] = useState<
     string | null
   >(null);
-  const [deletingInstagramId, setDeletingInstagramId] = useState<
-    string | null
-  >(null);
+  const [deletingInstagramId, setDeletingInstagramId] = useState<string | null>(
+    null,
+  );
 
-  const handleDeleteTestimonial = async (
-    id: string,
-    customerName: string,
-  ) => {
+  const handleDeleteTestimonial = async (id: string, customerName: string) => {
     if (
       !confirm(
         `Are you sure you want to delete testimonial from "${customerName}"?`,
@@ -112,9 +109,7 @@ export default function CommunityListClient({
       <S.Header style={{ marginBottom: "2rem" }}>
         <S.HeaderContent>
           <S.Title>Community</S.Title>
-          <S.Subtitle>
-            Manage testimonials and Instagram posts
-          </S.Subtitle>
+          <S.Subtitle>Manage testimonials and Instagram posts</S.Subtitle>
         </S.HeaderContent>
       </S.Header>
 
@@ -163,7 +158,9 @@ export default function CommunityListClient({
                         {testimonial.customerName[0].toUpperCase()}
                       </S.ProductImagePlaceholder>
                       <S.ProductDetails>
-                        <S.ProductName>{testimonial.customerName}</S.ProductName>
+                        <S.ProductName>
+                          {testimonial.customerName}
+                        </S.ProductName>
                       </S.ProductDetails>
                     </S.ProductInfo>
                   </S.TableCell>

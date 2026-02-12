@@ -28,36 +28,33 @@ export default function ImageUploadMulti({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Use UploadThing hook for auto-upload functionality
-  const { startUpload, isUploading: utIsUploading } = useUploadThing(
-    endpoint,
-    {
-      onClientUploadComplete: (res) => {
-        setIsUploading(false);
-        setUploadProgress(0);
-        onUploadComplete?.();
-        if (res && Array.isArray(res)) {
-          const newUrls = res
-            .map((file) => file?.url)
-            .filter((url): url is string => !!url);
-          if (newUrls.length > 0) {
-            onChange([...value, ...newUrls]);
-          }
-        } else {
-          console.error("Invalid upload response:", res);
+  const { startUpload, isUploading: utIsUploading } = useUploadThing(endpoint, {
+    onClientUploadComplete: (res) => {
+      setIsUploading(false);
+      setUploadProgress(0);
+      onUploadComplete?.();
+      if (res && Array.isArray(res)) {
+        const newUrls = res
+          .map((file) => file?.url)
+          .filter((url): url is string => !!url);
+        if (newUrls.length > 0) {
+          onChange([...value, ...newUrls]);
         }
-      },
-      onUploadError: (error: Error) => {
-        console.error("Upload error:", error);
-        setIsUploading(false);
-        setUploadProgress(0);
-        onUploadComplete?.();
-        alert(`Upload failed: ${error.message}`);
-      },
-      onUploadProgress: (progress) => {
-        setUploadProgress(progress);
-      },
+      } else {
+        console.error("Invalid upload response:", res);
+      }
     },
-  );
+    onUploadError: (error: Error) => {
+      console.error("Upload error:", error);
+      setIsUploading(false);
+      setUploadProgress(0);
+      onUploadComplete?.();
+      alert(`Upload failed: ${error.message}`);
+    },
+    onUploadProgress: (progress) => {
+      setUploadProgress(progress);
+    },
+  });
 
   // Only render on the client to avoid SSR issues
   useEffect(() => {
@@ -97,7 +94,7 @@ export default function ImageUploadMulti({
 
     // Start upload immediately
     await startUpload(Array.from(files));
-    
+
     // Reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -178,9 +175,7 @@ export default function ImageUploadMulti({
       )}
 
       {!isMounted ? (
-        <div
-          style={{ padding: "2rem", textAlign: "center", color: "#666" }}
-        >
+        <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
           Loading upload component...
         </div>
       ) : (

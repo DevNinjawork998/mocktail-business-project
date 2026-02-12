@@ -75,24 +75,92 @@ export default function ProductPageClient({
 
   // Build image URLs array: main imageUrl first, then supporting photos from ProductImage (order 1, 2)
   const imageUrls = useMemo(() => {
+    // #region agent log
+    if (typeof fetch !== "undefined") {
+      fetch(
+        "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            location: "ProductPageClient.tsx:77",
+            message: "Building imageUrls - initial data",
+            data: {
+              productId: product.id,
+              imageUrl: product.imageUrl,
+              imagesCount: product.images?.length || 0,
+              images:
+                product.images?.map((i) => ({ order: i.order, url: i.url })) ||
+                [],
+            },
+            timestamp: Date.now(),
+            runId: "run1",
+            hypothesisId: "C",
+          }),
+        },
+      ).catch(() => {});
+    }
+    // #endregion
     const urls: string[] = [];
     const urlSet = new Set<string>(); // Track URLs to prevent duplicates
     const orderSet = new Set<number>(); // Track orders to ensure only one image per order
-    
+
     // Always start with main imageUrl (this is the primary source for the main photo)
     if (product.imageUrl) {
       urls.push(product.imageUrl);
       urlSet.add(product.imageUrl);
       orderSet.add(0); // Mark order 0 as used
+      // #region agent log
+      if (typeof fetch !== "undefined") {
+        fetch(
+          "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              location: "ProductPageClient.tsx:87",
+              message: "Added main imageUrl",
+              data: {
+                imageUrl: product.imageUrl,
+                currentUrlsCount: urls.length,
+              },
+              timestamp: Date.now(),
+              runId: "run1",
+              hypothesisId: "B",
+            }),
+          },
+        ).catch(() => {});
+      }
+      // #endregion
+    } else {
+      // #region agent log
+      if (typeof fetch !== "undefined") {
+        fetch(
+          "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              location: "ProductPageClient.tsx:90",
+              message: "WARNING: product.imageUrl is missing",
+              data: { productId: product.id },
+              timestamp: Date.now(),
+              runId: "run1",
+              hypothesisId: "B",
+            }),
+          },
+        ).catch(() => {});
+      }
+      // #endregion
     }
-    
+
     // Then add supporting photos from ProductImage records (order 1, 2 only)
     // We skip order 0 because it's the same as imageUrl
     // Also ensure no ProductImage URL matches imageUrl (even if order > 0)
     if (product.images && product.images.length > 0) {
       // Group by order and take only the first occurrence of each order
       const orderMap = new Map<number, string>();
-      
+
       product.images.forEach((img) => {
         // Only process order 1 and 2 (strictly)
         if (img.order <= 0 || img.order > 2) {
@@ -111,7 +179,7 @@ export default function ProductPageClient({
           orderMap.set(img.order, img.url);
         }
       });
-      
+
       // Sort by order and add to URLs
       const sortedOrders = Array.from(orderMap.keys()).sort((a, b) => a - b);
       sortedOrders.forEach((order) => {
@@ -123,11 +191,11 @@ export default function ProductPageClient({
         }
       });
     }
-    
+
     // Safety limit: Only return max 3 images (main + 2 supporting)
     // This prevents issues if there are ProductImage records with order > 2
     const limitedUrls = urls.slice(0, 3);
-    
+
     // Final deduplication check: ensure no duplicate URLs in final array
     const finalDeduplicatedUrls: string[] = [];
     const finalUrlSet = new Set<string>();
@@ -137,7 +205,30 @@ export default function ProductPageClient({
         finalUrlSet.add(url);
       }
     });
-    
+
+    // #region agent log
+    if (typeof fetch !== "undefined") {
+      fetch(
+        "http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            location: "ProductPageClient.tsx:141",
+            message: "Final imageUrls array",
+            data: {
+              finalUrlsCount: finalDeduplicatedUrls.length,
+              finalUrls: finalDeduplicatedUrls,
+              productId: product.id,
+            },
+            timestamp: Date.now(),
+            runId: "run1",
+            hypothesisId: "D",
+          }),
+        },
+      ).catch(() => {});
+    }
+    // #endregion
     return finalDeduplicatedUrls;
   }, [product.images, product.imageUrl]);
 
@@ -261,7 +352,8 @@ export default function ProductPageClient({
     if (/^good\s+fiber$/i.test(normalized)) return "Fiber";
     if (/^good\s+antioxidant$/i.test(normalized)) return "Antioxidant";
     // Normalize "Less sugar" to "Less Sugar*" to match default feature
-    if (normalized === "Less sugar" || normalized === "Less Sugar") return "Less Sugar";
+    if (normalized === "Less sugar" || normalized === "Less Sugar")
+      return "Less Sugar";
     return normalized;
   };
 
@@ -436,7 +528,7 @@ export default function ProductPageClient({
                   onClick={(e) => {
                     e.stopPropagation();
                     setZoomedImageIndex((prev) =>
-                      prev > 0 ? prev - 1 : imageUrls.length - 1
+                      prev > 0 ? prev - 1 : imageUrls.length - 1,
                     );
                   }}
                   style={{
@@ -465,7 +557,69 @@ export default function ProductPageClient({
                   onClick={(e) => {
                     e.stopPropagation();
                     setZoomedImageIndex((prev) =>
-                      prev < imageUrls.length - 1 ? prev + 1 : 0
+                      prev < imageUrls.length - 1 ? prev + 1 : 0,
+                    );
+                  }}
+                  style={{
+                    position: "absolute",
+                    right: "1rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "rgba(0, 0, 0, 0.6)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "48px",
+                    height: "48px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    zIndex: 20,
+                  }}
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+              </>
+            )}
+            {imageUrls.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setZoomedImageIndex((prev) =>
+                      prev > 0 ? prev - 1 : imageUrls.length - 1,
+                    );
+                  }}
+                  style={{
+                    position: "absolute",
+                    left: "1rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "rgba(0, 0, 0, 0.6)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "48px",
+                    height: "48px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    zIndex: 20,
+                  }}
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setZoomedImageIndex((prev) =>
+                      prev < imageUrls.length - 1 ? prev + 1 : 0,
                     );
                   }}
                   style={{
@@ -508,6 +662,24 @@ export default function ProductPageClient({
                 priority
               />
             </div>
+            {imageUrls.length > 1 && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "1rem",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  background: "rgba(0, 0, 0, 0.6)",
+                  color: "white",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "8px",
+                  fontSize: "0.875rem",
+                  zIndex: 20,
+                }}
+              >
+                {zoomedImageIndex + 1} / {imageUrls.length}
+              </div>
+            )}
             {imageUrls.length > 1 && (
               <div
                 style={{

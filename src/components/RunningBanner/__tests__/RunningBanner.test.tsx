@@ -62,7 +62,7 @@ describe("RunningBanner", () => {
     expect(
       screen.getAllByText("New flavor just dropped: Strawberry Basil!").length,
     ).toBeGreaterThan(0);
-    
+
     // Images should not be rendered
     expect(screen.queryAllByAltText("Test Image 1").length).toBe(0);
   });

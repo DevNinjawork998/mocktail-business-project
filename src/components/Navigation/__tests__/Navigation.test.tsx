@@ -24,7 +24,9 @@ jest.mock("next/image", () => ({
     style?: React.CSSProperties;
   }) => {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={src} alt={alt} width={width} height={height} style={style} />;
+    return (
+      <img src={src} alt={alt} width={width} height={height} style={style} />
+    );
   },
 }));
 
@@ -48,7 +50,7 @@ describe("Navigation", () => {
     // Check if logo image is rendered
     const logoImage = screen.getByAltText("Mocktails On the Go");
     expect(logoImage).toBeInTheDocument();
-    
+
     // Check if logo text is rendered
     expect(screen.getByText("Mocktails")).toBeInTheDocument();
     expect(screen.getByText("On the Go")).toBeInTheDocument();

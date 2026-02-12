@@ -55,9 +55,7 @@ describe("LandingPage", () => {
     expect(
       screen.getByText(/These aren't just mocktails/i),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(/mid-day reset/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/mid-day reset/i)).toBeInTheDocument();
   });
 
   it("renders CTA buttons", () => {

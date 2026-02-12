@@ -5,7 +5,10 @@ import { prisma } from "@/lib/prisma";
 import { getEditorRoles, getDeleterRoles } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { isValidInstagramPostUrl, normalizeInstagramUrl } from "@/lib/instagram";
+import {
+  isValidInstagramPostUrl,
+  normalizeInstagramUrl,
+} from "@/lib/instagram";
 
 type ActionResult<T = void> =
   | { success: true; data?: T }
@@ -35,7 +38,7 @@ export async function createInstagramPost(
 
   try {
     const validated = instagramPostSchema.parse(data);
-    
+
     // Normalize the URL to standard format
     const normalizedUrl = normalizeInstagramUrl(validated.postUrl);
 

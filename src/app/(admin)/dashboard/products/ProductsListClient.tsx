@@ -95,7 +95,9 @@ export default function ProductsListClient({
                     <S.ProductDetails>
                       <S.ProductName>{product.name}</S.ProductName>
                       <S.ProductSubtitle>{product.subtitle}</S.ProductSubtitle>
-                      <S.ProductDescription>{product.description}</S.ProductDescription>
+                      <S.ProductDescription>
+                        {product.description}
+                      </S.ProductDescription>
                     </S.ProductDetails>
                   </S.ProductInfo>
                 </S.TableCell>
