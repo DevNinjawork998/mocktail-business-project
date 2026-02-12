@@ -60,7 +60,7 @@ export const ShopTitle = styled.h1`
   font-family: serif;
   font-family: serif;
 
-  ${({ theme }) => `
+  ${({ theme: _theme }) => `
     @media (min-width: 480px) {
       font-size: 2.25rem;
     }
@@ -79,7 +79,7 @@ export const ShopSubtitle = styled.p`
   opacity: 0.85;
   padding: 0 ${({ theme }) => theme.spacing.sm};
 
-  ${({ theme }) => `
+  ${({ theme: _theme }) => `
     @media (min-width: 480px) {
       font-size: 1.0625rem;
       max-width: 600px;
@@ -244,7 +244,7 @@ export const ProductName = styled.h3`
   margin-bottom: ${({ theme }) => theme.spacing.xs};
   text-align: center;
   transition: color 0.3s ease;
-  ${({ theme }) => `
+  ${({ theme: _theme }) => `
     @media (min-width: 480px) {
       font-size: 1.25rem;
     }
@@ -260,7 +260,7 @@ export const ProductDescription = styled.p`
   opacity: 0.8;
   font-weight: 500;
 
-  ${({ theme }) => `
+  ${({ theme: _theme }) => `
     @media (min-width: 480px) {
       font-size: 0.875rem;
     }

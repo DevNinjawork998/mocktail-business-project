@@ -275,6 +275,7 @@ export async function updateProduct(
           urlsToDelete.push(existingSupportingPhoto2.url);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const productImageUpdate = (prisma as any).productImage.update;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           await (productImageUpdate as any)({
             where: { id: existingSupportingPhoto2.id },
             data: { url: validated.supportingPhoto2Url },
@@ -284,6 +285,7 @@ export async function updateProduct(
         // Create new ProductImage record at order 2
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const productImageCreate = (prisma as any).productImage.create;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await (productImageCreate as any)({
           data: {
             productId: id,
@@ -298,6 +300,7 @@ export async function updateProduct(
         urlsToDelete.push(existingSupportingPhoto2.url);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const productImageDelete = (prisma as any).productImage.delete;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await (productImageDelete as any)({
           where: { id: existingSupportingPhoto2.id },
         });

@@ -62,7 +62,7 @@ export default async function YourBuddiesPage() {
           })
           .catch(() => []),
       ]);
-    } catch (error) {
+    } catch (_error) {
       // Silently handle errors - empty arrays will be used
       // Errors are already logged by Prisma or the catch blocks above
     }

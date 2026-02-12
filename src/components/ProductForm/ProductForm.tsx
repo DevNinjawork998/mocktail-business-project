@@ -62,8 +62,9 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isMainImageUploading, setIsMainImageUploading] = useState(false);
-  const [isSupportingImage1Uploading, setIsSupportingImage1Uploading] = useState(false);
-  const [isSupportingImage2Uploading, setIsSupportingImage2Uploading] = useState(false);
+  // Supporting image upload states are kept for future use
+  const [_isSupportingImage1Uploading, setIsSupportingImage1Uploading] = useState(false);
+  const [_isSupportingImage2Uploading, setIsSupportingImage2Uploading] = useState(false);
   
   // Load images from product.images array (ordered by order field)
   const initialMainPhotoUrl = product?.imageUrl || product?.images?.find(img => img.order === 0)?.url || null;
