@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useMemo, type MouseEvent } from "react";
+import { useState, useMemo, type MouseEvent } from "react";
 import { Product } from "@/data/serverProductService";
+import ProductImageSlider from "@/components/ProductImageSlider/ProductImageSlider";
 import ProductImageSlider from "@/components/ProductImageSlider/ProductImageSlider";
 import {
   ProductPageContainer,
@@ -330,6 +332,15 @@ export default function ProductPageClient({
                   setShowImageZoom(true);
                 }}
               />
+            {imageUrls.length > 0 ? (
+              <ProductImageSlider
+                images={imageUrls}
+                productName={product.name}
+                onImageClick={(index) => {
+                  setZoomedImageIndex(index);
+                  setShowImageZoom(true);
+                }}
+              />
             ) : (
               <ProductImagePlaceholder $bgColor={product.imageColor}>
                 {product.name}
@@ -438,11 +449,74 @@ export default function ProductPageClient({
 
       {/* Image Zoom Modal */}
       {showImageZoom && imageUrls.length > 0 && (
+      {showImageZoom && imageUrls.length > 0 && (
         <ImageZoomOverlay onClick={() => setShowImageZoom(false)}>
           <ImageZoomContainer onClick={(e) => e.stopPropagation()}>
             <ImageZoomCloseButton onClick={() => setShowImageZoom(false)}>
               ×
             </ImageZoomCloseButton>
+            {imageUrls.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setZoomedImageIndex((prev) =>
+                      prev > 0 ? prev - 1 : imageUrls.length - 1
+                    );
+                  }}
+                  style={{
+                    position: "absolute",
+                    left: "1rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "rgba(0, 0, 0, 0.6)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "48px",
+                    height: "48px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    zIndex: 20,
+                  }}
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setZoomedImageIndex((prev) =>
+                      prev < imageUrls.length - 1 ? prev + 1 : 0
+                    );
+                  }}
+                  style={{
+                    position: "absolute",
+                    right: "1rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "rgba(0, 0, 0, 0.6)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "48px",
+                    height: "48px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    zIndex: 20,
+                  }}
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+              </>
+            )}
             {imageUrls.length > 1 && (
               <>
                 <button
@@ -515,12 +589,33 @@ export default function ProductPageClient({
               <ImageZoomImage
                 src={imageUrls[zoomedImageIndex]}
                 alt={`${product.name} - Image ${zoomedImageIndex + 1}`}
+                src={imageUrls[zoomedImageIndex]}
+                alt={`${product.name} - Image ${zoomedImageIndex + 1}`}
                 fill
                 style={{ objectFit: "contain" }}
+                sizes="95vw"
                 sizes="95vw"
                 priority
               />
             </div>
+            {imageUrls.length > 1 && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "1rem",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  background: "rgba(0, 0, 0, 0.6)",
+                  color: "white",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "8px",
+                  fontSize: "0.875rem",
+                  zIndex: 20,
+                }}
+              >
+                {zoomedImageIndex + 1} / {imageUrls.length}
+              </div>
+            )}
             {imageUrls.length > 1 && (
               <div
                 style={{
