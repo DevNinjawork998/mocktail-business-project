@@ -15,7 +15,9 @@ export default async function EditProductPage({
 }: EditProductPageProps) {
   const { id } = await params;
 
-  const product = await prisma.product.findUnique({
+  // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const product = (await (prisma.product.findUnique as any)({
     where: { id },
     include: {
       images: {
@@ -24,7 +26,26 @@ export default async function EditProductPage({
         },
       },
     },
-  });
+  })) as
+    | {
+        id: string;
+        name: string;
+        subtitle: string;
+        description: string;
+        longDescription: string;
+        price: string;
+        priceSubtext: string;
+        imageColor: string;
+        imageUrl: string | null;
+        features: unknown;
+        ingredients: unknown;
+        productBrief: string | null;
+        nutritionFacts: unknown;
+        images: Array<{ url: string; order: number }>;
+        createdAt: Date;
+        updatedAt: Date;
+      }
+    | null;
 
   if (!product) {
     notFound();

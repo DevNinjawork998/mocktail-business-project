@@ -93,7 +93,9 @@ export async function createProduct(
       return { success: false, error: "Main photo is required" };
     }
 
-    const product = await prisma.product.create({
+    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const product = await (prisma.product.create as any)({
       data: {
         name: validated.name,
         subtitle: validated.subtitle,
@@ -166,7 +168,9 @@ export async function updateProduct(
     }
 
     // Get the current product with images to check what needs to be deleted
-    const currentProduct = await prisma.product.findUnique({
+    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const currentProduct = (await (prisma.product.findUnique as any)({
       where: { id },
       select: {
         imageUrl: true,
@@ -178,7 +182,12 @@ export async function updateProduct(
           },
         },
       },
-    });
+    })) as
+      | {
+          imageUrl: string | null;
+          images: Array<{ id: string; url: string; order: number }>;
+        }
+      | null;
 
     if (!currentProduct) {
       return { success: false, error: "Product not found" };
@@ -198,7 +207,8 @@ export async function updateProduct(
         // Main photo is being replaced
         urlsToDelete.push(existingMainPhoto.url);
         // Update existing ProductImage record
-        await prisma.productImage.update({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await ((prisma as any).productImage.update as any)({
           where: { id: existingMainPhoto.id },
           data: { url: validated.imageUrl },
         });
@@ -206,7 +216,8 @@ export async function updateProduct(
       // If URL is the same, no update needed
     } else {
       // Create new ProductImage record for main photo
-      await prisma.productImage.create({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await ((prisma as any).productImage.create as any)({
         data: {
           productId: id,
           url: validated.imageUrl,
@@ -228,14 +239,16 @@ export async function updateProduct(
         // Update existing record if URL changed
         if (existingSupportingPhoto1.url !== validated.supportingPhoto1Url) {
           urlsToDelete.push(existingSupportingPhoto1.url);
-          await prisma.productImage.update({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await ((prisma as any).productImage.update as any)({
             where: { id: existingSupportingPhoto1.id },
             data: { url: validated.supportingPhoto1Url },
           });
         }
       } else {
         // Create new ProductImage record at order 1
-        await prisma.productImage.create({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await ((prisma as any).productImage.create as any)({
           data: {
             productId: id,
             url: validated.supportingPhoto1Url,
@@ -247,7 +260,8 @@ export async function updateProduct(
       // Delete supporting photo 1 if it exists (no shifting)
       if (existingSupportingPhoto1) {
         urlsToDelete.push(existingSupportingPhoto1.url);
-        await prisma.productImage.delete({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await ((prisma as any).productImage.delete as any)({
           where: { id: existingSupportingPhoto1.id },
         });
       }
@@ -259,14 +273,18 @@ export async function updateProduct(
         // Update existing record if URL changed
         if (existingSupportingPhoto2.url !== validated.supportingPhoto2Url) {
           urlsToDelete.push(existingSupportingPhoto2.url);
-          await prisma.productImage.update({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const productImageUpdate = (prisma as any).productImage.update;
+          await (productImageUpdate as any)({
             where: { id: existingSupportingPhoto2.id },
             data: { url: validated.supportingPhoto2Url },
           });
         }
       } else {
         // Create new ProductImage record at order 2
-        await prisma.productImage.create({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const productImageCreate = (prisma as any).productImage.create;
+        await (productImageCreate as any)({
           data: {
             productId: id,
             url: validated.supportingPhoto2Url,
@@ -278,7 +296,9 @@ export async function updateProduct(
       // Delete supporting photo 2 if it exists (no shifting)
       if (existingSupportingPhoto2) {
         urlsToDelete.push(existingSupportingPhoto2.url);
-        await prisma.productImage.delete({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const productImageDelete = (prisma as any).productImage.delete;
+        await (productImageDelete as any)({
           where: { id: existingSupportingPhoto2.id },
         });
       }
@@ -329,7 +349,9 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
 
   try {
     // First, get the product with all images to delete from UploadThing
-    const product = await prisma.product.findUnique({
+    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const product = (await (prisma.product.findUnique as any)({
       where: { id },
       select: {
         imageUrl: true,
@@ -339,7 +361,12 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
           },
         },
       },
-    });
+    })) as
+      | {
+          imageUrl: string | null;
+          images: Array<{ url: string }>;
+        }
+      | null;
 
     // Delete all images from UploadThing
     if (product?.imageUrl) {

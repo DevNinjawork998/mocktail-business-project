@@ -64,7 +64,9 @@ function nameToSlug(name: string): string {
 export async function getProductById(id: string): Promise<Product | null> {
   try {
     // First, try to find by ID directly (works for both CUIDs and slug IDs)
-    let product = await prisma.product.findUnique({
+    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let product = (await (prisma.product.findUnique as any)({
       where: {
         id: id,
       },
@@ -75,11 +77,31 @@ export async function getProductById(id: string): Promise<Product | null> {
           },
         },
       },
-    });
+    })) as
+      | {
+          id: string;
+          name: string;
+          subtitle: string;
+          description: string;
+          longDescription: string;
+          price: string;
+          priceSubtext: string;
+          imageColor: string;
+          imageUrl: string | null;
+          features: unknown;
+          ingredients: unknown;
+          productBrief: string | null;
+          nutritionFacts: unknown;
+          images: Array<{ url: string; order: number }>;
+          createdAt: Date;
+          updatedAt: Date;
+        }
+      | null;
 
     // If not found and ID looks like a slug (contains hyphens), try finding by name
     if (!product && id.includes("-")) {
-      const allProducts = await prisma.product.findMany({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const allProducts = (await (prisma.product.findMany as any)({
         include: {
           images: {
             orderBy: {
@@ -87,7 +109,24 @@ export async function getProductById(id: string): Promise<Product | null> {
             },
           },
         },
-      });
+      })) as Array<{
+        id: string;
+        name: string;
+        subtitle: string;
+        description: string;
+        longDescription: string;
+        price: string;
+        priceSubtext: string;
+        imageColor: string;
+        imageUrl: string | null;
+        features: unknown;
+        ingredients: unknown;
+        productBrief: string | null;
+        nutritionFacts: unknown;
+        images: Array<{ url: string; order: number }>;
+        createdAt: Date;
+        updatedAt: Date;
+      }>;
       product =
         allProducts.find((p) => {
           const slug = nameToSlug(p.name);
