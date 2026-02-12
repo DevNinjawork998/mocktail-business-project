@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useMemo, type MouseEvent } from "react";
-import { useState, useMemo, type MouseEvent } from "react";
 import { Product } from "@/data/serverProductService";
-import ProductImageSlider from "@/components/ProductImageSlider/ProductImageSlider";
 import ProductImageSlider from "@/components/ProductImageSlider/ProductImageSlider";
 import {
   ProductPageContainer,
@@ -332,15 +330,6 @@ export default function ProductPageClient({
                   setShowImageZoom(true);
                 }}
               />
-            {imageUrls.length > 0 ? (
-              <ProductImageSlider
-                images={imageUrls}
-                productName={product.name}
-                onImageClick={(index) => {
-                  setZoomedImageIndex(index);
-                  setShowImageZoom(true);
-                }}
-              />
             ) : (
               <ProductImagePlaceholder $bgColor={product.imageColor}>
                 {product.name}
@@ -448,7 +437,6 @@ export default function ProductPageClient({
       </ProductDisclaimerSection>
 
       {/* Image Zoom Modal */}
-      {showImageZoom && imageUrls.length > 0 && (
       {showImageZoom && imageUrls.length > 0 && (
         <ImageZoomOverlay onClick={() => setShowImageZoom(false)}>
           <ImageZoomContainer onClick={(e) => e.stopPropagation()}>
@@ -589,11 +577,8 @@ export default function ProductPageClient({
               <ImageZoomImage
                 src={imageUrls[zoomedImageIndex]}
                 alt={`${product.name} - Image ${zoomedImageIndex + 1}`}
-                src={imageUrls[zoomedImageIndex]}
-                alt={`${product.name} - Image ${zoomedImageIndex + 1}`}
                 fill
                 style={{ objectFit: "contain" }}
-                sizes="95vw"
                 sizes="95vw"
                 priority
               />

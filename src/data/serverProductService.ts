@@ -11,8 +11,6 @@ export interface Product {
   imageColor: string;
   imageUrl?: string; // Optional image URL (kept for backward compatibility)
   images?: Array<{ url: string; order: number }>; // Multiple images from ProductImage table
-  imageUrl?: string; // Optional image URL (kept for backward compatibility)
-  images?: Array<{ url: string; order: number }>; // Multiple images from ProductImage table
   features: Array<{ text: string; color: string }>;
   ingredients?: string[]; // Array of ingredient strings
   productBrief?: string; // Introduction/description of the drink
@@ -76,39 +74,9 @@ export async function getProductById(id: string): Promise<Product | null> {
     // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let product = (await (prisma.product.findUnique as any)({
-    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let product = (await (prisma.product.findUnique as any)({
       where: {
         id: id,
       },
-      include: {
-        images: {
-          orderBy: {
-            order: "asc",
-          },
-        },
-      },
-    })) as
-      | {
-          id: string;
-          name: string;
-          subtitle: string;
-          description: string;
-          longDescription: string;
-          price: string;
-          priceSubtext: string;
-          imageColor: string;
-          imageUrl: string | null;
-          features: unknown;
-          ingredients: unknown;
-          productBrief: string | null;
-          nutritionFacts: unknown;
-          images: Array<{ url: string; order: number }>;
-          createdAt: Date;
-          updatedAt: Date;
-        }
-      | null;
       include: {
         images: {
           orderBy: {
