@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "../../../__tests__/test-utils";
+import { render, screen, fireEvent } from "../../../__tests__/test-utils";
 import userEvent from "@testing-library/user-event";
 import Testimonials from "../Testimonials";
 
@@ -180,12 +180,11 @@ describe("Testimonials", () => {
       expect(carouselTrack).not.toBeNull();
       
       if (carouselTrack) {
-        const mouseDownEvent = new MouseEvent("mousedown", {
-          bubbles: true,
-          clientX: 100,
-        });
-        Object.defineProperty(mouseDownEvent, "pageX", { value: 100 });
-        carouselTrack.dispatchEvent(mouseDownEvent);
+        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        fireEvent.mouseDown(carouselTrack, { pageX: 100 });
+        // Should not throw error
+        expect(carouselTrack).toBeInTheDocument();
       }
     });
 
@@ -196,21 +195,14 @@ describe("Testimonials", () => {
       expect(carouselTrack).not.toBeNull();
       
       if (carouselTrack) {
+        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
         // Start dragging
-        const mouseDownEvent = new MouseEvent("mousedown", {
-          bubbles: true,
-          clientX: 100,
-        });
-        Object.defineProperty(mouseDownEvent, "pageX", { value: 100 });
-        carouselTrack.dispatchEvent(mouseDownEvent);
-        
+        fireEvent.mouseDown(carouselTrack, { pageX: 100 });
         // Move mouse
-        const mouseMoveEvent = new MouseEvent("mousemove", {
-          bubbles: true,
-          clientX: 150,
-        });
-        Object.defineProperty(mouseMoveEvent, "pageX", { value: 150 });
-        carouselTrack.dispatchEvent(mouseMoveEvent);
+        fireEvent.mouseMove(carouselTrack, { pageX: 150 });
+        // Should not throw error
+        expect(carouselTrack).toBeInTheDocument();
       }
     });
 
@@ -221,8 +213,12 @@ describe("Testimonials", () => {
       expect(carouselTrack).not.toBeNull();
       
       if (carouselTrack) {
-        const mouseUpEvent = new MouseEvent("mouseup", { bubbles: true });
-        carouselTrack.dispatchEvent(mouseUpEvent);
+        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        fireEvent.mouseDown(carouselTrack, { pageX: 100 });
+        fireEvent.mouseUp(carouselTrack);
+        // Should not throw error
+        expect(carouselTrack).toBeInTheDocument();
       }
     });
 
@@ -233,11 +229,13 @@ describe("Testimonials", () => {
       expect(carouselTrack).not.toBeNull();
       
       if (carouselTrack) {
-        const touchStartEvent = new TouchEvent("touchstart", {
-          bubbles: true,
-          touches: [{ pageX: 100 } as Touch],
+        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        fireEvent.touchStart(carouselTrack, {
+          touches: [{ pageX: 100 }],
         });
-        carouselTrack.dispatchEvent(touchStartEvent);
+        // Should not throw error
+        expect(carouselTrack).toBeInTheDocument();
       }
     });
 
@@ -248,19 +246,18 @@ describe("Testimonials", () => {
       expect(carouselTrack).not.toBeNull();
       
       if (carouselTrack) {
+        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
         // Start dragging
-        const touchStartEvent = new TouchEvent("touchstart", {
-          bubbles: true,
-          touches: [{ pageX: 100 } as Touch],
+        fireEvent.touchStart(carouselTrack, {
+          touches: [{ pageX: 100 }],
         });
-        carouselTrack.dispatchEvent(touchStartEvent);
-        
         // Move touch
-        const touchMoveEvent = new TouchEvent("touchmove", {
-          bubbles: true,
-          touches: [{ pageX: 150 } as Touch],
+        fireEvent.touchMove(carouselTrack, {
+          touches: [{ pageX: 150 }],
         });
-        carouselTrack.dispatchEvent(touchMoveEvent);
+        // Should not throw error
+        expect(carouselTrack).toBeInTheDocument();
       }
     });
 
@@ -271,8 +268,14 @@ describe("Testimonials", () => {
       expect(carouselTrack).not.toBeNull();
       
       if (carouselTrack) {
-        const touchEndEvent = new TouchEvent("touchend", { bubbles: true });
-        carouselTrack.dispatchEvent(touchEndEvent);
+        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
+        fireEvent.touchStart(carouselTrack, {
+          touches: [{ pageX: 100 }],
+        });
+        fireEvent.touchEnd(carouselTrack);
+        // Should not throw error
+        expect(carouselTrack).toBeInTheDocument();
       }
     });
 
@@ -283,17 +286,27 @@ describe("Testimonials", () => {
       expect(carouselTrack).not.toBeNull();
       
       if (carouselTrack) {
+        Object.defineProperty(carouselTrack, "offsetLeft", { value: 0, writable: true });
+        Object.defineProperty(carouselTrack, "scrollLeft", { value: 0, writable: true });
         // Start dragging
-        const mouseDownEvent = new MouseEvent("mousedown", {
-          bubbles: true,
-          clientX: 100,
-        });
-        Object.defineProperty(mouseDownEvent, "pageX", { value: 100 });
-        carouselTrack.dispatchEvent(mouseDownEvent);
-        
+        fireEvent.mouseDown(carouselTrack, { pageX: 100 });
         // Try to leave while dragging
-        const mouseLeaveEvent = new MouseEvent("mouseleave", { bubbles: true });
-        carouselTrack.dispatchEvent(mouseLeaveEvent);
+        fireEvent.mouseLeave(carouselTrack);
+        // Should not throw error
+        expect(carouselTrack).toBeInTheDocument();
+      }
+    });
+
+    it("handles mouse enter to pause carousel", () => {
+      const { container } = render(<Testimonials testimonials={mockTestimonials} />);
+      const carouselTrack = getCarouselTrack(container);
+      
+      expect(carouselTrack).not.toBeNull();
+      
+      if (carouselTrack) {
+        fireEvent.mouseEnter(carouselTrack);
+        // Should not throw error
+        expect(carouselTrack).toBeInTheDocument();
       }
     });
   });

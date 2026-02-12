@@ -29,6 +29,19 @@ export const SectionTitle = styled.h2`
   margin: 0 0 ${({ theme }) => theme.spacing.lg} 0;
 `;
 
+export const SubsectionTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.currentSemantic.foreground};
+  margin: ${({ theme }) => theme.spacing.lg} 0 ${({ theme }) => theme.spacing.md} 0;
+  padding-bottom: ${({ theme }) => theme.spacing.xs};
+  border-bottom: 1px solid ${({ theme }) => theme.currentSemantic.border};
+  
+  &:first-of-type {
+    margin-top: 0;
+  }
+`;
+
 export const FormGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -44,6 +57,11 @@ export const FormGroup = styled.div<{ $fullWidth?: boolean }>`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xs};
   grid-column: ${({ $fullWidth }) => ($fullWidth ? "1 / -1" : "auto")};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 export const Label = styled.label`
@@ -239,4 +257,21 @@ export const SubmitButton = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
   }
+`;
+
+export const SupportingPhotosContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: ${({ theme }) => theme.spacing.lg};
+  margin-top: ${({ theme }) => theme.spacing.md};
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const SupportingPhotoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.xs};
 `;

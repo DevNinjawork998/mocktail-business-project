@@ -306,15 +306,24 @@ describe("ProductForm", () => {
     it("renders ImageUpload component", () => {
       render(<ProductForm />);
 
-      expect(screen.getByTestId("image-upload")).toBeInTheDocument();
-      expect(screen.getByText("Product Image")).toBeInTheDocument();
+      // There are now multiple ImageUpload components (main photo + supporting photos)
+      const imageUploads = screen.getAllByTestId("image-upload");
+      expect(imageUploads.length).toBeGreaterThan(0);
+      // Should have at least the main photo
+      expect(imageUploads.length).toBeGreaterThanOrEqual(1);
+      // The label changed from "Product Image" to "Main Photo *"
+      expect(screen.getByText("Main Photo *")).toBeInTheDocument();
     });
 
     it("displays existing image URL when editing", () => {
       render(<ProductForm product={mockProduct} />);
 
-      const imageInput = screen.getByTestId("image-url-input");
-      expect(imageInput).toHaveValue("https://example.com/image.jpg");
+      // There are now multiple ImageUpload components (main photo + supporting photos)
+      // The first one is the main photo
+      const imageInputs = screen.getAllByTestId("image-url-input");
+      expect(imageInputs.length).toBeGreaterThan(0);
+      // Main photo should be the first one
+      expect(imageInputs[0]).toHaveValue("https://example.com/image.jpg");
     });
   });
 

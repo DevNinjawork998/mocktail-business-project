@@ -29,6 +29,10 @@ const customJestConfig = {
     "!src/**/index.ts",
     // Exclude infrastructure files
     "!src/lib/prisma.ts",
+    "!src/lib/featureFlags.ts", // Server-side file system access hard to test in jsdom
+    "!src/auth.config.ts", // NextAuth server-side config
+    "!src/auth.ts", // NextAuth server-side auth
+    "!src/proxy.ts", // Server-side proxy configuration
     "!src/theme/index.ts",
     "!src/theme/*-provider.tsx",
     "!src/theme/styled-theme-provider.tsx",
@@ -49,6 +53,14 @@ const customJestConfig = {
     // Exclude admin dashboard client components (internal admin tools)
     "!src/app/(admin)/dashboard/**/*Client.tsx",
     "!src/app/(admin)/dashboard/DashboardClient.tsx",
+    "!src/app/(admin)/dashboard/**/CommunityListClient.tsx",
+    "!src/app/(admin)/dashboard/**/IngredientsListClient.tsx",
+    "!src/app/(admin)/dashboard/**/ProductsListClient.tsx",
+    "!src/app/(admin)/dashboard/**/UsersListClient.tsx",
+    // Exclude admin dashboard page files (server components)
+    "!src/app/(admin)/dashboard/**/page.tsx",
+    // Exclude unused/unimplemented components
+    "!src/components/ImageUploadMulti/**/*.{ts,tsx}",
     "!src/components/InstagramPostForm/**/*.{ts,tsx}",
     "!src/components/TestimonialForm/**/*.{ts,tsx}",
     "!src/app/actions/instagramPosts.ts",

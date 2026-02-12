@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as S from "./ProductShowcase.styles";
 import { getAllProducts, Product } from "@/data/productService";

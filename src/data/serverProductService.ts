@@ -9,7 +9,8 @@ export interface Product {
   price: string;
   priceSubtext: string;
   imageColor: string;
-  imageUrl?: string; // Optional image URL
+  imageUrl?: string; // Optional image URL (kept for backward compatibility)
+  images?: Array<{ url: string; order: number }>; // Multiple images from ProductImage table
   features: Array<{ text: string; color: string }>;
   ingredients?: string[]; // Array of ingredient strings
   productBrief?: string; // Introduction/description of the drink
@@ -63,15 +64,69 @@ function nameToSlug(name: string): string {
 export async function getProductById(id: string): Promise<Product | null> {
   try {
     // First, try to find by ID directly (works for both CUIDs and slug IDs)
-    let product = await prisma.product.findUnique({
+    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let product = (await (prisma.product.findUnique as any)({
       where: {
         id: id,
       },
-    });
+      include: {
+        images: {
+          orderBy: {
+            order: "asc",
+          },
+        },
+      },
+    })) as
+      | {
+          id: string;
+          name: string;
+          subtitle: string;
+          description: string;
+          longDescription: string;
+          price: string;
+          priceSubtext: string;
+          imageColor: string;
+          imageUrl: string | null;
+          features: unknown;
+          ingredients: unknown;
+          productBrief: string | null;
+          nutritionFacts: unknown;
+          images: Array<{ url: string; order: number }>;
+          createdAt: Date;
+          updatedAt: Date;
+        }
+      | null;
 
     // If not found and ID looks like a slug (contains hyphens), try finding by name
     if (!product && id.includes("-")) {
-      const allProducts = await prisma.product.findMany();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const allProducts = (await (prisma.product.findMany as any)({
+        include: {
+          images: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+      })) as Array<{
+        id: string;
+        name: string;
+        subtitle: string;
+        description: string;
+        longDescription: string;
+        price: string;
+        priceSubtext: string;
+        imageColor: string;
+        imageUrl: string | null;
+        features: unknown;
+        ingredients: unknown;
+        productBrief: string | null;
+        nutritionFacts: unknown;
+        images: Array<{ url: string; order: number }>;
+        createdAt: Date;
+        updatedAt: Date;
+      }>;
       product =
         allProducts.find((p) => {
           const slug = nameToSlug(p.name);
@@ -92,6 +147,13 @@ export async function getProductById(id: string): Promise<Product | null> {
         | undefined,
       imageUrl: product.imageUrl || undefined,
       productBrief: (product as unknown as Product).productBrief || undefined,
+      images:
+        product.images && product.images.length > 0
+          ? product.images.map((img) => ({
+              url: img.url,
+              order: img.order,
+            }))
+          : undefined,
     };
 
     return mappedProduct;

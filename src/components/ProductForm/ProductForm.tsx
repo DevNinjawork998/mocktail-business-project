@@ -29,7 +29,9 @@ const productSchema = z.object({
   price: z.string().min(1, "Price is required"),
   priceSubtext: z.string().min(1, "Price subtext is required"),
   imageColor: z.string().min(1, "Image color is required"),
-  imageUrl: z.string().optional().nullable(),
+  imageUrl: z.string().url("Main photo is required").min(1, "Main photo is required"),
+  supportingPhoto1Url: z.string().url().optional().nullable(),
+  supportingPhoto2Url: z.string().url().optional().nullable(),
   features: z.array(z.object({ text: z.string(), color: z.string() })),
   ingredients: z.array(z.string()),
   productBrief: z.string().optional().nullable(),
@@ -48,6 +50,7 @@ interface ProductFormProps {
     priceSubtext: string;
     imageColor: string;
     imageUrl: string | null;
+    images?: Array<{ url: string; order: number }>;
     features: Array<{ text: string; color: string }>;
     ingredients: string[] | null;
     productBrief: string | null;
@@ -58,12 +61,24 @@ export default function ProductForm({ product }: ProductFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isImageUploading, setIsImageUploading] = useState(false);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(
-    product?.imageUrl || null,
-  );
-  // Use a ref to ensure we always have the latest imageUrl value
-  const imageUrlRef = useRef<string | null>(product?.imageUrl || null);
+  const [isMainImageUploading, setIsMainImageUploading] = useState(false);
+  // Supporting image upload states are kept for future use
+  const [_isSupportingImage1Uploading, setIsSupportingImage1Uploading] = useState(false);
+  const [_isSupportingImage2Uploading, setIsSupportingImage2Uploading] = useState(false);
+  
+  // Load images from product.images array (ordered by order field)
+  const initialMainPhotoUrl = product?.imageUrl || product?.images?.find(img => img.order === 0)?.url || null;
+  const initialSupportingPhoto1Url = product?.images?.find(img => img.order === 1)?.url || null;
+  const initialSupportingPhoto2Url = product?.images?.find(img => img.order === 2)?.url || null;
+  
+  const [uploadedMainPhotoUrl, setUploadedMainPhotoUrl] = useState<string | null>(initialMainPhotoUrl);
+  const [uploadedSupportingPhoto1Url, setUploadedSupportingPhoto1Url] = useState<string | null>(initialSupportingPhoto1Url);
+  const [uploadedSupportingPhoto2Url, setUploadedSupportingPhoto2Url] = useState<string | null>(initialSupportingPhoto2Url);
+  
+  // Use refs to ensure we always have the latest values
+  const mainPhotoUrlRef = useRef<string | null>(initialMainPhotoUrl);
+  const supportingPhoto1UrlRef = useRef<string | null>(initialSupportingPhoto1Url);
+  const supportingPhoto2UrlRef = useRef<string | null>(initialSupportingPhoto2Url);
 
   // Parse existing longDescription if editing
   const parsedDescription = useMemo(() => {
@@ -96,7 +111,9 @@ export default function ProductForm({ product }: ProductFormProps) {
       price: product?.price || "",
       priceSubtext: product?.priceSubtext || "",
       imageColor: product?.imageColor || "#451515",
-      imageUrl: product?.imageUrl || null,
+      imageUrl: initialMainPhotoUrl || undefined,
+      supportingPhoto1Url: initialSupportingPhoto1Url || undefined,
+      supportingPhoto2Url: initialSupportingPhoto2Url || undefined,
       features: product?.features || [{ text: "", color: "#451515" }],
       ingredients: (product?.ingredients ?? []) as string[],
       productBrief: product?.productBrief || "",
@@ -132,37 +149,79 @@ export default function ProductForm({ product }: ProductFormProps) {
   });
 
   const imageUrl = watch("imageUrl");
+  const supportingPhoto1Url = watch("supportingPhoto1Url");
+  const supportingPhoto2Url = watch("supportingPhoto2Url");
 
-  // Update ref when imageUrl changes
+  // Update refs when values change
   useEffect(() => {
     if (imageUrl) {
-      imageUrlRef.current = imageUrl;
+      mainPhotoUrlRef.current = imageUrl;
     }
   }, [imageUrl]);
 
-  // Also update ref when uploadedImageUrl changes
   useEffect(() => {
-    if (uploadedImageUrl) {
-      imageUrlRef.current = uploadedImageUrl;
+    if (supportingPhoto1Url) {
+      supportingPhoto1UrlRef.current = supportingPhoto1Url;
     }
-  }, [uploadedImageUrl]);
+  }, [supportingPhoto1Url]);
 
-  // Sync hidden input with current imageUrl value
   useEffect(() => {
-    const currentValue = imageUrl || uploadedImageUrl || imageUrlRef.current;
-    if (currentValue) {
-      setValue("imageUrl", currentValue, {
-        shouldValidate: false,
+    if (supportingPhoto2Url) {
+      supportingPhoto2UrlRef.current = supportingPhoto2Url;
+    }
+  }, [supportingPhoto2Url]);
+
+  // Also update refs when uploaded values change
+  useEffect(() => {
+    if (uploadedMainPhotoUrl) {
+      mainPhotoUrlRef.current = uploadedMainPhotoUrl;
+    }
+  }, [uploadedMainPhotoUrl]);
+
+  useEffect(() => {
+    if (uploadedSupportingPhoto1Url) {
+      supportingPhoto1UrlRef.current = uploadedSupportingPhoto1Url;
+    }
+  }, [uploadedSupportingPhoto1Url]);
+
+  useEffect(() => {
+    if (uploadedSupportingPhoto2Url) {
+      supportingPhoto2UrlRef.current = uploadedSupportingPhoto2Url;
+    }
+  }, [uploadedSupportingPhoto2Url]);
+
+  // Sync hidden inputs with current values
+  useEffect(() => {
+    const currentMainPhoto = imageUrl || uploadedMainPhotoUrl || mainPhotoUrlRef.current;
+    if (currentMainPhoto) {
+      setValue("imageUrl", currentMainPhoto, {
+        shouldValidate: true,
         shouldDirty: false,
       });
     }
-  }, [imageUrl, uploadedImageUrl, setValue]);
+  }, [imageUrl, uploadedMainPhotoUrl, setValue]);
 
-  const onSubmit = async (data: FormData) => {
-    // Prevent submission if image is still uploading
-    if (isImageUploading) {
+  useEffect(() => {
+    const currentPhoto1 = supportingPhoto1Url || uploadedSupportingPhoto1Url || supportingPhoto1UrlRef.current;
+    setValue("supportingPhoto1Url", currentPhoto1 || undefined, {
+      shouldValidate: false,
+      shouldDirty: false,
+    });
+  }, [supportingPhoto1Url, uploadedSupportingPhoto1Url, setValue]);
+
+  useEffect(() => {
+    const currentPhoto2 = supportingPhoto2Url || uploadedSupportingPhoto2Url || supportingPhoto2UrlRef.current;
+    setValue("supportingPhoto2Url", currentPhoto2 || undefined, {
+      shouldValidate: false,
+      shouldDirty: false,
+    });
+  }, [supportingPhoto2Url, uploadedSupportingPhoto2Url, setValue]);
+
+  const onSubmit = async (data: FormData): Promise<void> => {
+    // Prevent submission if main image is still uploading
+    if (isMainImageUploading) {
       setError(
-        "Please wait for the image upload to complete before submitting.",
+        "Please wait for the main photo upload to complete before submitting.",
       );
       return;
     }
@@ -179,11 +238,37 @@ export default function ProductForm({ product }: ProductFormProps) {
     // Get the current imageUrl value - check all possible sources including ref
     const currentImageUrl =
       (
-        imageUrlRef.current ||
-        uploadedImageUrl ||
+        mainPhotoUrlRef.current ||
+        uploadedMainPhotoUrl ||
         imageUrl ||
         data.imageUrl ||
         getValues("imageUrl")
+      )?.trim() || null;
+
+    // Validate main photo is required
+    if (!currentImageUrl) {
+      setError("Main photo is required. Please upload a main photo before submitting.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Get supporting photo URLs
+    const currentSupportingPhoto1Url =
+      (
+        supportingPhoto1UrlRef.current ||
+        uploadedSupportingPhoto1Url ||
+        supportingPhoto1Url ||
+        data.supportingPhoto1Url ||
+        getValues("supportingPhoto1Url")
+      )?.trim() || null;
+
+    const currentSupportingPhoto2Url =
+      (
+        supportingPhoto2UrlRef.current ||
+        uploadedSupportingPhoto2Url ||
+        supportingPhoto2Url ||
+        data.supportingPhoto2Url ||
+        getValues("supportingPhoto2Url")
       )?.trim() || null;
 
     const formData: ProductFormData = {
@@ -194,7 +279,9 @@ export default function ProductForm({ product }: ProductFormProps) {
       price: data.price,
       priceSubtext: data.priceSubtext,
       imageColor: data.imageColor,
-      imageUrl: currentImageUrl || null,
+      imageUrl: currentImageUrl,
+      supportingPhoto1Url: currentSupportingPhoto1Url || null,
+      supportingPhoto2Url: currentSupportingPhoto2Url || null,
       features: data.features,
       ingredients: data.ingredients.filter((i) => i.trim()).length > 0
         ? data.ingredients.filter((i) => i.trim())
@@ -216,9 +303,11 @@ export default function ProductForm({ product }: ProductFormProps) {
   };
 
   return (
-    <S.Form onSubmit={handleSubmit(onSubmit)}>
-      {/* Hidden input to ensure imageUrl is tracked by react-hook-form */}
+      <S.Form onSubmit={handleSubmit(onSubmit)}>
+      {/* Hidden inputs to ensure image URLs are tracked by react-hook-form */}
       <input type="hidden" {...register("imageUrl")} />
+      <input type="hidden" {...register("supportingPhoto1Url")} />
+      <input type="hidden" {...register("supportingPhoto2Url")} />
       {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
       <S.Section>
@@ -337,40 +426,90 @@ export default function ProductForm({ product }: ProductFormProps) {
       <S.Section>
         <S.SectionTitle>Image</S.SectionTitle>
 
-        <S.FormGrid>
-          <S.FormGroup>
-            <S.Label>Image Color *</S.Label>
-            <S.ColorInput
-              type="color"
-              {...register("imageColor")}
-              $hasError={!!errors.imageColor}
-            />
-            {errors.imageColor && (
-              <S.FieldError>{errors.imageColor.message}</S.FieldError>
-            )}
-          </S.FormGroup>
+        <S.FormGroup $fullWidth>
+          <S.Label>Image Color *</S.Label>
+          <S.ColorInput
+            type="color"
+            {...register("imageColor")}
+            $hasError={!!errors.imageColor}
+          />
+          {errors.imageColor && (
+            <S.FieldError>{errors.imageColor.message}</S.FieldError>
+          )}
+        </S.FormGroup>
 
-          <S.FormGroup>
-            <ImageUpload
-              value={imageUrl || uploadedImageUrl || ""}
-              onChange={(url) => {
-                imageUrlRef.current = url;
-                setUploadedImageUrl(url);
-                setValue("imageUrl", url, {
-                  shouldValidate: true,
-                  shouldDirty: true,
-                  shouldTouch: true,
-                });
-                setIsImageUploading(false);
-              }}
-              onUploadStart={() => {
-                setIsImageUploading(true);
-              }}
-              endpoint="productImage"
-              label="Product Image"
-            />
-          </S.FormGroup>
-        </S.FormGrid>
+        <S.SubsectionTitle>Main Photo</S.SubsectionTitle>
+        <S.FormGroup $fullWidth>
+          <S.Label>Main Photo *</S.Label>
+          <ImageUpload
+            value={imageUrl || uploadedMainPhotoUrl || ""}
+            onChange={(url) => {
+              mainPhotoUrlRef.current = url;
+              setUploadedMainPhotoUrl(url);
+              setValue("imageUrl", url, {
+                shouldValidate: true,
+                shouldDirty: true,
+                shouldTouch: true,
+              });
+              setIsMainImageUploading(false);
+            }}
+            onUploadStart={() => {
+              setIsMainImageUploading(true);
+            }}
+            endpoint="productImage"
+          />
+          {errors.imageUrl && (
+            <S.FieldError>{errors.imageUrl.message}</S.FieldError>
+          )}
+        </S.FormGroup>
+
+        <S.SubsectionTitle>Supporting Photos</S.SubsectionTitle>
+        <S.FormGroup $fullWidth>
+          <S.SupportingPhotosContainer>
+            <S.SupportingPhotoWrapper>
+              <S.Label>Supporting Photo 1</S.Label>
+              <ImageUpload
+                value={supportingPhoto1Url || uploadedSupportingPhoto1Url || ""}
+                onChange={(url) => {
+                  const finalUrl = url?.trim() || null;
+                  supportingPhoto1UrlRef.current = finalUrl;
+                  setUploadedSupportingPhoto1Url(finalUrl);
+                  setValue("supportingPhoto1Url", finalUrl || undefined, {
+                    shouldValidate: false,
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  });
+                  setIsSupportingImage1Uploading(false);
+                }}
+                onUploadStart={() => {
+                  setIsSupportingImage1Uploading(true);
+                }}
+                endpoint="productImage"
+              />
+            </S.SupportingPhotoWrapper>
+            <S.SupportingPhotoWrapper>
+              <S.Label>Supporting Photo 2</S.Label>
+              <ImageUpload
+                value={supportingPhoto2Url || uploadedSupportingPhoto2Url || ""}
+                onChange={(url) => {
+                  const finalUrl = url?.trim() || null;
+                  supportingPhoto2UrlRef.current = finalUrl;
+                  setUploadedSupportingPhoto2Url(finalUrl);
+                  setValue("supportingPhoto2Url", finalUrl || undefined, {
+                    shouldValidate: false,
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  });
+                  setIsSupportingImage2Uploading(false);
+                }}
+                onUploadStart={() => {
+                  setIsSupportingImage2Uploading(true);
+                }}
+                endpoint="productImage"
+              />
+            </S.SupportingPhotoWrapper>
+          </S.SupportingPhotosContainer>
+        </S.FormGroup>
       </S.Section>
 
       <S.Section>
@@ -444,12 +583,12 @@ export default function ProductForm({ product }: ProductFormProps) {
         </S.CancelButton>
         <S.SubmitButton
           type="submit"
-          disabled={isSubmitting || isImageUploading}
+          disabled={isSubmitting || isMainImageUploading}
         >
           {isSubmitting
             ? "Saving..."
-            : isImageUploading
-              ? "Uploading Image..."
+            : isMainImageUploading
+              ? "Uploading Main Photo..."
               : product
                 ? "Update Product"
                 : "Create Product"}

@@ -61,7 +61,15 @@ const productSchema = z.object({
   price: z.string().min(1, "Price is required"),
   priceSubtext: z.string().min(1, "Price subtext is required"),
   imageColor: z.string().min(1, "Image color is required"),
-  imageUrl: z.string().optional().nullable(),
+  imageUrl: z.string().url("Main photo is required").min(1, "Main photo is required"),
+  supportingPhoto1Url: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined ? null : val),
+    z.string().url().nullable().optional(),
+  ),
+  supportingPhoto2Url: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined ? null : val),
+    z.string().url().nullable().optional(),
+  ),
   features: z.array(z.object({ text: z.string(), color: z.string() })),
   ingredients: z.array(z.string()).optional().nullable(),
   productBrief: z.string().optional().nullable(),
@@ -79,12 +87,54 @@ export async function createProduct(
 
   try {
     const validated = productSchema.parse(data);
-    const product = await prisma.product.create({
+    
+    // Validate main photo is required
+    if (!validated.imageUrl) {
+      return { success: false, error: "Main photo is required" };
+    }
+
+    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const product = await (prisma.product.create as any)({
       data: {
-        ...validated,
-        imageUrl: validated.imageUrl || null,
+        name: validated.name,
+        subtitle: validated.subtitle,
+        description: validated.description,
+        longDescription: validated.longDescription,
+        price: validated.price,
+        priceSubtext: validated.priceSubtext,
+        imageColor: validated.imageColor,
+        imageUrl: validated.imageUrl,
+        features: validated.features,
         ingredients: validated.ingredients || [],
         productBrief: validated.productBrief || null,
+        images: {
+          create: [
+            // Main photo always at order 0
+            {
+              url: validated.imageUrl,
+              order: 0,
+            },
+            // Supporting photo 1 at order 1 (if provided)
+            ...(validated.supportingPhoto1Url
+              ? [
+                  {
+                    url: validated.supportingPhoto1Url,
+                    order: 1,
+                  },
+                ]
+              : []),
+            // Supporting photo 2 at order 2 (if provided)
+            ...(validated.supportingPhoto2Url
+              ? [
+                  {
+                    url: validated.supportingPhoto2Url,
+                    order: 2,
+                  },
+                ]
+              : []),
+          ],
+        },
       },
     });
 
@@ -112,25 +162,169 @@ export async function updateProduct(
   try {
     const validated = productSchema.parse(data);
 
-    // Get the current product to check if we need to delete the old image
-    const currentProduct = await prisma.product.findUnique({
-      where: { id },
-      select: { imageUrl: true },
-    });
-
-    // Delete the old image from UploadThing if it's being replaced
-    if (
-      currentProduct?.imageUrl &&
-      validated.imageUrl !== currentProduct.imageUrl
-    ) {
-      await deleteUploadThingFile(currentProduct.imageUrl);
+    // Validate main photo is required
+    if (!validated.imageUrl) {
+      return { success: false, error: "Main photo is required" };
     }
 
+    // Get the current product with images to check what needs to be deleted
+    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const currentProduct = (await (prisma.product.findUnique as any)({
+      where: { id },
+      select: {
+        imageUrl: true,
+        images: {
+          select: {
+            id: true,
+            url: true,
+            order: true,
+          },
+        },
+      },
+    })) as
+      | {
+          imageUrl: string | null;
+          images: Array<{ id: string; url: string; order: number }>;
+        }
+      | null;
+
+    if (!currentProduct) {
+      return { success: false, error: "Product not found" };
+    }
+
+    // Find existing ProductImage records by order
+    const existingMainPhoto = currentProduct.images.find((img) => img.order === 0);
+    const existingSupportingPhoto1 = currentProduct.images.find((img) => img.order === 1);
+    const existingSupportingPhoto2 = currentProduct.images.find((img) => img.order === 2);
+
+    // Track URLs to delete from UploadThing
+    const urlsToDelete: string[] = [];
+
+    // Handle main photo (order 0) - always required
+    if (existingMainPhoto) {
+      if (existingMainPhoto.url !== validated.imageUrl) {
+        // Main photo is being replaced
+        urlsToDelete.push(existingMainPhoto.url);
+        // Update existing ProductImage record
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await ((prisma as any).productImage.update as any)({
+          where: { id: existingMainPhoto.id },
+          data: { url: validated.imageUrl },
+        });
+      }
+      // If URL is the same, no update needed
+    } else {
+      // Create new ProductImage record for main photo
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await ((prisma as any).productImage.create as any)({
+        data: {
+          productId: id,
+          url: validated.imageUrl,
+          order: 0,
+        },
+      });
+    }
+
+    // Also update product.imageUrl
+    if (currentProduct.imageUrl !== validated.imageUrl) {
+      if (currentProduct.imageUrl) {
+        urlsToDelete.push(currentProduct.imageUrl);
+      }
+    }
+
+    // Handle supporting photo 1 (order 1) - fixed slot mapping
+    if (validated.supportingPhoto1Url) {
+      if (existingSupportingPhoto1) {
+        // Update existing record if URL changed
+        if (existingSupportingPhoto1.url !== validated.supportingPhoto1Url) {
+          urlsToDelete.push(existingSupportingPhoto1.url);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await ((prisma as any).productImage.update as any)({
+            where: { id: existingSupportingPhoto1.id },
+            data: { url: validated.supportingPhoto1Url },
+          });
+        }
+      } else {
+        // Create new ProductImage record at order 1
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await ((prisma as any).productImage.create as any)({
+          data: {
+            productId: id,
+            url: validated.supportingPhoto1Url,
+            order: 1,
+          },
+        });
+      }
+    } else {
+      // Delete supporting photo 1 if it exists (no shifting)
+      if (existingSupportingPhoto1) {
+        urlsToDelete.push(existingSupportingPhoto1.url);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await ((prisma as any).productImage.delete as any)({
+          where: { id: existingSupportingPhoto1.id },
+        });
+      }
+    }
+
+    // Handle supporting photo 2 (order 2) - fixed slot mapping
+    if (validated.supportingPhoto2Url) {
+      if (existingSupportingPhoto2) {
+        // Update existing record if URL changed
+        if (existingSupportingPhoto2.url !== validated.supportingPhoto2Url) {
+          urlsToDelete.push(existingSupportingPhoto2.url);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const productImageUpdate = (prisma as any).productImage.update;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await (productImageUpdate as any)({
+            where: { id: existingSupportingPhoto2.id },
+            data: { url: validated.supportingPhoto2Url },
+          });
+        }
+      } else {
+        // Create new ProductImage record at order 2
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const productImageCreate = (prisma as any).productImage.create;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (productImageCreate as any)({
+          data: {
+            productId: id,
+            url: validated.supportingPhoto2Url,
+            order: 2,
+          },
+        });
+      }
+    } else {
+      // Delete supporting photo 2 if it exists (no shifting)
+      if (existingSupportingPhoto2) {
+        urlsToDelete.push(existingSupportingPhoto2.url);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const productImageDelete = (prisma as any).productImage.delete;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (productImageDelete as any)({
+          where: { id: existingSupportingPhoto2.id },
+        });
+      }
+    }
+
+    // Delete old files from UploadThing
+    for (const url of urlsToDelete) {
+      await deleteUploadThingFile(url);
+    }
+
+    // Update the product record
     await prisma.product.update({
       where: { id },
       data: {
-        ...validated,
-        imageUrl: validated.imageUrl || null,
+        name: validated.name,
+        subtitle: validated.subtitle,
+        description: validated.description,
+        longDescription: validated.longDescription,
+        price: validated.price,
+        priceSubtext: validated.priceSubtext,
+        imageColor: validated.imageColor,
+        imageUrl: validated.imageUrl,
+        features: validated.features,
         ingredients: validated.ingredients || [],
         productBrief: validated.productBrief || null,
       },
@@ -157,18 +351,37 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
   }
 
   try {
-    // First, get the product to check if it has an UploadThing image
-    const product = await prisma.product.findUnique({
+    // First, get the product with all images to delete from UploadThing
+    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const product = (await (prisma.product.findUnique as any)({
       where: { id },
-      select: { imageUrl: true },
-    });
+      select: {
+        imageUrl: true,
+        images: {
+          select: {
+            url: true,
+          },
+        },
+      },
+    })) as
+      | {
+          imageUrl: string | null;
+          images: Array<{ url: string }>;
+        }
+      | null;
 
-    // Delete the image from UploadThing if it exists
+    // Delete all images from UploadThing
     if (product?.imageUrl) {
       await deleteUploadThingFile(product.imageUrl);
     }
+    
+    // Delete all ProductImage records (cascade delete should handle this, but we'll delete files first)
+    for (const image of product?.images || []) {
+      await deleteUploadThingFile(image.url);
+    }
 
-    // Delete the product from the database
+    // Delete the product from the database (cascade delete will remove ProductImage records)
     await prisma.product.delete({ where: { id } });
 
     revalidatePath("/shop");

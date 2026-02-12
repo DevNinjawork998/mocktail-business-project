@@ -117,7 +117,7 @@ export async function getLandingPhotoUrl(): Promise<
       success: true,
       data: setting?.value || null,
     };
-  } catch (error) {
+  } catch (_error) {
     // Silently return null on error to allow fallback to environment variable/default
     // Don't log errors during build when DATABASE_URL is not available
     return { success: true, data: null };

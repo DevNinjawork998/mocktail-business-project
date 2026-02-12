@@ -107,7 +107,7 @@ export default function ImageUpload({
 
   return (
     <S.Container>
-      <S.Label>{label}</S.Label>
+      {label && <S.Label>{label}</S.Label>}
 
       {value ? (
         <S.PreviewContainer>

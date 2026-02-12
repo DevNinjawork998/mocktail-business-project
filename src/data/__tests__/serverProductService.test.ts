@@ -39,6 +39,7 @@ describe("serverProductService", () => {
         { label: "Calories", value: "100" },
         { label: "Sugar", value: "5g" },
       ],
+      images: [],
       createdAt: new Date(),
     },
     {
@@ -54,6 +55,7 @@ describe("serverProductService", () => {
       ingredients: ["Ingredient 3"],
       productBrief: "Another product brief",
       nutritionFacts: [],
+      images: [],
       createdAt: new Date(),
     },
   ];
@@ -155,18 +157,64 @@ describe("serverProductService", () => {
 
   describe("getProductById", () => {
     it("fetches product by id successfully", async () => {
-      (prisma.product.findUnique as jest.Mock).mockResolvedValueOnce(
-        mockPrismaProducts[0],
-      );
+      (prisma.product.findUnique as jest.Mock).mockResolvedValueOnce({
+        ...mockPrismaProducts[0],
+        images: [
+          { url: "/image1.jpg", order: 0 },
+          { url: "/image2.jpg", order: 1 },
+        ],
+      });
 
       const product = await getProductById("1");
 
-      expect(product).toMatchObject(expectedProducts[0]);
+      expect(product).toMatchObject({
+        ...expectedProducts[0],
+        images: [
+          { url: "/image1.jpg", order: 0 },
+          { url: "/image2.jpg", order: 1 },
+        ],
+      });
       expect(prisma.product.findUnique).toHaveBeenCalledWith({
         where: {
           id: "1",
         },
+        include: {
+          images: {
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
       });
+    });
+
+    it("fetches product by slug when ID contains hyphens", async () => {
+      (prisma.product.findUnique as jest.Mock).mockResolvedValueOnce(null);
+      (prisma.product.findMany as jest.Mock).mockResolvedValueOnce([
+        {
+          ...mockPrismaProducts[0],
+          name: "Test Cocktail 1",
+          id: "test-cocktail-1",
+          images: [],
+          updatedAt: new Date(),
+        },
+      ]);
+
+      const product = await getProductById("test-cocktail-1");
+
+      expect(product).toBeTruthy();
+      expect(product?.name).toBe("Test Cocktail 1");
+    });
+
+    it("returns null when product is not found by ID or slug", async () => {
+      (prisma.product.findUnique as jest.Mock).mockResolvedValueOnce(null);
+      (prisma.product.findMany as jest.Mock).mockResolvedValueOnce(
+        mockPrismaProducts,
+      );
+
+      const product = await getProductById("non-existent-slug");
+
+      expect(product).toBeNull();
     });
 
     it("returns null when product is not found", async () => {
@@ -175,6 +223,56 @@ describe("serverProductService", () => {
       const product = await getProductById("999");
 
       expect(product).toBeNull();
+    });
+
+    it("maps product images correctly", async () => {
+      (prisma.product.findUnique as jest.Mock).mockResolvedValueOnce({
+        ...mockPrismaProducts[0],
+        images: [
+          { url: "/main.jpg", order: 0 },
+          { url: "/support1.jpg", order: 1 },
+          { url: "/support2.jpg", order: 2 },
+        ],
+        updatedAt: new Date(),
+      });
+
+      const product = await getProductById("1");
+
+      expect(product?.images).toEqual([
+        { url: "/main.jpg", order: 0 },
+        { url: "/support1.jpg", order: 1 },
+        { url: "/support2.jpg", order: 2 },
+      ]);
+    });
+
+    it("returns undefined for images when empty array", async () => {
+      (prisma.product.findUnique as jest.Mock).mockResolvedValueOnce({
+        ...mockPrismaProducts[0],
+        images: [],
+        updatedAt: new Date(),
+      });
+
+      const product = await getProductById("1");
+
+      expect(product?.images).toBeUndefined();
+    });
+
+    it("handles slug lookup when product name matches slug", async () => {
+      (prisma.product.findUnique as jest.Mock).mockResolvedValueOnce(null);
+      (prisma.product.findMany as jest.Mock).mockResolvedValueOnce([
+        {
+          ...mockPrismaProducts[0],
+          name: "Dark & Stormy",
+          id: "dark-stormy",
+          images: [],
+          updatedAt: new Date(),
+        },
+      ]);
+
+      const product = await getProductById("dark-stormy");
+
+      expect(product).toBeTruthy();
+      expect(product?.name).toBe("Dark & Stormy");
     });
 
     it("handles products without optional fields", async () => {

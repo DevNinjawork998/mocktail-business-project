@@ -1014,12 +1014,12 @@ export const ImageZoomOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  padding: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing.md};
   cursor: pointer;
   animation: fadeIn 0.3s ease;
 
@@ -1035,10 +1035,13 @@ export const ImageZoomOverlay = styled.div`
 
 export const ImageZoomContainer = styled.div`
   position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
-  width: auto;
-  height: auto;
+  width: 95vw;
+  height: 95vh;
+  max-width: 95vw;
+  max-height: 95vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   animation: zoomIn 0.3s ease;
 
   @keyframes zoomIn {
