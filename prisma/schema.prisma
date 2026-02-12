@@ -78,7 +78,7 @@ model VerificationToken {
 // ============================================
 
 model Product {
-  id              String   @id @default(cuid())
+  id              String         @id @default(cuid())
   name            String
   subtitle        String
   description     String
@@ -86,15 +86,29 @@ model Product {
   price           String
   priceSubtext    String
   imageColor      String
-  imageUrl        String?  // URL to the product image
-  features        Json     // Array of { text: string; color: string }
-  ingredients     Json?    // Array of ingredient strings
-  productBrief    String?  // Introduction/description of the drink
-  nutritionFacts  Json?    // Array of { label: string; value: string }
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  imageUrl        String?        // URL to the product image
+  features        Json           // Array of { text: string; color: string }
+  ingredients     Json?          // Array of ingredient strings
+  productBrief    String?        // Introduction/description of the drink
+  nutritionFacts  Json?          // Array of { label: string; value: string }
+  images          ProductImage[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
 }
 
 model Ingredient {

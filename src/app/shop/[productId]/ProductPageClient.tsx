@@ -75,6 +75,9 @@ export default function ProductPageClient({
 
   // Build image URLs array: main imageUrl first, then supporting photos from ProductImage (order 1, 2)
   const imageUrls = useMemo(() => {
+    // #region agent log
+    fetch('http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ProductPageClient.tsx:77',message:'Building imageUrls - initial data',data:{productId:product.id,imageUrl:product.imageUrl,imagesCount:product.images?.length||0,images:product.images?.map(i=>({order:i.order,url:i.url}))||[]},timestamp:Date.now(),runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
     const urls: string[] = [];
     const urlSet = new Set<string>(); // Track URLs to prevent duplicates
     const orderSet = new Set<number>(); // Track orders to ensure only one image per order
@@ -84,6 +87,13 @@ export default function ProductPageClient({
       urls.push(product.imageUrl);
       urlSet.add(product.imageUrl);
       orderSet.add(0); // Mark order 0 as used
+      // #region agent log
+      fetch('http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ProductPageClient.tsx:87',message:'Added main imageUrl',data:{imageUrl:product.imageUrl,currentUrlsCount:urls.length},timestamp:Date.now(),runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
+    } else {
+      // #region agent log
+      fetch('http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ProductPageClient.tsx:90',message:'WARNING: product.imageUrl is missing',data:{productId:product.id},timestamp:Date.now(),runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
     }
     
     // Then add supporting photos from ProductImage records (order 1, 2 only)
@@ -138,6 +148,9 @@ export default function ProductPageClient({
       }
     });
     
+    // #region agent log
+    fetch('http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ProductPageClient.tsx:141',message:'Final imageUrls array',data:{finalUrlsCount:finalDeduplicatedUrls.length,finalUrls:finalDeduplicatedUrls,productId:product.id},timestamp:Date.now(),runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
     return finalDeduplicatedUrls;
   }, [product.images, product.imageUrl]);
 

@@ -63,6 +63,13 @@ function nameToSlug(name: string): string {
 
 export async function getProductById(id: string): Promise<Product | null> {
   try {
+    // #region agent log
+    // Server-side logging - write directly to file
+    const fs = await import('fs');
+    const logPath = '/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log';
+    const logEntry = JSON.stringify({location:'serverProductService.ts:69',message:'Fetching product from DB',data:{productId:id},timestamp:Date.now(),runId:'run1',hypothesisId:'A'})+'\n';
+    fs.promises.appendFile(logPath, logEntry).catch(()=>{});
+    // #endregion
     // First, try to find by ID directly (works for both CUIDs and slug IDs)
     // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,6 +107,12 @@ export async function getProductById(id: string): Promise<Product | null> {
 
     // If not found and ID looks like a slug (contains hyphens), try finding by name
     if (!product && id.includes("-")) {
+      // #region agent log
+      const fsSlug = await import('fs');
+      const logPathSlug = '/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log';
+      const logEntrySlug = JSON.stringify({location:'serverProductService.ts:109',message:'Product not found by ID, trying slug lookup',data:{productId:id},timestamp:Date.now(),runId:'run1',hypothesisId:'A'})+'\n';
+      fsSlug.promises.appendFile(logPathSlug, logEntrySlug).catch(()=>{});
+      // #endregion
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const allProducts = (await (prisma.product.findMany as any)({
         include: {
@@ -132,7 +145,20 @@ export async function getProductById(id: string): Promise<Product | null> {
           const slug = nameToSlug(p.name);
           return slug === id || p.id === id;
         }) || null;
+      // #region agent log
+      const fsSlug2 = await import('fs');
+      const logPathSlug2 = '/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log';
+      const logEntrySlug2 = JSON.stringify({location:'serverProductService.ts:142',message:'Slug lookup result',data:{productFound:!!product,productId:id,searchedProductsCount:allProducts.length,imageUrl:product?.imageUrl,imagesCount:product?.images?.length||0},timestamp:Date.now(),runId:'run1',hypothesisId:'A'})+'\n';
+      fsSlug2.promises.appendFile(logPathSlug2, logEntrySlug2).catch(()=>{});
+      // #endregion
     }
+
+    // #region agent log
+    const fs2 = await import('fs');
+    const logPath2 = '/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log';
+    const logEntry2 = JSON.stringify({location:'serverProductService.ts:137',message:'Product query result',data:{productFound:!!product,productId:id,imageUrl:product?.imageUrl,imagesCount:product?.images?.length||0,images:product?.images?.map((i: {url: string; order: number})=>({order:i.order,url:i.url}))||[]},timestamp:Date.now(),runId:'run1',hypothesisId:'C'})+'\n';
+    fs2.promises.appendFile(logPath2, logEntry2).catch(()=>{});
+    // #endregion
 
     if (!product) return null;
 
@@ -155,6 +181,13 @@ export async function getProductById(id: string): Promise<Product | null> {
             }))
           : undefined,
     };
+
+    // #region agent log
+    const fs3 = await import('fs');
+    const logPath3 = '/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log';
+    const logEntry3 = JSON.stringify({location:'serverProductService.ts:164',message:'Mapped product ready to return',data:{productId:id,imageUrl:mappedProduct.imageUrl,imagesCount:mappedProduct.images?.length||0,images:mappedProduct.images?.map((i: {url: string; order: number})=>({order:i.order,url:i.url}))||[]},timestamp:Date.now(),runId:'run1',hypothesisId:'C'})+'\n';
+    fs3.promises.appendFile(logPath3, logEntry3).catch(()=>{});
+    // #endregion
 
     return mappedProduct;
   } catch (error) {

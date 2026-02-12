@@ -21,7 +21,14 @@ export default function ProductImageSlider({
   const [scrollLeft, setScrollLeft] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
+  // #region agent log
+  fetch('http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ProductImageSlider.tsx:24',message:'ProductImageSlider received images',data:{imagesCount:images?.length||0,images:images||[],productName},timestamp:Date.now(),runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+  // #endregion
+
   if (!images || images.length === 0) {
+    // #region agent log
+    fetch('http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ProductImageSlider.tsx:26',message:'WARNING: No images provided to slider',data:{productName},timestamp:Date.now(),runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+    // #endregion
     return null;
   }
 
@@ -110,22 +117,33 @@ export default function ProductImageSlider({
         $isDragging={isDragging}
         $hasMultipleImages={hasMultipleImages}
       >
-        {images.map((url, index) => (
-          <S.ImageSlide key={`${url}-${index}`}>
-            <S.ImageContainer onClick={() => handleImageClick(index)}>
-              <Image
-                src={url}
-                alt={`${productName} - Image ${index + 1}`}
-                fill
-                sizes="(max-width: 768px) 300px, (max-width: 1024px) 400px, 450px"
-                style={{
-                  objectFit: "contain",
-                }}
-                priority={index === 0}
-              />
-            </S.ImageContainer>
-          </S.ImageSlide>
-        ))}
+        {images.map((url, index) => {
+          // #region agent log
+          fetch('http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ProductImageSlider.tsx:116',message:'Rendering image',data:{index,url,productName,urlValid:!!url,urlLength:url?.length||0},timestamp:Date.now(),runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+          // #endregion
+          return (
+            <S.ImageSlide key={`${url}-${index}`}>
+              <S.ImageContainer onClick={() => handleImageClick(index)}>
+                <Image
+                  src={url}
+                  alt={`${productName} - Image ${index + 1}`}
+                  fill
+                  sizes="(max-width: 768px) 300px, (max-width: 1024px) 400px, 450px"
+                  style={{
+                    objectFit: "contain",
+                  }}
+                  priority={index === 0}
+                  onError={(e) => {
+                    // #region agent log
+                    fetch('http://127.0.0.1:7246/ingest/4b2c1512-4efc-413b-bace-ac682a95f5c0',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ProductImageSlider.tsx:127',message:'Image load error',data:{index,url,productName,error:'Image failed to load'},timestamp:Date.now(),runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+                    // #endregion
+                    console.error(`Failed to load image ${index + 1} for ${productName}:`, url);
+                  }}
+                />
+              </S.ImageContainer>
+            </S.ImageSlide>
+          );
+        })}
       </S.SliderWrapper>
 
       {/* Always show indicators if there are images, even with just one */}
