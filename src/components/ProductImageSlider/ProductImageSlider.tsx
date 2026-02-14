@@ -4,6 +4,7 @@ import {
   useState,
   useRef,
   useEffect,
+  useCallback,
   type MouseEvent,
   type TouchEvent,
 } from "react";
@@ -28,10 +29,6 @@ export default function ProductImageSlider({
   const sliderRef = useRef<HTMLDivElement>(null);
   const currentIndexRef = useRef(0);
   currentIndexRef.current = currentIndex;
-
-  if (!images || images.length === 0) {
-    return null;
-  }
 
   // If only one image, don't show slider controls
   const hasMultipleImages = images.length > 1;
@@ -80,14 +77,17 @@ export default function ProductImageSlider({
     }
   };
 
-  const goToSlide = (index: number) => {
-    if (!hasMultipleImages || !sliderRef.current) return;
-    setCurrentIndex(index);
-    sliderRef.current.scrollTo({
-      left: index * sliderRef.current.clientWidth,
-      behavior: "smooth",
-    });
-  };
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (!hasMultipleImages || !sliderRef.current) return;
+      setCurrentIndex(index);
+      sliderRef.current.scrollTo({
+        left: index * sliderRef.current.clientWidth,
+        behavior: "smooth",
+      });
+    },
+    [hasMultipleImages],
+  );
 
   const handleScroll = () => {
     if (!sliderRef.current || !hasMultipleImages) return;
@@ -108,7 +108,12 @@ export default function ProductImageSlider({
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, [hasMultipleImages, images.length]);
+  }, [hasMultipleImages, images.length, goToSlide]);
+
+  // Early return check must come after all hooks
+  if (!images || images.length === 0) {
+    return null;
+  }
 
   const handleImageClick = (index: number) => {
     if (onImageClick) {
