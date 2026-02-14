@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useRef, type MouseEvent, type TouchEvent } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  type MouseEvent,
+  type TouchEvent,
+} from "react";
 import Image from "next/image";
 import * as S from "./ProductImageSlider.styles";
 
@@ -20,13 +27,11 @@ export default function ProductImageSlider({
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
-
-  if (!images || images.length === 0) {
-    return null;
-  }
+  const currentIndexRef = useRef(0);
+  currentIndexRef.current = currentIndex;
 
   // If only one image, don't show slider controls
-  const hasMultipleImages = images.length > 1;
+  const hasMultipleImages = (images?.length ?? 0) > 1;
 
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     if (!hasMultipleImages || !sliderRef.current) return;
@@ -64,7 +69,7 @@ export default function ProductImageSlider({
   const handleTouchEnd = () => {
     setIsDragging(false);
     // Update currentIndex based on scroll position
-    if (sliderRef.current) {
+    if (sliderRef.current && images) {
       const scrollPosition = sliderRef.current.scrollLeft;
       const imageWidth = sliderRef.current.clientWidth;
       const newIndex = Math.round(scrollPosition / imageWidth);
@@ -72,22 +77,43 @@ export default function ProductImageSlider({
     }
   };
 
-  const goToSlide = (index: number) => {
-    if (!hasMultipleImages || !sliderRef.current) return;
-    setCurrentIndex(index);
-    sliderRef.current.scrollTo({
-      left: index * sliderRef.current.clientWidth,
-      behavior: "smooth",
-    });
-  };
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (!hasMultipleImages || !sliderRef.current) return;
+      setCurrentIndex(index);
+      sliderRef.current.scrollTo({
+        left: index * sliderRef.current.clientWidth,
+        behavior: "smooth",
+      });
+    },
+    [hasMultipleImages],
+  );
 
   const handleScroll = () => {
-    if (!sliderRef.current || !hasMultipleImages) return;
+    if (!sliderRef.current || !hasMultipleImages || !images) return;
     const scrollPosition = sliderRef.current.scrollLeft;
     const imageWidth = sliderRef.current.clientWidth;
     const newIndex = Math.round(scrollPosition / imageWidth);
     setCurrentIndex(Math.max(0, Math.min(newIndex, images.length - 1)));
   };
+
+  // Auto-rotate images every 5 seconds
+  useEffect(() => {
+    if (!hasMultipleImages || !images || images.length === 0) return;
+
+    const intervalId = setInterval(() => {
+      const current = currentIndexRef.current;
+      const nextIndex = current < images.length - 1 ? current + 1 : 0;
+      goToSlide(nextIndex);
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [hasMultipleImages, images, goToSlide]);
+
+  // Early return check must come after all hooks
+  if (!images || images.length === 0) {
+    return null;
+  }
 
   const handleImageClick = (index: number) => {
     if (onImageClick) {
