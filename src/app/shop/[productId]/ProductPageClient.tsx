@@ -108,7 +108,6 @@ export default function ProductPageClient({
     const urlSet = new Set<string>(); // Track URLs to prevent duplicates
     const orderSet = new Set<number>(); // Track orders to ensure only one image per order
 
-
     // Always start with main imageUrl (this is the primary source for the main photo)
     if (product.imageUrl) {
       urls.push(product.imageUrl);
@@ -164,14 +163,12 @@ export default function ProductPageClient({
       // #endregion
     }
 
-
     // Then add supporting photos from ProductImage records (order 1, 2 only)
     // We skip order 0 because it's the same as imageUrl
     // Also ensure no ProductImage URL matches imageUrl (even if order > 0)
     if (product.images && product.images.length > 0) {
       // Group by order and take only the first occurrence of each order
       const orderMap = new Map<number, string>();
-
 
       product.images.forEach((img) => {
         // Only process order 1 and 2 (strictly)
@@ -192,7 +189,6 @@ export default function ProductPageClient({
         }
       });
 
-
       // Sort by order and add to URLs
       const sortedOrders = Array.from(orderMap.keys()).sort((a, b) => a - b);
       sortedOrders.forEach((order) => {
@@ -205,11 +201,9 @@ export default function ProductPageClient({
       });
     }
 
-
     // Safety limit: Only return max 3 images (main + 2 supporting)
     // This prevents issues if there are ProductImage records with order > 2
     const limitedUrls = urls.slice(0, 3);
-
 
     // Final deduplication check: ensure no duplicate URLs in final array
     const finalDeduplicatedUrls: string[] = [];

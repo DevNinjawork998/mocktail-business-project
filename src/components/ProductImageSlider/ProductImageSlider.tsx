@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useRef, type MouseEvent, type TouchEvent } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  type MouseEvent,
+  type TouchEvent,
+} from "react";
 import Image from "next/image";
 import * as S from "./ProductImageSlider.styles";
 
@@ -20,6 +26,8 @@ export default function ProductImageSlider({
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const currentIndexRef = useRef(0);
+  currentIndexRef.current = currentIndex;
 
   if (!images || images.length === 0) {
     return null;
@@ -88,6 +96,19 @@ export default function ProductImageSlider({
     const newIndex = Math.round(scrollPosition / imageWidth);
     setCurrentIndex(Math.max(0, Math.min(newIndex, images.length - 1)));
   };
+
+  // Auto-rotate images every 5 seconds
+  useEffect(() => {
+    if (!hasMultipleImages || images.length === 0) return;
+
+    const intervalId = setInterval(() => {
+      const current = currentIndexRef.current;
+      const nextIndex = current < images.length - 1 ? current + 1 : 0;
+      goToSlide(nextIndex);
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [hasMultipleImages, images.length]);
 
   const handleImageClick = (index: number) => {
     if (onImageClick) {
