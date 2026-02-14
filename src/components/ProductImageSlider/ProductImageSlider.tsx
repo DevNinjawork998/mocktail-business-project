@@ -31,7 +31,7 @@ export default function ProductImageSlider({
   currentIndexRef.current = currentIndex;
 
   // If only one image, don't show slider controls
-  const hasMultipleImages = images.length > 1;
+  const hasMultipleImages = (images?.length ?? 0) > 1;
 
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     if (!hasMultipleImages || !sliderRef.current) return;
@@ -69,7 +69,7 @@ export default function ProductImageSlider({
   const handleTouchEnd = () => {
     setIsDragging(false);
     // Update currentIndex based on scroll position
-    if (sliderRef.current) {
+    if (sliderRef.current && images) {
       const scrollPosition = sliderRef.current.scrollLeft;
       const imageWidth = sliderRef.current.clientWidth;
       const newIndex = Math.round(scrollPosition / imageWidth);
@@ -90,7 +90,7 @@ export default function ProductImageSlider({
   );
 
   const handleScroll = () => {
-    if (!sliderRef.current || !hasMultipleImages) return;
+    if (!sliderRef.current || !hasMultipleImages || !images) return;
     const scrollPosition = sliderRef.current.scrollLeft;
     const imageWidth = sliderRef.current.clientWidth;
     const newIndex = Math.round(scrollPosition / imageWidth);
@@ -99,7 +99,7 @@ export default function ProductImageSlider({
 
   // Auto-rotate images every 5 seconds
   useEffect(() => {
-    if (!hasMultipleImages || images.length === 0) return;
+    if (!hasMultipleImages || !images || images.length === 0) return;
 
     const intervalId = setInterval(() => {
       const current = currentIndexRef.current;
@@ -108,7 +108,7 @@ export default function ProductImageSlider({
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, [hasMultipleImages, images.length, goToSlide]);
+  }, [hasMultipleImages, images, goToSlide]);
 
   // Early return check must come after all hooks
   if (!images || images.length === 0) {
