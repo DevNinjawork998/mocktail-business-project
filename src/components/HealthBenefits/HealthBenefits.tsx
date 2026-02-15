@@ -61,8 +61,8 @@ const HealthBenefits = () => {
       <Section>
         <Headline>Real Ingredients. Real Results.</Headline>
         <Intro>
-          We source the finest fruits from sustainable farms. No concentrates,
-          no shortcuts.
+          We source the finest ingredients from local suppliers, with Halal,
+          Mesti, HACCP, and GMP certifications.
         </Intro>
         <div style={{ textAlign: "center", padding: "2rem" }}>
           Loading ingredients...
@@ -78,8 +78,8 @@ const HealthBenefits = () => {
     <Section>
       <Headline>Real Ingredients. Real Results.</Headline>
       <Intro>
-        We source the finest fruits from sustainable farms. No concentrates, no
-        shortcuts.
+        We source the finest ingredients from local suppliers, with Halal,
+        Mesti, HACCP, and GMP certifications.
       </Intro>
       <IngredientsGrid>
         {ingredients.map((ingredient) => {
