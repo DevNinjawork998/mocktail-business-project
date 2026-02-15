@@ -21,7 +21,7 @@ export const HeroTitle = styled.h1`
   font-weight: bold;
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 
   ${({ theme }) => `
     @media (min-width: ${theme.breakpoints.md}) {
@@ -68,7 +68,7 @@ export const FeaturedTitle = styled.h2`
   font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 
   ${({ theme }) => `
     @media (min-width: ${theme.breakpoints.md}) {
@@ -269,7 +269,7 @@ export const BackTitle = styled.h3`
   font-weight: bold;
   color: white;
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 `;
 
 export const BackSubtitle = styled.p`

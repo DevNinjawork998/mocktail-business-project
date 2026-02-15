@@ -19,7 +19,7 @@ export const Title = styled.h1`
   font-weight: bold;
   color: ${({ theme }) => theme.semantic.primary};
   margin-bottom: ${({ theme }) => theme.spacing.xl};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 `;
 
 export const Paragraph = styled.p`

@@ -18,7 +18,7 @@ export const Logo = styled.h1`
   font-size: 1.25rem;
   font-weight: bold;
   margin: 0;
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 `;
 
 export const Nav = styled.nav`

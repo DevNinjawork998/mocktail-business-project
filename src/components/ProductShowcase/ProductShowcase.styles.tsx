@@ -79,7 +79,7 @@ export const SectionTitle = styled.h2`
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 
   ${({ theme }) => `
     @media (min-width: 480px) {

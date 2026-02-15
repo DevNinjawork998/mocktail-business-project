@@ -31,7 +31,7 @@ export const SectionTitle = styled.h2`
   font-weight: bold;
   color: ${({ theme }) => theme.colors.chocolateKisses.base};
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 
   ${({ theme }) => `
     @media (min-width: 480px) {

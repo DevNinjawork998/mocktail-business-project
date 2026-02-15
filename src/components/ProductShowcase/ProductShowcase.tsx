@@ -1,10 +1,133 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import * as S from "./ProductShowcase.styles";
 import { getAllProducts, Product } from "@/data/productService";
+
+/**
+ * Build image URLs array: main imageUrl first, then supporting photos from ProductImage (order 1, 2)
+ */
+function buildImageUrls(
+  imageUrl?: string | null,
+  images?: Array<{ url: string; order: number }>,
+): string[] {
+  const urls: string[] = [];
+  const urlSet = new Set<string>();
+
+  // Always start with main imageUrl
+  if (imageUrl) {
+    urls.push(imageUrl);
+    urlSet.add(imageUrl);
+  }
+
+  // Then add supporting photos from ProductImage records (order 1, 2 only)
+  if (images && images.length > 0) {
+    const orderMap = new Map<number, string>();
+
+    images.forEach((img) => {
+      // Only process order 1 and 2 (strictly)
+      if (img.order <= 0 || img.order > 2) {
+        return;
+      }
+      // Skip if URL matches imageUrl
+      if (imageUrl && img.url === imageUrl) {
+        return;
+      }
+      // Skip if URL already exists
+      if (urlSet.has(img.url)) {
+        return;
+      }
+      // Only keep the first occurrence of each order
+      if (!orderMap.has(img.order)) {
+        orderMap.set(img.order, img.url);
+      }
+    });
+
+    // Sort by order and add to URLs
+    const sortedOrders = Array.from(orderMap.keys()).sort((a, b) => a - b);
+    sortedOrders.forEach((order) => {
+      const url = orderMap.get(order);
+      if (url && !urlSet.has(url)) {
+        urls.push(url);
+        urlSet.add(url);
+      }
+    });
+  }
+
+  // Safety limit: Only return max 3 images (main + 2 supporting)
+  return urls.slice(0, 3);
+}
+
+/**
+ * Rotating Product Image Component
+ */
+function RotatingProductImage({
+  imageUrls,
+  productName,
+  imageColor,
+}: {
+  imageUrls: string[];
+  productName: string;
+  imageColor: string;
+}) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const currentIndexRef = useRef(0);
+  currentIndexRef.current = currentIndex;
+
+  const hasMultipleImages = imageUrls.length > 1;
+
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (!hasMultipleImages) return;
+      setCurrentIndex(index);
+    },
+    [hasMultipleImages],
+  );
+
+  // Auto-rotate images every 4 seconds
+  useEffect(() => {
+    if (!hasMultipleImages || imageUrls.length === 0) return;
+
+    const intervalId = setInterval(() => {
+      const current = currentIndexRef.current;
+      const nextIndex = current < imageUrls.length - 1 ? current + 1 : 0;
+      goToSlide(nextIndex);
+    }, 4000);
+
+    return () => clearInterval(intervalId);
+  }, [hasMultipleImages, imageUrls.length, goToSlide]);
+
+  if (imageUrls.length === 0) {
+    return (
+      <S.ProductImagePlaceholder $bgColor={imageColor}>
+        {productName}
+      </S.ProductImagePlaceholder>
+    );
+  }
+
+  return (
+    <>
+      {imageUrls.map((url, index) => (
+        <Image
+          key={`${url}-${index}`}
+          src={url}
+          alt={`${productName} - Image ${index + 1}`}
+          fill
+          sizes="(max-width: 768px) 200px, 300px"
+          style={{
+            objectFit: "cover",
+            objectPosition: "center",
+            opacity: index === currentIndex ? 1 : 0,
+            transition: "opacity 0.5s ease-in-out",
+            position: "absolute",
+          }}
+        />
+      ))}
+    </>
+  );
+}
 
 /**
  * Extract section title from longDescription HTML
@@ -66,9 +189,14 @@ function SubtitleWithLink({
   return subtitle;
 }
 
+// Extended Product type to include images
+type ProductWithImages = Product & {
+  images?: Array<{ url: string; order: number }>;
+};
+
 const ProductShowcase = () => {
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductWithImages[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -116,24 +244,19 @@ const ProductShowcase = () => {
         </S.SectionHeader>
 
         <S.ProductsGrid>
-          {products.map((product) => (
-            <S.ProductCardLink key={product.id} href={`/shop/${product.id}`}>
-              <S.ProductCard>
-                <S.ProductImage>
-                  {product.imageUrl ? (
-                    <Image
-                      src={product.imageUrl}
-                      alt={product.name}
-                      fill
-                      sizes="(max-width: 768px) 200px, 300px"
-                      style={{ objectFit: "cover", objectPosition: "center" }}
+          {products.map((product) => {
+            const imageUrls = buildImageUrls(product.imageUrl, product.images);
+
+            return (
+              <S.ProductCardLink key={product.id} href={`/shop/${product.id}`}>
+                <S.ProductCard>
+                  <S.ProductImage>
+                    <RotatingProductImage
+                      imageUrls={imageUrls}
+                      productName={product.name}
+                      imageColor={product.imageColor}
                     />
-                  ) : (
-                    <S.ProductImagePlaceholder $bgColor={product.imageColor}>
-                      {product.name}
-                    </S.ProductImagePlaceholder>
-                  )}
-                </S.ProductImage>
+                  </S.ProductImage>
                 <S.ProductContent>
                   <S.ProductName>{product.name}</S.ProductName>
                   <S.ProductSubtitle>
@@ -158,7 +281,8 @@ const ProductShowcase = () => {
                 </S.ProductContent>
               </S.ProductCard>
             </S.ProductCardLink>
-          ))}
+            );
+          })}
         </S.ProductsGrid>
       </S.Container>
     </S.ShowcaseSection>

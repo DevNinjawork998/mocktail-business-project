@@ -58,8 +58,7 @@ export const ShopTitle = styled.h1`
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  font-family: serif;
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 
   ${({ theme: _theme }) => `
     @media (min-width: 480px) {

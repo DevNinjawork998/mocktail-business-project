@@ -34,7 +34,7 @@ export const Heading = styled.h2`
   font-weight: bold;
   color: white;
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 
   ${({ theme }) => `
     @media (min-width: 480px) {
