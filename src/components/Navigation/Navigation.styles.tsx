@@ -140,20 +140,31 @@ export const LogoImage = styled.div`
 `;
 
 export const LogoText = styled.div`
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   color: white;
   white-space: nowrap;
+  /* Drop shadow for depth + subtle outline for definition */
+  text-shadow:
+    0 1px 0 rgba(69, 21, 21, 0.4),
+    0 2px 4px rgba(69, 21, 21, 0.25),
+    0 4px 8px rgba(69, 21, 21, 0.15);
 
   ${({ theme }) => `
     @media (max-width: ${theme.breakpoints.md}) {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
     }
   `}
 `;
 
 export const LogoAccent = styled.span`
   color: ${({ theme }) => theme.colors.caramel.base};
+  /* Drop shadow for depth + subtle outline */
+  text-shadow:
+    0 1px 0 rgba(69, 21, 21, 0.35),
+    0 2px 4px rgba(69, 21, 21, 0.2);
 `;
 
 export const CartIconWrapper = styled.div`
