@@ -140,31 +140,34 @@ export const LogoImage = styled.div`
 `;
 
 export const LogoText = styled.div`
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 1.5rem;
-  font-weight: 400;
-  letter-spacing: 0.04em;
+  font-family: "Raleway", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
   color: white;
   white-space: nowrap;
-  /* Drop shadow for depth + subtle outline for definition */
+  text-transform: uppercase;
+  /* Bold drop shadow for maximum impact */
   text-shadow:
-    0 1px 0 rgba(69, 21, 21, 0.4),
-    0 2px 4px rgba(69, 21, 21, 0.25),
-    0 4px 8px rgba(69, 21, 21, 0.15);
+    0 2px 0 rgba(69, 21, 21, 0.6),
+    0 4px 8px rgba(69, 21, 21, 0.4),
+    0 6px 12px rgba(69, 21, 21, 0.3),
+    0 0 20px rgba(221, 84, 28, 0.2);
 
   ${({ theme }) => `
     @media (max-width: ${theme.breakpoints.md}) {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
   `}
 `;
 
 export const LogoAccent = styled.span`
   color: ${({ theme }) => theme.colors.caramel.base};
-  /* Drop shadow for depth + subtle outline */
+  /* Enhanced shadow for accent */
   text-shadow:
-    0 1px 0 rgba(69, 21, 21, 0.35),
-    0 2px 4px rgba(69, 21, 21, 0.2);
+    0 2px 0 rgba(69, 21, 21, 0.5),
+    0 4px 8px rgba(69, 21, 21, 0.3),
+    0 0 15px rgba(250, 195, 88, 0.4);
 `;
 
 export const CartIconWrapper = styled.div`

@@ -91,7 +91,7 @@ export const Title = styled.h2`
   font-weight: bold;
   color: ${({ theme }) => theme.semantic.primary};
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
   line-height: 1.2;
 
   ${({ theme }) => `

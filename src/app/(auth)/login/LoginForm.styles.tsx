@@ -34,7 +34,7 @@ export const Logo = styled.h1`
   font-weight: bold;
   color: ${({ theme }) => theme.semantic.primary};
   margin: 0;
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 `;
 
 export const Tagline = styled.p`

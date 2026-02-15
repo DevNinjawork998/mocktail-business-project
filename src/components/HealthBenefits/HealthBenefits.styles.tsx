@@ -212,7 +212,7 @@ export const BackTitle = styled.h3`
   font-weight: 700;
   color: white;
   margin-bottom: 0.75rem;
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 `;
 
 export const BackSubtitle = styled.p`

@@ -26,7 +26,7 @@ export const HeroTitle = styled.h1`
   font-size: 3rem;
   font-weight: bold;
   margin-bottom: ${({ theme }) => theme.spacing.md};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 
   ${({ theme }) => `
     @media (min-width: ${theme.breakpoints.md}) {
@@ -61,7 +61,7 @@ export const SectionTitle = styled.h2`
   color: ${({ theme }) => theme.semantic.primary};
   text-align: center;
   margin-bottom: ${({ theme }) => theme.spacing.xl};
-  font-family: serif;
+  font-family: "Poppins", sans-serif;
 
   ${({ theme }) => `
     @media (min-width: ${theme.breakpoints.md}) {
