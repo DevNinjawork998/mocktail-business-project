@@ -97,7 +97,7 @@ export default function ProductImageSlider({
     setCurrentIndex(Math.max(0, Math.min(newIndex, images.length - 1)));
   };
 
-  // Auto-rotate images every 5 seconds
+  // Auto-rotate images every 4 seconds
   useEffect(() => {
     if (!hasMultipleImages || !images || images.length === 0) return;
 
@@ -105,7 +105,7 @@ export default function ProductImageSlider({
       const current = currentIndexRef.current;
       const nextIndex = current < images.length - 1 ? current + 1 : 0;
       goToSlide(nextIndex);
-    }, 5000);
+    }, 3000);
 
     return () => clearInterval(intervalId);
   }, [hasMultipleImages, images, goToSlide]);

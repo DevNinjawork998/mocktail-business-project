@@ -6,6 +6,9 @@ export const Container = styled.div`
   width: 100%;
   max-width: 260px;
   aspect-ratio: 2 / 3;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
 
   ${media.md} {
     max-width: 400px;
@@ -32,13 +35,31 @@ export const SliderWrapper = styled.div<{
   -webkit-overflow-scrolling: touch;
   cursor: ${({ $isDragging, $hasMultipleImages }) =>
     $hasMultipleImages ? ($isDragging ? "grabbing" : "grab") : "pointer"};
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 
-  /* Hide scrollbar */
+  /* Hide scrollbar completely */
   scrollbar-width: none;
   -ms-overflow-style: none;
 
   &::-webkit-scrollbar {
     display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    display: none;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    display: none;
+    background: transparent;
   }
 
   /* Prevent text selection while dragging */
@@ -52,6 +73,11 @@ export const ImageSlide = styled.div`
   height: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 `;
 
 export const ImageContainer = styled.div`
@@ -60,9 +86,19 @@ export const ImageContainer = styled.div`
   height: 100%;
   cursor: pointer;
   transition: transform 0.3s ease;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 
   &:hover {
     transform: scale(1.02);
+  }
+
+  &:focus {
+    outline: none;
+    border: none;
   }
 `;
 

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Poster-style font for header brand */
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+
 /* Global CSS Reset and Base Styles */
 :root {
   /* Color Palette - Cocktail Business Theme */
