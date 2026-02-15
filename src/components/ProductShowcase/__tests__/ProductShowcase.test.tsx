@@ -191,7 +191,7 @@ describe("ProductShowcase", () => {
       render(<ProductShowcase />);
 
       await waitFor(() => {
-        const image1 = screen.getByAltText("Test Cocktail 1");
+        const image1 = screen.getByAltText("Test Cocktail 1 - Image 1");
         expect(image1).toBeInTheDocument();
         expect(image1).toHaveAttribute("src", "/test-image-1.jpg");
       });
