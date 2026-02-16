@@ -31,7 +31,6 @@ export const NavContent = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      grid-template-columns: auto 1fr auto;
     }
   `}
 `;
@@ -133,8 +132,7 @@ export const LogoImage = styled.div`
 
   ${({ theme }) => `
     @media (max-width: ${theme.breakpoints.md}) {
-      height: 35px;
-      margin-right: ${theme.spacing.xs};
+      display: none;
     }
   `}
 `;
@@ -143,6 +141,7 @@ export const LogoText = styled.div`
   font-family: "Raleway", sans-serif;
   font-size: 1.75rem;
   font-weight: 900;
+  line-height: 1;
   letter-spacing: 0.05em;
   color: white;
   white-space: nowrap;
@@ -156,7 +155,8 @@ export const LogoText = styled.div`
 
   ${({ theme }) => `
     @media (max-width: ${theme.breakpoints.md}) {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
+      letter-spacing: 0.03em;
     }
   `}
 `;
