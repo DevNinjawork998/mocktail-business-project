@@ -77,6 +77,8 @@
     "typescript": "^5"
   },
   "overrides": {
+    "@hono/node-server": "^1.19.10",
+    "@tootallnate/once": "^3.0.1",
     "esbuild": "^0.25.9",
     "path-to-regexp": "^6.2.3",
     "undici": "^6.21.1",
