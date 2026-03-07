@@ -84,7 +84,7 @@ describe("CheckoutPageClient", () => {
 
     it("navigates to cart when back button is clicked", () => {
       const mockPush = jest.fn();
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
+       
       jest.spyOn(require("next/navigation"), "useRouter").mockReturnValue({
         push: mockPush,
       });

@@ -128,7 +128,7 @@ describe("ProductImageSlider", () => {
     });
 
     it("handles indicator click", () => {
-      const { container } = render(
+      const { container: _container } = render(
         <ProductImageSlider images={mockImages} productName="Test Product" />,
       );
 

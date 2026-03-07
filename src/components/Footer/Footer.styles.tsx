@@ -63,7 +63,7 @@ export const BrandLogo = styled.h3`
   color: ${({ theme }) => theme.colors.caramel.base};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
 
-  ${({ theme }) => `
+  ${() => `
     @media (min-width: 480px) {
       font-size: 1.5rem;
     }

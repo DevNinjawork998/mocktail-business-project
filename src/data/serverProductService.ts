@@ -81,7 +81,7 @@ export async function getProductById(id: string): Promise<Product | null> {
     // #endregion
     // First, try to find by ID directly (works for both CUIDs and slug IDs)
     // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     let product = (await (prisma.product.findUnique as any)({
       where: {
         id: id,
@@ -129,7 +129,7 @@ export async function getProductById(id: string): Promise<Product | null> {
         }) + "\n";
       fsSlug.promises.appendFile(logPathSlug, logEntrySlug).catch(() => {});
       // #endregion
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       const allProducts = (await (prisma.product.findMany as any)({
         include: {
           images: {

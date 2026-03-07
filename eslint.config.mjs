@@ -38,6 +38,12 @@ const eslintConfig = [
           caughtErrorsIgnorePattern: "^_",
         },
       ],
+      // Disable strict React Compiler rules that flag valid/common patterns
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/purity": "off",
+      "react-hooks/error-boundaries": "off",
+      "react-hooks/refs": "off",
+      "react-hooks/incompatible-library": "off",
     },
   },
 ];

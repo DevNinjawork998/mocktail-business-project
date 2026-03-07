@@ -242,7 +242,7 @@ export default function ProductPageClient({
     }
     // #endregion
     return finalDeduplicatedUrls;
-  }, [product.images, product.imageUrl]);
+  }, [product.images, product.imageUrl, product.id]);
 
   const handleWhatsAppInquiry = () => {
     setShowModal(true);
