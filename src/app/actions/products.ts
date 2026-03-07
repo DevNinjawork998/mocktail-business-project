@@ -62,17 +62,22 @@ const productSchema = z.object({
   priceSubtext: z.string().min(1, "Price subtext is required"),
   imageColor: z.string().min(1, "Image color is required"),
   imageUrl: z
-    .string()
     .url("Main photo is required")
     .min(1, "Main photo is required"),
-  supportingPhoto1Url: z.preprocess(
-    (val) => (val === "" || val === null || val === undefined ? null : val),
-    z.string().url().nullable().optional(),
-  ),
-  supportingPhoto2Url: z.preprocess(
-    (val) => (val === "" || val === null || val === undefined ? null : val),
-    z.string().url().nullable().optional(),
-  ),
+  supportingPhoto1Url: z
+    .union([z.url(), z.literal(""), z.null(), z.undefined()])
+    .transform((val) =>
+      val === "" || val === null || val === undefined ? null : val,
+    )
+    .nullable()
+    .optional(),
+  supportingPhoto2Url: z
+    .union([z.url(), z.literal(""), z.null(), z.undefined()])
+    .transform((val) =>
+      val === "" || val === null || val === undefined ? null : val,
+    )
+    .nullable()
+    .optional(),
   features: z.array(z.object({ text: z.string(), color: z.string() })),
   ingredients: z.array(z.string()).optional().nullable(),
   productBrief: z.string().optional().nullable(),
@@ -146,7 +151,7 @@ export async function createProduct(
     return { success: true, data: { id: product.id } };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: error.issues[0].message };
     }
     console.error("Error creating product:", error);
     return { success: false, error: "Failed to create product" };
@@ -344,7 +349,7 @@ export async function updateProduct(
     return { success: true };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: error.issues[0].message };
     }
     console.error("Error updating product:", error);
     return { success: false, error: "Failed to update product" };

@@ -33,8 +33,8 @@ const productSchema = z.object({
     .string()
     .url("Main photo is required")
     .min(1, "Main photo is required"),
-  supportingPhoto1Url: z.string().url().optional().nullable(),
-  supportingPhoto2Url: z.string().url().optional().nullable(),
+  supportingPhoto1Url: z.url().optional().nullable(),
+  supportingPhoto2Url: z.url().optional().nullable(),
   features: z.array(z.object({ text: z.string(), color: z.string() })),
   ingredients: z.array(z.string()),
   productBrief: z.string().optional().nullable(),

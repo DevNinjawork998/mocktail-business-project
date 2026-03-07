@@ -88,7 +88,7 @@ export async function createIngredient(
     return { success: true, data: { id: ingredient.id } };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: error.issues[0].message };
     }
     console.error("Error creating ingredient:", error);
     return { success: false, error: "Failed to create ingredient" };
@@ -136,7 +136,7 @@ export async function updateIngredient(
     return { success: true };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: error.issues[0].message };
     }
     console.error("Error updating ingredient:", error);
     return { success: false, error: "Failed to update ingredient" };

@@ -13,7 +13,7 @@ type ActionResult<T = void> =
   | { success: false; error: string };
 
 const userCreateSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   name: z.string().min(1, "Name is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["SUPERADMIN", "ADMIN", "EDITOR"]),
@@ -135,7 +135,7 @@ export async function createUser(
     return { success: true, data: { id: user.id } };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: error.issues[0].message };
     }
     console.error("Error creating user:", error);
     return { success: false, error: "Failed to create user" };
@@ -207,7 +207,7 @@ export async function updateUser(
     return { success: true };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: error.issues[0].message };
     }
     console.error("Error updating user:", error);
     return { success: false, error: "Failed to update user" };

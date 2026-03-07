@@ -39,7 +39,7 @@ export async function createTestimonial(
     return { success: true, data: { id: testimonial.id } };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: error.issues[0].message };
     }
     console.error("Error creating testimonial:", error);
     return { success: false, error: "Failed to create testimonial" };
