@@ -22,9 +22,9 @@ function getFeatureFlagsConfig(): FeatureFlagsConfig {
   if (typeof window === "undefined") {
     try {
       // Dynamic import for Node.js modules (server-side only)
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
+       
       const { readFileSync } = require("fs");
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
+       
       const { join } = require("path");
       const configPath = join(
         process.cwd(),

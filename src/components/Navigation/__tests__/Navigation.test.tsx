@@ -23,8 +23,9 @@ jest.mock("next/image", () => ({
     priority?: boolean;
     style?: React.CSSProperties;
   }) => {
-    // eslint-disable-next-line @next/next/no-img-element
+     
     return (
+      // eslint-disable-next-line @next/next/no-img-element -- mock for testing
       <img src={src} alt={alt} width={width} height={height} style={style} />
     );
   },

@@ -22,7 +22,7 @@ const instagramPostSchema = z.object({
       (url) => isValidInstagramPostUrl(url),
       "Must be a valid Instagram post URL (e.g., https://www.instagram.com/p/POST_ID/)",
     ),
-  imageUrl: z.string().url("Image URL is required").min(1, "Image is required"),
+  imageUrl: z.url("Image URL is required").min(1, "Image is required"),
   order: z.number().int().min(0).default(0),
 });
 
@@ -55,7 +55,7 @@ export async function createInstagramPost(
     return { success: true, data: { id: instagramPost.id } };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, error: error.errors[0].message };
+      return { success: false, error: error.issues[0].message };
     }
     console.error("Error creating Instagram post:", error);
     return { success: false, error: "Failed to create Instagram post" };

@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loadStripe } from "@stripe/stripe-js";
-import type { Stripe } from "@stripe/stripe-js";
 import {
   CheckoutContainer,
   CheckoutHeader,
@@ -73,7 +71,7 @@ enum PaymentMethod {
 
 const customerInfoSchema = z.object({
   name: z.string().min(1, "Full name is required"),
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   phone: z
     .string()
     .min(1, "Phone number is required")
@@ -100,7 +98,6 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
   const { state, clearCart } = useCart();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [stripe, setStripe] = useState<Stripe | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
     stripeEnabled ? PaymentMethod.STRIPE : PaymentMethod.WHATSAPP,
   );
@@ -122,27 +119,8 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
     },
   });
 
-  // Load Stripe on component mount only if enabled
-  useEffect(() => {
-    if (!stripeEnabled) {
-      return;
-    }
-
-    const loadStripeInstance = async () => {
-      const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-      if (publishableKey) {
-        const stripeInstance = await loadStripe(publishableKey);
-        setStripe(stripeInstance);
-      }
-    };
-    loadStripeInstance();
-  }, [stripeEnabled]);
 
   const handleStripeCheckout = async () => {
-    if (!stripe) {
-      alert("Stripe is not loaded. Please try again.");
-      return;
-    }
     setLoading(true);
     try {
       const response = await fetch("/api/create-checkout-session", {
@@ -160,16 +138,17 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
         throw new Error("Failed to create checkout session");
       }
 
-      const { sessionId } = await response.json();
+      const { url } = await response.json();
 
-      const { error } = await stripe.redirectToCheckout({ sessionId });
-      if (error) {
-        throw error;
+      if (!url) {
+        throw new Error("No checkout URL received");
       }
+
+      // Redirect directly to Stripe Checkout (Stripe.js v8+)
+      window.location.href = url;
     } catch (error) {
       console.error("Error during checkout:", error);
       alert("There was an error processing your payment. Please try again.");
-    } finally {
       setLoading(false);
     }
   };
@@ -318,7 +297,7 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
                       handleStripeCheckout();
                     }}
                     $isSelected={paymentMethod === PaymentMethod.STRIPE}
-                    disabled={loading || !stripe}
+                    disabled={loading}
                   >
                     {loading ? (
                       <LoadingSpinner />

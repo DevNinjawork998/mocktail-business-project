@@ -20,7 +20,7 @@ const ingredientSchema = z.object({
   subtitle: z.string().min(1, "Subtitle is required"),
   description: z.string().min(1, "Description is required"),
   type: z.enum(["Adaptogen", "Fruit"]),
-  order: z.coerce.number().int().min(0),
+  order: z.number().int().min(0),
 });
 
 type FormData = z.infer<typeof ingredientSchema>;
