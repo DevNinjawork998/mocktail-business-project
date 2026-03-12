@@ -148,18 +148,29 @@ function decodeBasicHtmlEntities(input: string): string {
   );
 }
 
+function htmlToText(html: string): string {
+  if (!html) {
+    return "";
+  }
+
+  if (typeof window === "undefined" || typeof DOMParser === "undefined") {
+    // Fallback: strip tags and angle brackets if DOMParser is not available
+    return html.replace(/<[^>]*>/g, "").replace(/[<>]/g, "");
+  }
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  return (doc.body && doc.body.textContent) ? doc.body.textContent : "";
+}
+
 function extractSectionTitle(longDescription: string): string | null {
   if (!longDescription) return null;
 
   // Try to extract h3 tag content
   const h3Match = longDescription.match(/<h3[^>]*>(.*?)<\/h3>/i);
   if (h3Match) {
-    // Remove HTML tags, decode basic entities, and strip any remaining angle brackets
-    return decodeBasicHtmlEntities(
-      h3Match[1].replace(/<[^>]*>/g, ""),
-    )
-      .replace(/[<>]/g, "")
-      .trim();
+    // Convert inner HTML to plain text and trim
+    return htmlToText(h3Match[1]).trim();
   }
 
   return null;
