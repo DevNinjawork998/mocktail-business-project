@@ -148,21 +148,6 @@ function decodeBasicHtmlEntities(input: string): string {
   );
 }
 
-function htmlToText(html: string): string {
-  if (!html) {
-    return "";
-  }
-
-  if (typeof window === "undefined" || typeof DOMParser === "undefined") {
-    // Fallback: strip tags and angle brackets if DOMParser is not available
-    return html.replace(/<[^>]*>/g, "").replace(/[<>]/g, "");
-  }
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  return (doc.body && doc.body.textContent) ? doc.body.textContent : "";
-}
-
 function extractSectionTitle(longDescription: string): string | null {
   if (!longDescription) return null;
 
