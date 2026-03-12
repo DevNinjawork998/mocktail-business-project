@@ -132,16 +132,27 @@ function RotatingProductImage({
 /**
  * Extract section title from longDescription HTML
  */
+function decodeBasicHtmlEntities(input: string): string {
+  return input
+    .replace(/&nbsp;/g, " ")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
+
 function extractSectionTitle(longDescription: string): string | null {
   if (!longDescription) return null;
 
   // Try to extract h3 tag content
   const h3Match = longDescription.match(/<h3[^>]*>(.*?)<\/h3>/i);
   if (h3Match) {
-    // Remove HTML tags and decode entities
-    return h3Match[1]
-      .replace(/<[^>]*>/g, "")
-      .replace(/&nbsp;/g, " ")
+    // Remove HTML tags, decode basic entities, and strip any remaining angle brackets
+    return decodeBasicHtmlEntities(
+      h3Match[1].replace(/<[^>]*>/g, ""),
+    )
+      .replace(/[<>]/g, "")
       .trim();
   }
 
