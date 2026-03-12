@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import striptags from "striptags";
 import * as S from "./ProductShowcase.styles";
 import { getAllProducts, Product } from "@/data/productService";
 
@@ -154,8 +155,8 @@ function extractSectionTitle(longDescription: string): string | null {
   // Try to extract h3 tag content
   const h3Match = longDescription.match(/<h3[^>]*>(.*?)<\/h3>/i);
   if (h3Match) {
-    // Convert inner HTML to plain text and trim
-    return htmlToText(h3Match[1]).trim();
+    // Convert inner HTML to plain text (strip tags, decode entities) and trim
+    return decodeBasicHtmlEntities(striptags(h3Match[1])).trim();
   }
 
   return null;
