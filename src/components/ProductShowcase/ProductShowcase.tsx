@@ -133,13 +133,19 @@ function RotatingProductImage({
  * Extract section title from longDescription HTML
  */
 function decodeBasicHtmlEntities(input: string): string {
-  return input
-    .replace(/&nbsp;/g, " ")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+  const entityMap: Record<string, string> = {
+    "&nbsp;": " ",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&amp;": "&",
+    "&quot;": '"',
+    "&#39;": "'",
+  };
+
+  return input.replace(
+    /&(nbsp|lt|gt|amp|quot|#39);/g,
+    (fullMatch) => entityMap[fullMatch] ?? fullMatch,
+  );
 }
 
 function extractSectionTitle(longDescription: string): string | null {
