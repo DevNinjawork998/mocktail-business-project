@@ -2,6 +2,8 @@
  * Helper function to parse HTML into structured data for the ProductForm
  * Extracts section title (h3) and paragraphs (p) from HTML string
  */
+import striptags from "striptags";
+
 export function parseLongDescription(html: string): {
   sectionTitle: string;
   paragraphs: string[];
@@ -12,15 +14,15 @@ export function parseLongDescription(html: string): {
 
   // Check if we're on the client (DOMParser is browser-only)
   if (typeof window === "undefined" || typeof DOMParser === "undefined") {
-    // Fallback: simple regex parsing for server-side
+    // Fallback: simple parsing for server-side
     const h3Match = html.match(/<h3[^>]*>(.*?)<\/h3>/i);
-    const sectionTitle = h3Match ? h3Match[1].trim() : "";
+    const sectionTitle = h3Match ? striptags(h3Match[1]).trim() : "";
 
     const pMatches = html.match(/<p[^>]*>(.*?)<\/p>/gi) || [];
     const paragraphs = pMatches
       .map((p) => {
         const textMatch = p.match(/<p[^>]*>(.*?)<\/p>/i);
-        return textMatch ? textMatch[1].replace(/<[^>]*>/g, "").trim() : "";
+        return textMatch ? striptags(textMatch[1]).trim() : "";
       })
       .filter((p) => p.length > 0);
 
