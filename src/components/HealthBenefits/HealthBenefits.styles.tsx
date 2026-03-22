@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styled from "styled-components";
 
 export const Section = styled.section`
@@ -150,6 +151,71 @@ export const CardFront = styled(CardFace)`
     0 8px 16px rgba(0, 0, 0, 0.12),
     0 4px 8px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.3s ease;
+`;
+
+/** Decorative: indicates the card can be pressed to flip (parent handles click). */
+export const FlipAffordance = styled.span.attrs({
+  "aria-hidden": true,
+})`
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: ${({ theme }) => theme.semantic.primary};
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+`;
+
+export const MobileCarouselWrapper = styled.div`
+  max-width: 22rem;
+  margin: 0 auto;
+`;
+
+export const ViewAllIngredientsRow = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+
+  ${({ theme }) => `
+    @media (min-width: ${theme.breakpoints.md}) {
+      margin-top: 2rem;
+    }
+  `}
+`;
+
+export const ViewAllIngredientsLink = styled(Link)`
+  display: inline-block;
+  text-align: center;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.semantic.primary};
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.semantic.primary};
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+`;
+
+export const VisuallyHidden = styled.span`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 `;
 
 export const FlipCardContainer = styled.div`
