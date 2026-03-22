@@ -21,7 +21,7 @@ export const ourFileRouter = {
       return { userId: session.user.id, role: session.user.role };
     })
     .onUploadComplete(async ({ metadata: _metadata, file }) => {
-      return { url: file.url };
+      return { url: file.ufsUrl };
     }),
 
   // Image uploader for ingredients
@@ -40,7 +40,7 @@ export const ourFileRouter = {
       return { userId: session.user.id, role: session.user.role };
     })
     .onUploadComplete(async ({ metadata: _metadata, file }) => {
-      return { url: file.url };
+      return { url: file.ufsUrl };
     }),
 
   // Image uploader for landing photo
@@ -59,7 +59,7 @@ export const ourFileRouter = {
       return { userId: session.user.id, role: session.user.role };
     })
     .onUploadComplete(async ({ metadata: _metadata, file }) => {
-      return { url: file.url };
+      return { url: file.ufsUrl };
     }),
 } satisfies FileRouter;
 

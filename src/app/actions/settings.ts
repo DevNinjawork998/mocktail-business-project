@@ -47,6 +47,75 @@ async function deleteUploadThingFile(url: string): Promise<void> {
 }
 
 const SETTINGS_KEY_LANDING_PHOTO = "landingPhotoUrl";
+const SETTINGS_KEY_LANDING_HERO_SLIDE_URLS = "landingHeroSlideUrls";
+
+function normalizeSlideUrlList(urls: unknown): string[] {
+  if (!Array.isArray(urls)) {
+    return [];
+  }
+  return urls.filter(
+    (u): u is string =>
+      typeof u === "string" && u.trim().length > 0 && u.startsWith("http"),
+  );
+}
+
+function parseSlideUrlsJson(value: string | null | undefined): string[] | null {
+  if (value === null || value === undefined) {
+    return null;
+  }
+  if (!value.trim()) {
+    return null;
+  }
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed)) {
+      return null;
+    }
+    return normalizeSlideUrlList(parsed);
+  } catch {
+    return null;
+  }
+}
+
+async function fetchLandingSlideUrlsFromDatabase(): Promise<string[]> {
+  const hasDatabaseUrl =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.DIRECT_URL ||
+    process.env.PRISMA_DATABASE_URL;
+
+  if (!hasDatabaseUrl) {
+    return [];
+  }
+
+  const { prisma } = await import("@/lib/prisma");
+
+  const slidesRow = await prisma.settings
+    .findUnique({
+      where: { key: SETTINGS_KEY_LANDING_HERO_SLIDE_URLS },
+    })
+    .catch(() => null);
+
+  if (slidesRow) {
+    const fromJson = parseSlideUrlsJson(slidesRow.value);
+    if (fromJson !== null) {
+      return fromJson;
+    }
+  }
+
+  const legacyRow = await prisma.settings
+    .findUnique({
+      where: { key: SETTINGS_KEY_LANDING_PHOTO },
+    })
+    .catch(() => null);
+
+  const legacy = legacyRow?.value?.trim();
+  if (legacy && legacy.startsWith("http")) {
+    return [legacy];
+  }
+
+  return [];
+}
 
 /**
  * Ensure the settings table exists in the database
@@ -75,60 +144,52 @@ async function ensureSettingsTableExists(): Promise<boolean> {
 }
 
 /**
- * Get the landing photo URL from settings
+ * Ordered landing hero image URLs (JSON in settings, with legacy single-URL fallback).
  */
-export async function getLandingPhotoUrl(): Promise<
-  ActionResult<string | null>
+export async function getLandingHeroSlideUrls(): Promise<
+  ActionResult<string[]>
 > {
   try {
-    // Check if DATABASE_URL is available before attempting database access
-    // This prevents errors during static generation when DATABASE_URL is not set
-    const hasDatabaseUrl =
-      process.env.DATABASE_URL ||
-      process.env.POSTGRES_URL ||
-      process.env.DIRECT_URL ||
-      process.env.PRISMA_DATABASE_URL;
-
-    if (!hasDatabaseUrl) {
-      // During build/static generation, return null to use fallback
-      return { success: true, data: null };
-    }
-
-    // Dynamically import prisma only when DATABASE_URL is available
-    const { prisma } = await import("@/lib/prisma");
-
-    // Check if settings table exists by trying to access it
-    // If the table doesn't exist yet, return null (fallback to env/default)
-    const setting = await prisma.settings
-      .findUnique({
-        where: { key: SETTINGS_KEY_LANDING_PHOTO },
-      })
-      .catch(() => null);
-
-    if (setting === null) {
-      // Table might not exist or no setting found - return null to use fallback
-      return {
-        success: true,
-        data: null,
-      };
-    }
-
-    return {
-      success: true,
-      data: setting?.value || null,
-    };
+    const slides = await fetchLandingSlideUrlsFromDatabase();
+    return { success: true, data: slides };
   } catch (_error) {
-    // Silently return null on error to allow fallback to environment variable/default
-    // Don't log errors during build when DATABASE_URL is not available
-    return { success: true, data: null };
+    return { success: true, data: [] };
   }
 }
 
 /**
- * Update the landing photo URL in settings
+ * First landing hero URL (backward compatible with single-photo callers).
  */
-export async function updateLandingPhotoUrl(
-  url: string,
+export async function getLandingPhotoUrl(): Promise<
+  ActionResult<string | null>
+> {
+  const result = await getLandingHeroSlideUrls();
+  const first = result.success ? result.data?.[0] : undefined;
+  return { success: true, data: first ?? null };
+}
+
+function filterValidSlideUrls(urls: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const u of urls) {
+    if (typeof u !== "string" || !u.trim().startsWith("http")) {
+      continue;
+    }
+    if (seen.has(u)) {
+      continue;
+    }
+    seen.add(u);
+    out.push(u);
+  }
+  return out;
+}
+
+/**
+ * Replace the full ordered list of landing hero slide URLs.
+ * Removes any URLs no longer present from UploadThing.
+ */
+export async function setLandingHeroSlideUrls(
+  urls: string[],
 ): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user || !getEditorRoles().includes(session.user.role)) {
@@ -136,38 +197,42 @@ export async function updateLandingPhotoUrl(
   }
 
   try {
-    // Ensure the settings table exists
     await ensureSettingsTableExists();
-
-    // Dynamically import prisma
     const { prisma } = await import("@/lib/prisma");
+    const nextUrls = filterValidSlideUrls(urls);
+    const previous = await fetchLandingSlideUrlsFromDatabase();
 
-    // Get the current landing photo URL to delete the old file
-    const currentSetting = await prisma.settings
-      .findUnique({
-        where: { key: SETTINGS_KEY_LANDING_PHOTO },
-      })
-      .catch(() => null);
-
-    // Delete the old image from UploadThing if it's being replaced
-    if (
-      currentSetting?.value &&
-      url !== currentSetting.value &&
-      currentSetting.value.startsWith("http")
-    ) {
-      await deleteUploadThingFile(currentSetting.value);
+    for (const u of previous) {
+      if (!nextUrls.includes(u)) {
+        await deleteUploadThingFile(u);
+      }
     }
 
-    // Upsert the setting (create if doesn't exist, update if exists)
+    const jsonValue = JSON.stringify(nextUrls);
+    const legacyFirst = nextUrls[0] ?? "";
+
+    await prisma.settings.upsert({
+      where: { key: SETTINGS_KEY_LANDING_HERO_SLIDE_URLS },
+      update: {
+        value: jsonValue,
+        updatedById: session.user.id,
+      },
+      create: {
+        key: SETTINGS_KEY_LANDING_HERO_SLIDE_URLS,
+        value: jsonValue,
+        updatedById: session.user.id,
+      },
+    });
+
     await prisma.settings.upsert({
       where: { key: SETTINGS_KEY_LANDING_PHOTO },
       update: {
-        value: url,
+        value: legacyFirst,
         updatedById: session.user.id,
       },
       create: {
         key: SETTINGS_KEY_LANDING_PHOTO,
-        value: url,
+        value: legacyFirst,
         updatedById: session.user.id,
       },
     });
@@ -176,51 +241,54 @@ export async function updateLandingPhotoUrl(
     revalidatePath("/dashboard/settings");
     return { success: true };
   } catch (error) {
-    console.error("Error updating landing photo URL:", error);
-    return { success: false, error: "Failed to update landing photo URL" };
+    console.error("Error saving landing hero slides:", error);
+    return { success: false, error: "Failed to save landing hero slides" };
   }
 }
 
 /**
- * Remove the landing photo (set to empty string)
+ * Remove one slide by index (deletes file from UploadThing when applicable).
  */
-export async function removeLandingPhoto(): Promise<ActionResult> {
+export async function removeLandingHeroSlideAt(
+  index: number,
+): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user || !getEditorRoles().includes(session.user.role)) {
     return { success: false, error: "Unauthorized" };
   }
 
-  try {
-    // Dynamically import prisma
-    const { prisma } = await import("@/lib/prisma");
-
-    const currentSetting = await prisma.settings
-      .findUnique({
-        where: { key: SETTINGS_KEY_LANDING_PHOTO },
-      })
-      .catch(() => null);
-
-    // Delete the image from UploadThing
-    if (currentSetting?.value && currentSetting.value.startsWith("http")) {
-      await deleteUploadThingFile(currentSetting.value);
-    }
-
-    // Update setting to empty string
-    if (currentSetting) {
-      await prisma.settings.update({
-        where: { key: SETTINGS_KEY_LANDING_PHOTO },
-        data: {
-          value: "",
-          updatedById: session.user.id,
-        },
-      });
-    }
-
-    revalidatePath("/");
-    revalidatePath("/dashboard/settings");
-    return { success: true };
-  } catch (error) {
-    console.error("Error removing landing photo:", error);
-    return { success: false, error: "Failed to remove landing photo" };
+  if (!Number.isInteger(index) || index < 0) {
+    return { success: false, error: "Invalid slide index" };
   }
+
+  try {
+    await ensureSettingsTableExists();
+    const previous = await fetchLandingSlideUrlsFromDatabase();
+    if (index >= previous.length) {
+      return { success: false, error: "Invalid slide index" };
+    }
+
+    const nextUrls = previous.filter((_, i) => i !== index);
+    return setLandingHeroSlideUrls(nextUrls);
+  } catch (error) {
+    console.error("Error removing landing hero slide:", error);
+    return { success: false, error: "Failed to remove slide" };
+  }
+}
+
+/**
+ * Update the landing photo URL (replaces all slides with a single image).
+ */
+export async function updateLandingPhotoUrl(url: string): Promise<ActionResult> {
+  if (!url.trim().startsWith("http")) {
+    return { success: false, error: "Invalid image URL" };
+  }
+  return setLandingHeroSlideUrls([url]);
+}
+
+/**
+ * Remove all landing hero photos and clear settings.
+ */
+export async function removeLandingPhoto(): Promise<ActionResult> {
+  return setLandingHeroSlideUrls([]);
 }
