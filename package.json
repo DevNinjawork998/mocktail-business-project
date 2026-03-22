@@ -20,6 +20,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:prod": "tsx prisma/seed.prod.ts",
     "db:seed-admin": "tsx prisma/seed-admin.ts",
+    "db:reset-password": "tsx scripts/reset-password.ts",
     "db:create-settings-table": "tsx scripts/create-settings-table.ts",
     "db:backup:prod": "tsx scripts/backup-prod-db.ts",
     "upload:product-images": "tsx scripts/upload-product-images-from-zips.ts",
