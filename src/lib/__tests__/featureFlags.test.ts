@@ -1,6 +1,7 @@
 import {
   isFeatureEnabled,
   isStripeEnabled,
+  isCartIconEnabled,
   isCTABannerEnabled,
   getAllFeatureFlags,
   clearFeatureFlagsCache,
@@ -98,6 +99,26 @@ describe("featureFlags", () => {
       delete process.env.NEXT_PUBLIC_ENABLE_STRIPE;
 
       expect(isStripeEnabled()).toBe(true);
+    });
+  });
+
+  describe("isCartIconEnabled", () => {
+    it("returns true when cart is enabled via environment variable", () => {
+      process.env.NEXT_PUBLIC_ENABLE_CART = "true";
+
+      expect(isCartIconEnabled()).toBe(true);
+    });
+
+    it("returns false when cart is disabled via environment variable", () => {
+      process.env.NEXT_PUBLIC_ENABLE_CART = "false";
+
+      expect(isCartIconEnabled()).toBe(false);
+    });
+
+    it("returns true by default", () => {
+      delete process.env.NEXT_PUBLIC_ENABLE_CART;
+
+      expect(isCartIconEnabled()).toBe(true);
     });
   });
 
