@@ -1,4 +1,4 @@
-import { getLandingPhotoUrl } from "@/app/actions/settings";
+import { getLandingHeroSlideUrls } from "@/app/actions/settings";
 import SettingsClient from "./SettingsClient";
 
 export const metadata = {
@@ -6,8 +6,8 @@ export const metadata = {
 };
 
 export default async function SettingsPage() {
-  const result = await getLandingPhotoUrl();
-  const landingPhotoUrl = result.success ? result.data || null : null;
+  const result = await getLandingHeroSlideUrls();
+  const initialLandingSlideUrls = result.success ? result.data ?? [] : [];
 
   return (
     <div>
@@ -21,7 +21,7 @@ export default async function SettingsPage() {
       >
         Settings
       </h1>
-      <SettingsClient initialLandingPhotoUrl={landingPhotoUrl} />
+      <SettingsClient initialLandingSlideUrls={initialLandingSlideUrls} />
     </div>
   );
 }

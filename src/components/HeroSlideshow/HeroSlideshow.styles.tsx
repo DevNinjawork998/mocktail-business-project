@@ -26,6 +26,15 @@ export const ImageWrapper = styled.div`
   `}
 `;
 
+export const Slide = styled.div<{ $active: boolean }>`
+  position: absolute;
+  inset: 0;
+  opacity: ${({ $active }) => ($active ? 1 : 0)};
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+  z-index: ${({ $active }) => ($active ? 1 : 0)};
+`;
+
 export const Badge = styled.div`
   position: absolute;
   top: ${({ theme }) => theme.spacing.md};

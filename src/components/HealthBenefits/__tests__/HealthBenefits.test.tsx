@@ -9,6 +9,20 @@ import {
 import HealthBenefits from "../HealthBenefits";
 import "@jest/globals";
 
+function mockMatchMedia(matches: boolean): void {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    configurable: true,
+    value: jest.fn().mockImplementation((query: string) => ({
+      matches,
+      media: query,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+}
+
 // Mock fetch API
 global.fetch = jest.fn();
 
@@ -68,6 +82,7 @@ const mockIngredients = [
 describe("HealthBenefits", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockMatchMedia(true);
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => mockIngredients,
@@ -107,6 +122,10 @@ describe("HealthBenefits", () => {
 
     expect(screen.getAllByText("Maca").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Ginger").length).toBeGreaterThan(0);
+
+    expect(
+      screen.getByRole("link", { name: /view all ingredients/i }),
+    ).toHaveAttribute("href", "/ingredients");
   });
 
   it("renders ingredient subtitles", async () => {
@@ -263,5 +282,101 @@ describe("HealthBenefits", () => {
     expect(
       screen.getByText(/Real Ingredients. Real Results./i),
     ).toBeInTheDocument();
+  });
+
+  it("on narrow viewports shows one carousel card, flip control, and link to /ingredients", async () => {
+    mockMatchMedia(false);
+
+    await act(async () => {
+      render(<HealthBenefits />);
+    });
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Ashwagandha").length).toBeGreaterThan(0);
+    });
+
+    expect(
+      screen.getByRole("link", { name: /view all ingredients/i }),
+    ).toHaveAttribute("href", "/ingredients");
+
+    expect(
+      screen.getByRole("button", {
+        name: /Ashwagandha: flip card to read full details/i,
+      }),
+    ).toBeInTheDocument();
+
+    expect(screen.queryByText("Maca")).not.toBeInTheDocument();
+    expect(screen.queryByText("Ginger")).not.toBeInTheDocument();
+    expect(screen.getAllByRole("button")).toHaveLength(1);
+  });
+
+  it("on narrow viewports advances carousel every 3 seconds when card is not flipped", async () => {
+    jest.useFakeTimers();
+    mockMatchMedia(false);
+
+    await act(async () => {
+      render(<HealthBenefits />);
+    });
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Ashwagandha").length).toBeGreaterThan(0);
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(3000);
+    });
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Maca").length).toBeGreaterThan(0);
+    });
+
+    jest.useRealTimers();
+  });
+
+  it("on narrow viewports pauses carousel while card is flipped", async () => {
+    jest.useFakeTimers();
+    mockMatchMedia(false);
+
+    await act(async () => {
+      render(<HealthBenefits />);
+    });
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Ashwagandha").length).toBeGreaterThan(0);
+    });
+
+    const flipButton = screen.getByRole("button", {
+      name: /Ashwagandha: flip card to read full details/i,
+    });
+    fireEvent.click(flipButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          /Ashwagandha is a powerful adaptogen that helps reduce stress/i,
+        ),
+      ).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(9000);
+    });
+
+    expect(screen.queryByText("Maca")).not.toBeInTheDocument();
+
+    const flippedButton = screen.getByRole("button", {
+      name: /Ashwagandha: show front of card/i,
+    });
+    fireEvent.click(flippedButton);
+
+    await act(async () => {
+      jest.advanceTimersByTime(3000);
+    });
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Maca").length).toBeGreaterThan(0);
+    });
+
+    jest.useRealTimers();
   });
 });
