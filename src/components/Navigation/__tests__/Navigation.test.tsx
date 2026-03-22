@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "../../../__tests__/test-utils";
 import Navigation from "../Navigation";
+import NavigationClient from "../NavigationClient";
 import { CartProvider } from "../../../contexts/CartContext";
 import "@testing-library/jest-dom";
 import "@jest/globals";
@@ -23,7 +24,6 @@ jest.mock("next/image", () => ({
     priority?: boolean;
     style?: React.CSSProperties;
   }) => {
-     
     return (
       // eslint-disable-next-line @next/next/no-img-element -- mock for testing
       <img src={src} alt={alt} width={width} height={height} style={style} />
@@ -125,5 +125,15 @@ describe("Navigation", () => {
       "aria-label",
       "Toggle mobile menu",
     );
+  });
+
+  it("does not render cart icon or cart menu link when cartIconEnabled is false", () => {
+    render(
+      <CartProvider>
+        <NavigationClient cartIconEnabled={false} />
+      </CartProvider>,
+    );
+
+    expect(screen.queryByTestId("cart-icon-container")).not.toBeInTheDocument();
   });
 });

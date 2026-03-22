@@ -1,0 +1,6 @@
+{
+  "features": {
+    "stripe": { "enabled": true },
+    "cart": { "enabled": true }
+  }
+}

@@ -1,6 +1,11 @@
+import { isCartIconEnabled } from "./cart-icon-enabled";
+
 interface FeatureFlagsConfig {
   features: {
     stripe?: {
+      enabled: boolean;
+    };
+    cart?: {
       enabled: boolean;
     };
     [key: string]: { enabled: boolean } | undefined;
@@ -22,9 +27,9 @@ function getFeatureFlagsConfig(): FeatureFlagsConfig {
   if (typeof window === "undefined") {
     try {
       // Dynamic import for Node.js modules (server-side only)
-       
+
       const { readFileSync } = require("fs");
-       
+
       const { join } = require("path");
       const configPath = join(
         process.cwd(),
@@ -43,6 +48,7 @@ function getFeatureFlagsConfig(): FeatureFlagsConfig {
       cachedConfig = {
         features: {
           stripe: { enabled: true },
+          cart: { enabled: true },
         },
       };
       return cachedConfig;
@@ -53,6 +59,7 @@ function getFeatureFlagsConfig(): FeatureFlagsConfig {
   cachedConfig = {
     features: {
       stripe: { enabled: true },
+      cart: { enabled: true },
     },
   };
   return cachedConfig;
@@ -70,6 +77,11 @@ export function isFeatureEnabled(featureName: string): boolean {
   const envValue = process.env[envKey];
   if (envValue !== undefined) {
     return envValue === "true" || envValue === "1";
+  }
+
+  // Cart: must not use `window` — same result during SSR and in the browser
+  if (featureName.toLowerCase() === "cart") {
+    return isCartIconEnabled();
   }
 
   // Check config file (server-side only)
@@ -91,6 +103,12 @@ export function isFeatureEnabled(featureName: string): boolean {
 export function isStripeEnabled(): boolean {
   return isFeatureEnabled("stripe");
 }
+
+/**
+ * Check if the navigation cart icon and cart menu entry are enabled
+ * @returns true if cart UI is enabled, false otherwise
+ */
+export { isCartIconEnabled };
 
 /**
  * Check if CTABanner is enabled
