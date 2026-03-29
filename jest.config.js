@@ -63,7 +63,7 @@ const customJestConfig = {
     "!src/components/ImageUploadMulti/**/*.{ts,tsx}",
     "!src/components/InstagramPostForm/**/*.{ts,tsx}",
     "!src/components/TestimonialForm/**/*.{ts,tsx}",
-    "!src/app/actions/instagramPosts.ts",
+    "!src/app/actions/**/*.ts", // Server actions: NextAuth/Prisma; tested via integration or E2E
     "!src/lib/instagram.ts",
   ],
   coveragePathIgnorePatterns: [
