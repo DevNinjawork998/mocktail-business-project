@@ -2,6 +2,12 @@ import React from "react";
 import { render, screen } from "../../../__tests__/test-utils";
 import FounderStory from "../FounderStory";
 
+jest.mock("@/app/actions/settings", () => ({
+  getFounderStory: jest.fn(() =>
+    Promise.resolve({ success: true, data: undefined }),
+  ),
+}));
+
 // Mock Next.js Image component
 jest.mock("next/image", () => ({
   __esModule: true,

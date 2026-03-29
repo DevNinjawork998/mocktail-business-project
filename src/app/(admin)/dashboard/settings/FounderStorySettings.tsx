@@ -5,15 +5,15 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
 import { setFounderStory } from "@/app/actions/settings";
-import { FounderStoryData } from "@/types/founder";
+import { DEFAULT_FOUNDER_STORY, FounderStoryData } from "@/types/founder";
 import * as S from "./SettingsClient.styles";
 
 interface FounderStorySettingsProps {
-  initialData: FounderStoryData;
+  initialData?: FounderStoryData;
 }
 
 export default function FounderStorySettings({
-  initialData,
+  initialData = DEFAULT_FOUNDER_STORY,
 }: FounderStorySettingsProps) {
   const router = useRouter();
   const [data, setData] = useState<FounderStoryData>(initialData);
@@ -226,7 +226,7 @@ export default function FounderStorySettings({
             onClick={() => void handleSave()}
             disabled={isSaving || isImageUploading || !isDirty}
           >
-            {isSaving ? "Saving..." : "Save changes"}
+            {isSaving ? "Saving founder..." : "Save founder story"}
           </S.SaveButton>
         </S.ButtonGroup>
       </S.FormSection>

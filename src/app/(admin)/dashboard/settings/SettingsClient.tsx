@@ -6,17 +6,17 @@ import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
 import { setLandingHeroSlideUrls } from "@/app/actions/settings";
 import * as S from "./SettingsClient.styles";
-import { FounderStoryData } from "@/types/founder";
+import { DEFAULT_FOUNDER_STORY, FounderStoryData } from "@/types/founder";
 import FounderStorySettings from "./FounderStorySettings";
 
 interface SettingsClientProps {
   initialLandingSlideUrls: string[];
-  initialFounderStory: FounderStoryData;
+  initialFounderStory?: FounderStoryData;
 }
 
 export default function SettingsClient({
   initialLandingSlideUrls,
-  initialFounderStory,
+  initialFounderStory = DEFAULT_FOUNDER_STORY,
 }: SettingsClientProps) {
   const router = useRouter();
   const [slideUrls, setSlideUrls] = useState<string[]>(
@@ -193,7 +193,7 @@ export default function SettingsClient({
                 slideUrls.length === 0
               }
             >
-              {isSaving ? "Saving..." : "Save changes"}
+              {isSaving ? "Saving hero..." : "Save hero images"}
             </S.SaveButton>
             {slideUrls.length > 0 && (
               <S.RemoveButton

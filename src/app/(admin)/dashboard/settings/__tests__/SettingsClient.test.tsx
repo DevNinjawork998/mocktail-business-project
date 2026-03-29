@@ -7,6 +7,8 @@ import * as settingsActions from "@/app/actions/settings";
 
 jest.mock("@/app/actions/settings", () => ({
   setLandingHeroSlideUrls: jest.fn(),
+  setFounderStory: jest.fn(),
+  getFounderStory: jest.fn(),
 }));
 
 jest.mock("next/image", () => ({
@@ -105,7 +107,7 @@ describe("SettingsClient", () => {
     const user = userEvent.setup();
     render(<SettingsClient initialLandingSlideUrls={[]} />);
 
-    const saveButton = screen.getByRole("button", { name: /save changes/i });
+    const saveButton = screen.getByRole("button", { name: /save hero images/i });
     expect(saveButton).toBeDisabled();
 
     await user.click(screen.getByTestId("upload-button"));
@@ -127,7 +129,7 @@ describe("SettingsClient", () => {
 
     await user.click(screen.getByTestId("upload-button"));
 
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /save hero images/i }));
 
     await waitFor(() => {
       expect(mockSet).toHaveBeenCalledWith([
@@ -147,7 +149,7 @@ describe("SettingsClient", () => {
     render(<SettingsClient initialLandingSlideUrls={[]} />);
 
     await user.click(screen.getByTestId("upload-button"));
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /save hero images/i }));
 
     await waitFor(() => {
       expect(screen.getByText("Failed to save")).toBeInTheDocument();
@@ -199,7 +201,7 @@ describe("SettingsClient", () => {
 
     await user.click(screen.getByTestId("upload-button"));
 
-    const saveButton = screen.getByRole("button", { name: /save changes/i });
+    const saveButton = screen.getByRole("button", { name: /save hero images/i });
     await user.click(screen.getByTestId("trigger-upload"));
     expect(saveButton).toBeDisabled();
 
@@ -219,7 +221,7 @@ describe("SettingsClient", () => {
     render(<SettingsClient initialLandingSlideUrls={[]} />);
 
     await user.click(screen.getByTestId("upload-button"));
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /save hero images/i }));
 
     await waitFor(() => {
       expect(screen.getByText("Error message")).toBeInTheDocument();

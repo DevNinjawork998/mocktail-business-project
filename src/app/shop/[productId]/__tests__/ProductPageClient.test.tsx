@@ -61,8 +61,8 @@ const mockProduct: Product = {
   imageColor: "#ff6b6b",
   imageUrl: "/test-image.jpg",
   features: [
-    { text: "Feature 1", color: "#ff6b6b" },
-    { text: "Feature 2", color: "#4ecdc4" },
+    { text: "Feature 1", color: "#ff6b6b", icon: "🧪" },
+    { text: "Feature 2", color: "#4ecdc4", icon: "🍹" },
   ],
   ingredients: ["Ingredient 1", "Ingredient 2", "Ingredient 3"],
   productBrief: "Test product brief",
@@ -212,7 +212,7 @@ describe("ProductPageClient", () => {
       ).toBeInTheDocument();
     });
 
-    it("renders feature icons", () => {
+    it("renders feature icons and labels from product data", () => {
       render(
         <ProductPageClient
           product={mockProduct}
@@ -220,12 +220,10 @@ describe("ProductPageClient", () => {
         />,
       );
 
-      expect(screen.getByText("🌾")).toBeInTheDocument();
-      expect(screen.getByText("Fiber")).toBeInTheDocument();
-      expect(screen.getByText("🍬")).toBeInTheDocument();
-      expect(screen.getByText("Less Sugar*")).toBeInTheDocument();
-      expect(screen.getByText("🌱")).toBeInTheDocument();
-      expect(screen.getByText("Vegan")).toBeInTheDocument();
+      expect(screen.getByText("🧪")).toBeInTheDocument();
+      expect(screen.getByText("Feature 1")).toBeInTheDocument();
+      expect(screen.getByText("🍹")).toBeInTheDocument();
+      expect(screen.getByText("Feature 2")).toBeInTheDocument();
     });
   });
 
