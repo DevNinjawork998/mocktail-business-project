@@ -1,4 +1,8 @@
 import styled from "styled-components";
+import {
+  Section as FormSurfaceSection,
+  SectionTitle as FormSurfaceSectionTitle,
+} from "@/components/ui/FormSurface/FormSurface.styles";
 
 export const Container = styled.div`
   max-width: 1200px;
@@ -68,13 +72,9 @@ export const StatLink = styled.span`
   }
 `;
 
-export const Section = styled.section`
-  background-color: ${({ theme }) => theme.currentSemantic.surface};
-  border-radius: ${({ theme }) => theme.radii.xl};
-  padding: ${({ theme }) => theme.spacing.xl};
-  box-shadow: ${({ theme }) => theme.shadows.sm};
-  margin-bottom: ${({ theme }) => theme.spacing["2xl"]};
-`;
+export const Section = styled(FormSurfaceSection).attrs({
+  $variant: "dashboard",
+})``;
 
 export const SectionHeader = styled.div`
   display: flex;
@@ -83,12 +83,9 @@ export const SectionHeader = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
-export const SectionTitle = styled.h2`
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.semantic.primary};
-  margin: 0;
-`;
+export const SectionTitle = styled(FormSurfaceSectionTitle).attrs({
+  $variant: "dashboard",
+})``;
 
 export const ViewAllLink = styled.span`
   font-size: 0.875rem;

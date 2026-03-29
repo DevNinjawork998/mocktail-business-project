@@ -3,23 +3,21 @@ import { defineConfig } from "prisma/config";
 import { config } from "dotenv";
 import { resolve } from "node:path";
 
-// Load environment variables from .env files in order of priority
-// dotenv will automatically load .env.local, .env.development.local, etc.
-// Silently fail if files don't exist (they won't in production)
+// Base → cloud dev (hosted Prisma) → prod locals → `.env.local` last so full local dev wins.
 try {
-  config({ path: resolve(__dirname, "../.env.local") });
+  config({ path: resolve(__dirname, ".env") });
 } catch {}
 try {
-  config({ path: resolve(__dirname, "../.env.development.local") });
+  config({ path: resolve(__dirname, ".env.development.local") });
 } catch {}
 try {
-  config({ path: resolve(__dirname, "../.env.production.local") });
+  config({ path: resolve(__dirname, ".env.production.local") });
 } catch {}
 try {
-  config({ path: resolve(__dirname, "../.env.prod.local") }); // Legacy
+  config({ path: resolve(__dirname, ".env.prod.local") }); // Legacy
 } catch {}
 try {
-  config({ path: resolve(__dirname, "../.env") });
+  config({ path: resolve(__dirname, ".env.local"), override: true });
 } catch {}
 
 // Determine the database URL based on environment
@@ -78,7 +76,7 @@ const dbUrl = getDatabaseUrl();
 // Migrations will handle their own errors when actually run
 
 export default defineConfig({
-  schema: path.join(__dirname, "schema.prisma"),
+  schema: path.join(__dirname, "prisma", "schema.prisma"),
   datasource: {
     url: dbUrl,
   },

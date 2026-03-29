@@ -1,17 +1,23 @@
-// Development schema using SQLite
-// Copy this to schema.prisma for local development
+// Production schema using PostgreSQL with Prisma Accelerate
+// Copy this to schema.prisma for production deployment
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 // ============================================
 // Authentication Models (NextAuth.js v5)
 // ============================================
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  EDITOR
+}
 
 model User {
   id            String    @id @default(cuid())
@@ -20,7 +26,7 @@ model User {
   emailVerified DateTime?
   password      String    // bcrypt hashed
   image         String?
-  role          String    @default("EDITOR") // SUPERADMIN, ADMIN, or EDITOR (SQLite doesn't support enums)
+  role          Role      @default(EDITOR)
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now())
@@ -128,4 +134,28 @@ model Settings {
   updatedById   String?  // Track who last updated
 
   @@map("settings")
+}
+
+model Testimonial {
+  id              String   @id @default(cuid())
+  text            String
+  customerName    String
+  avatarColor     String   @default("#FF6B6B")
+  rating          Int      @default(5)
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+model InstagramPost {
+  id              String   @id @default(cuid())
+  postUrl         String   // Full Instagram post URL
+  imageUrl        String?  // UploadThing URL for the post image (nullable for existing posts)
+  order           Int      @default(0) // For display ordering
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("instagram_posts")
 }

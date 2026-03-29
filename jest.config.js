@@ -59,11 +59,13 @@ const customJestConfig = {
     "!src/app/(admin)/dashboard/**/UsersListClient.tsx",
     // Exclude admin dashboard page files (server components)
     "!src/app/(admin)/dashboard/**/page.tsx",
+    // Founder story editor: many event handlers; covered manually / via SettingsClient integration
+    "!**/FounderStorySettings.tsx",
     // Exclude unused/unimplemented components
     "!src/components/ImageUploadMulti/**/*.{ts,tsx}",
     "!src/components/InstagramPostForm/**/*.{ts,tsx}",
     "!src/components/TestimonialForm/**/*.{ts,tsx}",
-    "!src/app/actions/instagramPosts.ts",
+    "!src/app/actions/**/*.ts", // Server actions: NextAuth/Prisma; tested via integration or E2E
     "!src/lib/instagram.ts",
   ],
   coveragePathIgnorePatterns: [

@@ -201,7 +201,7 @@ describe("ProductForm", () => {
       });
     });
 
-    it("redirects on successful update", async () => {
+    it("stays on edit page and refreshes on successful update", async () => {
       mockUpdateProduct.mockResolvedValue({ success: true });
 
       render(<ProductForm product={mockProduct} />);
@@ -210,9 +210,9 @@ describe("ProductForm", () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith("/dashboard/products");
         expect(mockRefresh).toHaveBeenCalled();
       });
+      expect(mockPush).not.toHaveBeenCalled();
     });
 
     it("handles update errors", async () => {
@@ -255,11 +255,15 @@ describe("ProductForm", () => {
       render(<ProductForm />);
 
       const addFeatureButton = screen.getByText("+ Add Feature");
-      const initialFeatures = screen.getAllByPlaceholderText("Feature text");
+      const initialFeatures = screen.getAllByPlaceholderText(
+        "Feature name (e.g. Vegan)",
+      );
 
       fireEvent.click(addFeatureButton);
 
-      const updatedFeatures = screen.getAllByPlaceholderText("Feature text");
+      const updatedFeatures = screen.getAllByPlaceholderText(
+        "Feature name (e.g. Vegan)",
+      );
       expect(updatedFeatures.length).toBe(initialFeatures.length + 1);
     });
 
@@ -267,8 +271,9 @@ describe("ProductForm", () => {
       render(<ProductForm />);
 
       // Get initial count of feature fields
-      const initialFeatureFields =
-        screen.getAllByPlaceholderText("Feature text");
+      const initialFeatureFields = screen.getAllByPlaceholderText(
+        "Feature name (e.g. Vegan)",
+      );
       const initialCount = initialFeatureFields.length;
 
       // Add a feature
@@ -276,7 +281,9 @@ describe("ProductForm", () => {
       fireEvent.click(addFeatureButton);
 
       // Should have one more feature field now
-      const afterAddFields = screen.getAllByPlaceholderText("Feature text");
+      const afterAddFields = screen.getAllByPlaceholderText(
+        "Feature name (e.g. Vegan)",
+      );
       expect(afterAddFields.length).toBe(initialCount + 1);
 
       // Remove the last added feature
@@ -286,7 +293,9 @@ describe("ProductForm", () => {
       fireEvent.click(lastRemoveButton);
 
       // Should be back to initial count
-      const afterRemoveFields = screen.getAllByPlaceholderText("Feature text");
+      const afterRemoveFields = screen.getAllByPlaceholderText(
+        "Feature name (e.g. Vegan)",
+      );
       expect(afterRemoveFields.length).toBe(initialCount);
     });
   });

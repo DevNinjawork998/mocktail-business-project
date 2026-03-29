@@ -290,120 +290,24 @@ export default function ProductPageClient({
   };
 
   // Data from Prisma database
-  const ingredients = product.ingredients;
+  const rawIngredients = product.ingredients as Array<string | { name: string; emoji?: string }> | undefined | null;
+  const ingredients = useMemo(() => {
+    if (!rawIngredients || rawIngredients.length === 0) return [];
+    return rawIngredients.map((ing) => {
+      if (typeof ing === "string") return ing;
+      return ing.emoji ? `${ing.emoji} ${ing.name}` : ing.name;
+    });
+  }, [rawIngredients]);
 
-  // List of ingredient names and features that should not be shown
-  const excludedFeatures = [
-    "Cocoa",
-    "Coffee",
-    "Maca",
-    "Maca Root",
-    "Fresh Orange",
-    "Cranberry",
-    "Baobab",
-    "Ginger",
-    "Cinnamon",
-    "Ashwagandha",
-    "Paleo",
-    "Gluten Free",
-  ];
-
-  // Default features that should always be shown (excluding Paleo and Gluten Free)
-  // Exclude Vegan for Maca Martini since it contains milk
-  // Exclude Good Vit C for Maca Martini
-  const baseDefaultFeatures = [
-    { icon: "🌾", label: "Fiber" },
-    { icon: "🍬", label: "Less Sugar*" },
-    { icon: "🌱", label: "Vegan" },
-    { icon: "🥥", label: "Plant Powered" },
-    { icon: "🚫🌽", label: "GMO Free" },
-    { icon: "🍊", label: "Good Vit C" },
-    { icon: "⚡", label: "Good Iron" },
-  ];
-
-  // Remove Vegan if product contains milk (Maca Martini)
-  const hasMilk = ingredients?.some((ing) =>
-    ing.toLowerCase().includes("milk"),
-  );
-
-  // Remove Good Vit C for Maca Martini
-  const isMacaMartini = product.id === "maca-martini";
-
-  const defaultFeatures = baseDefaultFeatures.filter((f) => {
-    if (hasMilk && f.label === "Vegan") return false;
-    if (isMacaMartini && f.label === "Good Vit C") return false;
-    return true;
-  });
-
-  // Map common feature texts to icons (alphabetically ordered)
-  const featureIconMap: Record<string, string> = {
-    Antioxidant: "✨",
-    Caffeine: "☕",
-    Calcium: "🥛",
-    Fiber: "🌾",
-    "GMO Free": "🚫🌽",
-    "Good Iron": "⚡",
-    "Good Vit C": "🍊",
-    "High Calcium": "🥛",
-    "High Fiber": "🌾",
-    "Less Sugar": "🍬",
-    "Less sugar": "🍬",
-    "Plant Powered": "🥥",
-    Vegan: "🌱",
-  };
-
-  // Filter out features that are ingredient names or excluded features
-  // Also normalize feature labels (replace "High Fiber" -> "Fiber", etc.)
-  const normalizeFeatureLabel = (label: string): string => {
-    const normalized = label.trim();
-    // Handle case-insensitive matching for "High" variations
-    if (/^high\s+fiber$/i.test(normalized)) return "Fiber";
-    if (/^high\s+antioxidant$/i.test(normalized)) return "Antioxidant";
-    if (/^high\s+calcium$/i.test(normalized)) return "Calcium";
-    // Handle case-insensitive matching for "Good" variations
-    if (/^good\s+fiber$/i.test(normalized)) return "Fiber";
-    if (/^good\s+antioxidant$/i.test(normalized)) return "Antioxidant";
-    // Normalize "Less sugar" to "Less Sugar*" to match default feature
-    if (normalized === "Less sugar" || normalized === "Less Sugar")
-      return "Less Sugar";
-    return normalized;
-  };
-
-  const productSpecificFeatures =
-    product.features && product.features.length > 0
-      ? product.features
-          .filter((f) => !excludedFeatures.includes(f.text))
-          .map((f) => {
-            const normalizedLabel = normalizeFeatureLabel(f.text);
-            return {
-              icon:
-                featureIconMap[normalizedLabel] ||
-                featureIconMap[f.text] ||
-                "✨",
-              label: normalizedLabel,
-            };
-          })
-      : [];
-
-  // Check if product has its own "Less sugar" or "Less Sugar" feature
-  const hasProductLessSugar = productSpecificFeatures.some(
-    (f) =>
-      f.label === "Less Sugar*" ||
-      f.label === "Less sugar" ||
-      f.label === "Less Sugar",
-  );
-
-  // Remove "Less Sugar*" from default features if product already has it
-  const finalDefaultFeatures = hasProductLessSugar
-    ? defaultFeatures.filter((f) => f.label !== "Less Sugar*")
-    : defaultFeatures;
-
-  // Combine default features with product-specific features
-  // Remove duplicates based on label
-  const features = [...finalDefaultFeatures, ...productSpecificFeatures].filter(
-    (feature, index, self) =>
-      index === self.findIndex((f) => f.label === feature.label),
-  );
+  // Extract features directly from product data, defaulting to empty array if none exist
+  const features = useMemo(() => {
+    if (!product.features || !Array.isArray(product.features)) return [];
+    
+    return product.features.map((f: any) => ({
+      icon: f.icon || "✨",
+      label: f.text || "",
+    }));
+  }, [product.features]);
 
   const priceNumber = Number(product.price.replace(/[^0-9.]/g, ""));
 
