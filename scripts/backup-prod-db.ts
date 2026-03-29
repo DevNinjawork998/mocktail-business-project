@@ -3,9 +3,10 @@
  * Usage: npx tsx scripts/backup-prod-db.ts
  */
 
-import { config } from "dotenv";
 import { resolve } from "path";
 import { writeFileSync } from "fs";
+import { loadEnvForDatabaseCli } from "./load-env-for-db-cli";
+import { resolveDirectPostgresUrlForPg } from "./resolve-direct-postgres-url";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
@@ -27,24 +28,22 @@ function ensureVerifyFullSsl(connectionString: string): string {
   }
 }
 
-// Load environment variables
-config({ path: resolve(__dirname, "../.env.local") });
-config({ path: resolve(__dirname, "../.env.production.local") });
-config({ path: resolve(__dirname, "../.env.prod.local") });
-config({ path: resolve(__dirname, "../.env") });
+loadEnvForDatabaseCli();
 
-// Use PostgreSQL adapter for production backup
-const databaseUrl = process.env.DATABASE_URL || process.env.DIRECT_URL;
-
-if (!databaseUrl) {
+let databaseUrl: string;
+try {
+  databaseUrl = resolveDirectPostgresUrlForPg().url;
+} catch (e) {
   console.error(
-    "❌ Error: DATABASE_URL or DIRECT_URL environment variable is required",
+    "❌ Error:",
+    e instanceof Error ? e.message : String(e),
   );
   process.exit(1);
 }
 
 const pool = new Pool({
   connectionString: ensureVerifyFullSsl(databaseUrl),
+  connectionTimeoutMillis: 60_000,
 });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
@@ -52,41 +51,81 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   try {
     console.log("🔄 Starting production database backup...");
+    console.log(
+      "   (sequential reads — includes product gallery images, settings, OAuth rows)",
+    );
 
-    // Fetch all data from production database
-    const [products, ingredients, testimonials, instagramPosts, users] =
-      await Promise.all([
-        prisma.product.findMany({
-          orderBy: { id: "asc" },
-        }),
-        prisma.ingredient.findMany({
-          orderBy: { id: "asc" },
-        }),
-        prisma.testimonial.findMany({
-          orderBy: { order: "asc" },
-        }),
-        prisma.instagramPost.findMany({
-          orderBy: { order: "asc" },
-        }),
-        prisma.user.findMany({
-          orderBy: { createdAt: "asc" },
-        }),
-      ]);
-
-    console.log(`✅ Fetched ${products.length} products`);
+    // Sequential queries reduce parallel connection pressure (helps avoid P1008 timeouts).
+    const ingredients = await prisma.ingredient.findMany({
+      orderBy: { id: "asc" },
+    });
     console.log(`✅ Fetched ${ingredients.length} ingredients`);
+
+    const products = await prisma.product.findMany({
+      orderBy: { id: "asc" },
+    });
+    console.log(`✅ Fetched ${products.length} products`);
+
+    const productImages = await prisma.productImage.findMany({
+      orderBy: [{ productId: "asc" }, { order: "asc" }],
+    });
+    console.log(`✅ Fetched ${productImages.length} product images`);
+
+    const settings = await prisma.settings.findMany({
+      orderBy: { key: "asc" },
+    });
+    console.log(`✅ Fetched ${settings.length} settings`);
+
+    const testimonials = await prisma.testimonial.findMany({
+      orderBy: { order: "asc" },
+    });
     console.log(`✅ Fetched ${testimonials.length} testimonials`);
+
+    const instagramPosts = await prisma.instagramPost.findMany({
+      orderBy: { order: "asc" },
+    });
     console.log(`✅ Fetched ${instagramPosts.length} Instagram posts`);
+
+    const users = await prisma.user.findMany({
+      orderBy: { createdAt: "asc" },
+    });
     console.log(`✅ Fetched ${users.length} users`);
 
-    // Create backup object
+    const accounts = await prisma.account.findMany({
+      orderBy: [{ userId: "asc" }, { provider: "asc" }],
+    });
+    console.log(`✅ Fetched ${accounts.length} accounts`);
+
+    const sessions = await prisma.session.findMany({
+      orderBy: { userId: "asc" },
+    });
+    console.log(`✅ Fetched ${sessions.length} sessions`);
+
+    const passwordResetTokens = await prisma.passwordResetToken.findMany({
+      orderBy: { createdAt: "asc" },
+    });
+    console.log(`✅ Fetched ${passwordResetTokens.length} password reset tokens`);
+
+    const verificationTokens = await prisma.verificationToken.findMany({
+      orderBy: [{ identifier: "asc" }, { token: "asc" }],
+    });
+    console.log(`✅ Fetched ${verificationTokens.length} verification tokens`);
+
+    // Create backup object (schemaVersion 2 adds gallery images, settings, auth tokens)
     const backup = {
+      schemaVersion: 2 as const,
       exportedAt: new Date().toISOString(),
       products,
+      productImages,
       ingredients,
+      settings,
       testimonials,
       instagramPosts,
       users,
+      accounts,
+      sessions,
+      passwordResetTokens,
+      verificationTokens,
     };
 
     // Generate filename with timestamp
@@ -107,10 +146,16 @@ async function main() {
     console.log(`📁 Backup saved to: ${filename}`);
     console.log(`📊 Summary:`);
     console.log(`   - Products: ${products.length}`);
+    console.log(`   - Product images: ${productImages.length}`);
     console.log(`   - Ingredients: ${ingredients.length}`);
+    console.log(`   - Settings: ${settings.length}`);
     console.log(`   - Testimonials: ${testimonials.length}`);
     console.log(`   - Instagram Posts: ${instagramPosts.length}`);
     console.log(`   - Users: ${users.length}`);
+    console.log(`   - Accounts: ${accounts.length}`);
+    console.log(`   - Sessions: ${sessions.length}`);
+    console.log(`   - Password reset tokens: ${passwordResetTokens.length}`);
+    console.log(`   - Verification tokens: ${verificationTokens.length}`);
   } catch (error) {
     console.error("❌ Error creating backup:", error);
     throw error;

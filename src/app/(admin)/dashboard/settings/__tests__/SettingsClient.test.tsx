@@ -93,9 +93,10 @@ describe("SettingsClient", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("img", { name: "Hero slide 1" }),
-    ).toHaveAttribute("src", "https://example.com/a.jpg");
+    expect(screen.getByRole("img", { name: "Hero slide 1" })).toHaveAttribute(
+      "src",
+      "https://example.com/a.jpg",
+    );
     expect(
       screen.getByRole("button", { name: "Remove hero image 1" }),
     ).toBeInTheDocument();
@@ -171,7 +172,9 @@ describe("SettingsClient", () => {
 
     await waitFor(() => {
       expect(mockSet).toHaveBeenCalledWith([]);
-      expect(screen.getByText("All landing hero images removed.")).toBeInTheDocument();
+      expect(
+        screen.getByText("All landing hero images removed."),
+      ).toBeInTheDocument();
     });
   });
 

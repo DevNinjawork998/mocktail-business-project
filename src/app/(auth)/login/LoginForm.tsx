@@ -20,6 +20,7 @@ export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const passwordResetSuccess = searchParams.get("reset") === "success";
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState<string | null>(null);
@@ -93,6 +94,11 @@ export default function LoginForm() {
         </S.LogoContainer>
 
         <S.Form onSubmit={handleSubmit(onSubmit)}>
+          {passwordResetSuccess && (
+            <S.SuccessBanner>
+              Your password was updated. Sign in with your new password.
+            </S.SuccessBanner>
+          )}
           {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
           {/* OAuth Providers */}
@@ -168,6 +174,10 @@ export default function LoginForm() {
               <S.FieldError>{errors.password.message}</S.FieldError>
             )}
           </S.FormGroup>
+
+          <S.ForgotPasswordRow>
+            <S.TextLink href="/forgot-password">Forgot password?</S.TextLink>
+          </S.ForgotPasswordRow>
 
           <S.SubmitButton type="submit" disabled={isLoading}>
             {isLoading ? "Signing in..." : "Sign In"}

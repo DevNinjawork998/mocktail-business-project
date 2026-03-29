@@ -271,30 +271,30 @@ const ProductShowcase = () => {
                       imageColor={product.imageColor}
                     />
                   </S.ProductImage>
-                <S.ProductContent>
-                  <S.ProductName>{product.name}</S.ProductName>
-                  <S.ProductSubtitle>
-                    <SubtitleWithLink
-                      subtitle={product.subtitle}
-                      sectionTitle={extractSectionTitle(
-                        product.longDescription,
-                      )}
-                      productId={product.id}
-                      onNavigate={(url) => router.push(url)}
-                    />
-                  </S.ProductSubtitle>
-                  <S.AddToCartButton
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      // Add to cart functionality can be added here
-                    }}
-                  >
-                    Add to Cart
-                  </S.AddToCartButton>
-                </S.ProductContent>
-              </S.ProductCard>
-            </S.ProductCardLink>
+                  <S.ProductContent>
+                    <S.ProductName>{product.name}</S.ProductName>
+                    <S.ProductSubtitle>
+                      <SubtitleWithLink
+                        subtitle={product.subtitle}
+                        sectionTitle={extractSectionTitle(
+                          product.longDescription,
+                        )}
+                        productId={product.id}
+                        onNavigate={(url) => router.push(url)}
+                      />
+                    </S.ProductSubtitle>
+                    <S.AddToCartButton
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Add to cart functionality can be added here
+                      }}
+                    >
+                      Add to Cart
+                    </S.AddToCartButton>
+                  </S.ProductContent>
+                </S.ProductCard>
+              </S.ProductCardLink>
             );
           })}
         </S.ProductsGrid>

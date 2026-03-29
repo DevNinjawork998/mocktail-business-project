@@ -1,4 +1,34 @@
+"use client";
+
+import Link from "next/link";
 import styled from "styled-components";
+
+export const TextLink = styled(Link)`
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.semantic.primary};
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+export const ForgotPasswordRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: calc(-1 * ${({ theme }) => theme.spacing.sm});
+`;
+
+export const SuccessBanner = styled.div`
+  padding: ${({ theme }) => theme.spacing.md};
+  background-color: ${({ theme }) => theme.semantic.primary}15;
+  border: 1px solid ${({ theme }) => theme.semantic.primary}55;
+  border-radius: ${({ theme }) => theme.radii.md};
+  color: ${({ theme }) => theme.currentSemantic.foreground};
+  font-size: 0.875rem;
+  text-align: center;
+`;
 
 export const PageContainer = styled.div`
   min-height: 100vh;

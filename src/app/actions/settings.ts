@@ -279,7 +279,9 @@ export async function removeLandingHeroSlideAt(
 /**
  * Update the landing photo URL (replaces all slides with a single image).
  */
-export async function updateLandingPhotoUrl(url: string): Promise<ActionResult> {
+export async function updateLandingPhotoUrl(
+  url: string,
+): Promise<ActionResult> {
   if (!url.trim().startsWith("http")) {
     return { success: false, error: "Invalid image URL" };
   }

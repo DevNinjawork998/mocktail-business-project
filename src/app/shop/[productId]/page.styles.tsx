@@ -1,3 +1,5 @@
+"use client";
+
 import styled from "styled-components";
 import { media } from "@/theme/styled-theme";
 import Link from "next/link";

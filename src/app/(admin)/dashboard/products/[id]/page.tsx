@@ -16,7 +16,7 @@ export default async function EditProductPage({
   const { id } = await params;
 
   // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
-   
+
   const product = (await (prisma.product.findUnique as any)({
     where: { id },
     include: {

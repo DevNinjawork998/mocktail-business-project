@@ -1,16 +1,17 @@
 {
-  "exportedAt": "2026-02-07T02:49:58.262Z",
+  "schemaVersion": 2,
+  "exportedAt": "2026-03-24T13:05:41.377Z",
   "products": [
     {
       "id": "dark-stormy",
       "name": "Dark & Stormy",
       "subtitle": "Aged old acquired taste",
-      "description": "The classic rum rebel, now with extra bite. We've spiced things up with fiery ginger, bold cinnamon, and a lime twist sharp enough to cut through the chaos. Then we slipped in ashwagandha because even rebels deserve stress relief and a clear head. It's a storm in a glass, balanced yet untamed, paying cheeky homage to the Cuban original.",
-      "longDescription": "<h3>Digestion & Stress Relief</h3>\n  <p>Our homemade non-alcoholic rum base is enhanced with adaptogen, ashwagandha to help manage stress, while ginger and cinnamon work together to soothe your digestive system and provide anti-inflammatory benefits.</p>",
-      "price": "RM10.50",
+      "description": "It's a storm in a glass, balanced yet untamed, paying cheeky homage to the Cuban original. We've spiced things up with fiery ginger, bold cinnamon, and a lime twist sharp enough to cut through the chaos. Then we slipped in ashwagandha because even rebels deserve stress relief and a clear head. ",
+      "longDescription": "<h3>Digestion & Stress Relief</h3>\n  <p>Our homemade non-alcoholic rum base is enhanced with adaptogen ashwagandha to help manage stress, while ginger and cinnamon work together to soothe your digestive system and provide anti-inflammatory benefits.</p>",
+      "price": "RM12.50",
       "priceSubtext": "Min total order 3 bottles. Can mix with other flavours.",
       "imageColor": "#8B4513",
-      "imageUrl": "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGL9LVbzkKUo2NbcLsEyGnV6TeMA1KkvQU5hzmg",
+      "imageUrl": "https://utfs.io/f/2frRLzpx3hGLZ7sfWTohICVNRdpe51m4uiSDHzcBJk9wAyZG",
       "features": [
         {
           "text": "Less sugar",
@@ -78,18 +79,18 @@
         }
       ],
       "createdAt": "2025-07-28T02:48:14.523Z",
-      "updatedAt": "2026-02-07T02:10:11.669Z"
+      "updatedAt": "2026-03-24T12:42:33.966Z"
     },
     {
       "id": "maca-martini",
       "name": "Maca Martini",
       "subtitle": "Creamy & Chocolaty",
-      "description": "Where earthy maca meets a cheeky trio of coffee and chocolate. It's bold, it's smooth, and it's basically liquid charisma. Sip it when you want to feel like James Bond with a gym membership, libido up, stamina strong, and ready to conquer both boardrooms and ball games. Your ultimate wingman for work and play.",
+      "description": "Sip it when you want to feel like James Bond with a gym membership, libido up, stamina strong, and ready to conquer both boardrooms and ball games. Your ultimate wingman for work and play.",
       "longDescription": "<h3>Stamina & Libido Boost</h3>\n  <p>Maca root is an ancient Peruvian superfood known for its energy-boosting properties and natural support for hormonal balance and vitality. Combined with mood-enhancing cocoa and energizing coffee, this creamy blend keeps your spirits high and your energy sustained.</p>",
       "price": "RM11.50",
       "priceSubtext": "Min total order 3 bottles. Can mix with other flavours.",
       "imageColor": "#654321",
-      "imageUrl": "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGL3uSvvjZSIC7hAszGimOtgLuxFbKZRQVjwy2N",
+      "imageUrl": "https://utfs.io/f/2frRLzpx3hGLXI6pGlhqA0SfFOR6jTbmZluUeVIaMihnHwvs",
       "features": [
         {
           "text": "Antioxidant",
@@ -150,18 +151,18 @@
         }
       ],
       "createdAt": "2025-07-28T02:48:14.739Z",
-      "updatedAt": "2026-02-07T02:10:11.689Z"
+      "updatedAt": "2026-03-24T12:43:02.990Z"
     },
     {
       "id": "tequila-sundown",
       "name": "Tequila Sundown",
       "subtitle": "Refreshing, tart and citrusy",
-      "description": "Whether you're the life of the party, the quiet observer, or somewhere in between, this drink has your back (and your cells). Fresh orange and cranberry bring the immunity boost and antioxidant armor, while mighty Baobab swoops in with fiber and a vitamin lineup worthy of a standing ovation. It's basically your glow-up in a glass. Proof that looking radiant starts from the inside out.",
-      "longDescription": "<h3>Gut health & Immunity support</h3>\n  <p>Fresh orange and cranberry are high in oxidants which protects cell damages from free radical linking to heart diseases, cancer and diabetes. Baobab is high in iron and vitamin C which is good for immunity and gut support. Pairing iron rich food with vitamin C rich fruits enhances iron absorption in the body</p>",
-      "price": "RM11.50",
+      "description": "Whether you're the life of the party, the quiet observer, or somewhere in between, this drink has your back (and your cells). Fresh orange and cranberry bring the immunity boost and antioxidant armor, while mighty Baobab swoops in with fiber to curb your pre-party appetite. ",
+      "longDescription": "<h3>Gut health & Immunity support</h3>\n  <p>Fresh orange and cranberry are high in oxidants which protects cell damages from free radical linking to heart diseases, cancer and diabetes. Baobab is high in iron and vitamin C which is good for immunity and gut support. Pairing iron rich food with vitamin C enhances iron absorption in the body. The perfect drink if you're feeling hungry.</p>",
+      "price": "RM12.50",
       "priceSubtext": "Min total order 3 bottles. Can mix with other flavours.",
       "imageColor": "#FF6347",
-      "imageUrl": "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLO6VqBvKnPKYEgeG0tm78wrchLAJHQUl5RDZB",
+      "imageUrl": "https://utfs.io/f/2frRLzpx3hGL5LHuUeAhRje4c1DiutTplF92vmbaxMCWzXQs",
       "features": [
         {
           "text": "Good Vitamin C",
@@ -170,6 +171,10 @@
         {
           "text": "Good Iron",
           "color": "#DC143C"
+        },
+        {
+          "text": "Good Fiber",
+          "color": "#451515"
         }
       ],
       "ingredients": [
@@ -218,7 +223,81 @@
         }
       ],
       "createdAt": "2025-07-28T02:48:14.230Z",
-      "updatedAt": "2026-02-07T02:10:11.646Z"
+      "updatedAt": "2026-03-24T12:43:21.587Z"
+    }
+  ],
+  "productImages": [
+    {
+      "id": "cmn4logbx000004l4unnmfr83",
+      "productId": "dark-stormy",
+      "url": "https://utfs.io/f/2frRLzpx3hGLZ7sfWTohICVNRdpe51m4uiSDHzcBJk9wAyZG",
+      "order": 0,
+      "createdAt": "2026-03-24T12:38:01.389Z",
+      "updatedAt": "2026-03-24T12:38:01.389Z"
+    },
+    {
+      "id": "cmn4logc3000104l4w7k2bad8",
+      "productId": "dark-stormy",
+      "url": "https://utfs.io/f/2frRLzpx3hGLT5w0hH34pK1uI5PGYzMLvfBaiNRxDCZ9HgV2",
+      "order": 1,
+      "createdAt": "2026-03-24T12:38:01.395Z",
+      "updatedAt": "2026-03-24T12:38:01.395Z"
+    },
+    {
+      "id": "cmn4luana000204jpy2sdw2xo",
+      "productId": "dark-stormy",
+      "url": "https://utfs.io/f/2frRLzpx3hGL4ZUOGvkcw3mI0dyX79SjMthWfpDrRzNbJiGK",
+      "order": 2,
+      "createdAt": "2026-03-24T12:42:33.958Z",
+      "updatedAt": "2026-03-24T12:42:33.958Z"
+    },
+    {
+      "id": "cmn4lux17000004la22jr9skc",
+      "productId": "maca-martini",
+      "url": "https://utfs.io/f/2frRLzpx3hGLXI6pGlhqA0SfFOR6jTbmZluUeVIaMihnHwvs",
+      "order": 0,
+      "createdAt": "2026-03-24T12:43:02.971Z",
+      "updatedAt": "2026-03-24T12:43:02.971Z"
+    },
+    {
+      "id": "cmn4lux1c000104lap92lvbz2",
+      "productId": "maca-martini",
+      "url": "https://utfs.io/f/2frRLzpx3hGL3Ii5blZSIC7hAszGimOtgLuxFbKZRQVjwy2N",
+      "order": 1,
+      "createdAt": "2026-03-24T12:43:02.976Z",
+      "updatedAt": "2026-03-24T12:43:02.976Z"
+    },
+    {
+      "id": "cmn4lux1h000204la6azrgtlx",
+      "productId": "maca-martini",
+      "url": "https://utfs.io/f/2frRLzpx3hGLJRR6rjlFqOpXcvZLkBwtbjPI3xC8WuNoR4Yz",
+      "order": 2,
+      "createdAt": "2026-03-24T12:43:02.981Z",
+      "updatedAt": "2026-03-24T12:43:02.981Z"
+    },
+    {
+      "id": "cmn4lvbdz000004la75bweka3",
+      "productId": "tequila-sundown",
+      "url": "https://utfs.io/f/2frRLzpx3hGL5LHuUeAhRje4c1DiutTplF92vmbaxMCWzXQs",
+      "order": 0,
+      "createdAt": "2026-03-24T12:43:21.575Z",
+      "updatedAt": "2026-03-24T12:43:21.575Z"
+    },
+    {
+      "id": "cmn4lvbe4000104la3gmt2dj0",
+      "productId": "tequila-sundown",
+      "url": "https://utfs.io/f/2frRLzpx3hGLbUUET2XgIlpFomiD4eZHnRQPWczfLuYw2bXS",
+      "order": 1,
+      "createdAt": "2026-03-24T12:43:21.580Z",
+      "updatedAt": "2026-03-24T12:43:21.580Z"
+    },
+    {
+      "id": "cmn4lvbe8000204la9u7h84lk",
+      "productId": "tequila-sundown",
+      "url": "https://utfs.io/f/2frRLzpx3hGLmv8zF9KJcKpq8UO4JDRVknzN6WolPMiGIguH",
+      "order": 2,
+      "createdAt": "2026-03-24T12:43:21.584Z",
+      "updatedAt": "2026-03-24T12:43:21.584Z"
     }
   ],
   "ingredients": [
@@ -228,11 +307,11 @@
       "icon": "🌳",
       "imageUrl": "/images/ingredients/baobab.jpg",
       "subtitle": "Your gut's new BFF",
-      "description": "High-fiber fuel paired with zinc to keep your gut and immunity in check.",
-      "type": "Adaptogen",
+      "description": "Iron & Vitamin C are the ultimate power couple. Think Barrack & Michelle Obama fighting gut & skin inflammation",
+      "type": "Fruit",
       "order": 1,
       "createdAt": "2026-01-25T05:25:44.861Z",
-      "updatedAt": "2026-02-07T02:10:11.707Z"
+      "updatedAt": "2026-02-11T14:49:48.549Z"
     },
     {
       "id": "cmktap4xa00017wtp5fe784nc",
@@ -240,11 +319,11 @@
       "icon": "☕",
       "imageUrl": "/images/ingredients/coffee.jpg",
       "subtitle": "Mental alertness",
-      "description": "The ultimate liquid spark for sharp mental alertness and staying dialed-in all day.",
-      "type": "Adaptogen",
+      "description": "Like a 5G upgrade for your brain, downloading your \"to-do\" list at lightning speed",
+      "type": "Fruit",
       "order": 2,
       "createdAt": "2026-01-25T05:25:44.878Z",
-      "updatedAt": "2026-02-07T02:10:11.723Z"
+      "updatedAt": "2026-02-11T14:53:18.637Z"
     },
     {
       "id": "cmktap4xn00027wtpgd21ftle",
@@ -252,11 +331,11 @@
       "icon": "🌿",
       "imageUrl": "/images/ingredients/cinnamon.jpg",
       "subtitle": "Antioxidant-rich spice",
-      "description": "A cozy, antioxidant-rich spice that helps your body fight off oxidative stress naturally.",
-      "type": "Adaptogen",
+      "description": "Antioxidants acting as elite security. Think the Avengers in 2012 saving your cells from Loki-level chaos",
+      "type": "Fruit",
       "order": 3,
       "createdAt": "2026-01-25T05:25:44.891Z",
-      "updatedAt": "2026-02-07T02:10:11.738Z"
+      "updatedAt": "2026-02-13T12:17:44.157Z"
     },
     {
       "id": "cmktap4xz00037wtpl11kf1j8",
@@ -264,11 +343,11 @@
       "icon": "🫚",
       "imageUrl": "/images/ingredients/ginger.jpg",
       "subtitle": "Digestive sidekick",
-      "description": "Your digestive sidekick, perfect for soothing the stomach and keeping things moving smoothly.",
+      "description": "The VIP bouncer for your stomach. Stopping bloat at the door like he’s checking IDs at the club",
       "type": "Adaptogen",
       "order": 4,
       "createdAt": "2026-01-25T05:25:44.903Z",
-      "updatedAt": "2026-02-07T02:10:11.750Z"
+      "updatedAt": "2026-02-13T12:18:03.907Z"
     },
     {
       "id": "cmktap4yd00047wtpptt7zou4",
@@ -288,11 +367,11 @@
       "icon": "🥔",
       "imageUrl": "/images/ingredients/maca.jpg",
       "subtitle": "Energy-boosting root",
-      "description": "An ancient energy-boosting root known for naturally supporting a healthy, vibrant libido.",
+      "description": "Like a \"Sport Mode\" button for your hormones; giving your energy and drive a much-needed boost.",
       "type": "Adaptogen",
       "order": 6,
       "createdAt": "2026-01-25T05:25:44.932Z",
-      "updatedAt": "2026-02-07T02:10:11.778Z"
+      "updatedAt": "2026-02-13T12:18:26.861Z"
     },
     {
       "id": "cmktap4z400067wtpvlurjmwj",
@@ -310,13 +389,13 @@
       "id": "cmktap4zj00077wtp1zpx9cmp",
       "name": "Lime",
       "icon": "🍋",
-      "imageUrl": "/images/ingredients/lime.jpg",
+      "imageUrl": "https://utfs.io/f/2frRLzpx3hGL1ITcoLCOTkt9GF8ZY6LjmU4aPHEe7J0DXoSM",
       "subtitle": "Balance stomach acidity",
-      "description": "Refreshing citrus that helps balance stomach acidity for a happy, alkalized gut environment.",
+      "description": "Like a \"Clear History\" button for your gut; neutralizing acid so you can start fresh.",
       "type": "Fruit",
       "order": 8,
       "createdAt": "2026-01-25T05:25:44.959Z",
-      "updatedAt": "2026-02-07T02:10:11.802Z"
+      "updatedAt": "2026-02-13T12:18:45.364Z"
     },
     {
       "id": "cmktap4zv00087wtp18tictek",
@@ -324,11 +403,11 @@
       "icon": "🍫",
       "imageUrl": "/images/ingredients/cocoa.jpg",
       "subtitle": "Heart health & mood",
-      "description": "Deliciously dark and packed with antioxidants for heart health and major mood boosts.",
+      "description": "A love letter to your arteries. Heart-healthy antioxidants that feel like a warm, cozy hug from Ryan Gosling.",
       "type": "Adaptogen",
       "order": 9,
       "createdAt": "2026-01-25T05:25:44.971Z",
-      "updatedAt": "2026-02-07T02:10:11.814Z"
+      "updatedAt": "2026-02-13T12:19:30.866Z"
     },
     {
       "id": "cmktap50800097wtpezafq7s5",
@@ -348,11 +427,27 @@
       "icon": "🫐",
       "imageUrl": "/images/ingredients/cranberry.jpg",
       "subtitle": "Urinary health",
-      "description": "Tart and tiny antioxidant bombs that support urinary health and overall body wellness.",
+      "description": "The elite cleaning crew. Specialized antioxidants keeping your internal plumbing more sparkling than a Five-Star hotel.",
       "type": "Fruit",
       "order": 11,
       "createdAt": "2026-01-25T05:25:44.996Z",
-      "updatedAt": "2026-02-07T02:10:11.843Z"
+      "updatedAt": "2026-02-13T12:19:40.816Z"
+    }
+  ],
+  "settings": [
+    {
+      "id": "cmn4lscel000004jp5k0ypaq5",
+      "key": "landingHeroSlideUrls",
+      "value": "[\"https://utfs.io/f/2frRLzpx3hGLsmQOwMWDM6t2oxbP0SGYCHvurza73ZR5Owgy\",\"https://utfs.io/f/2frRLzpx3hGLwCBWQURDETcuXnIk7JCmOv0Bsr38UjpZ4KSl\",\"https://utfs.io/f/2frRLzpx3hGLMAoz4CD4ykTaZhRSXwenf3O7IxcipoK0bJFG\"]",
+      "updatedAt": "2026-03-24T12:41:02.925Z",
+      "updatedById": "cmmoz5ycm00006otpp52pr1wt"
+    },
+    {
+      "id": "cmn4lscet000104jpyc8vlrsd",
+      "key": "landingPhotoUrl",
+      "value": "https://utfs.io/f/2frRLzpx3hGLsmQOwMWDM6t2oxbP0SGYCHvurza73ZR5Owgy",
+      "updatedAt": "2026-03-24T12:41:02.933Z",
+      "updatedById": "cmmoz5ycm00006otpp52pr1wt"
     }
   ],
   "testimonials": [
@@ -423,6 +518,14 @@
       "updatedAt": "2026-02-07T02:43:24.332Z"
     },
     {
+      "id": "cmli5kznb000004jr5u2e39b5",
+      "postUrl": "https://www.instagram.com/p/DUlEm-Fko5R/",
+      "imageUrl": "https://utfs.io/f/2frRLzpx3hGLwEwjfWRDETcuXnIk7JCmOv0Bsr38UjpZ4KSl",
+      "order": 0,
+      "createdAt": "2026-02-11T14:56:47.735Z",
+      "updatedAt": "2026-02-11T14:56:47.735Z"
+    },
+    {
       "id": "cmlbpjp48000169tpn9kbftlu",
       "postUrl": "https://www.instagram.com/p/DQWvDIVEpw_/",
       "imageUrl": "https://utfs.io/f/2frRLzpx3hGLRzJilm2hvljbQEFPkZg3BuTNenrhU1YLqtd0",
@@ -432,17 +535,6 @@
     }
   ],
   "users": [
-    {
-      "id": "cml3wsnwa00029itpczrbmgto",
-      "name": "abcName",
-      "email": "abc@abc.com",
-      "emailVerified": null,
-      "password": "$2b$12$WRy3Aqnyn2VFO0D.6LCiV.98o024ezcuII2hnYYFnBADkrbAvWeLa",
-      "image": null,
-      "role": "SUPERADMIN",
-      "createdAt": "2026-02-01T15:42:02.746Z",
-      "updatedAt": "2026-02-01T15:42:02.746Z"
-    },
     {
       "id": "cml4marph000004kzl1evj8ij",
       "name": "KRISHANTHINI",
@@ -464,6 +556,21 @@
       "role": "SUPERADMIN",
       "createdAt": "2026-02-02T03:38:01.290Z",
       "updatedAt": "2026-02-03T06:24:32.035Z"
+    },
+    {
+      "id": "cmmoz5ycm00006otpp52pr1wt",
+      "name": "Ooi Teng Hao",
+      "email": "thooi998@gmail.com",
+      "emailVerified": null,
+      "password": "$2b$12$l7P90k0DDg9AE6u1hTUNpuKUpE5vBYI4IGpcoUCTzd2AiaC0Qo01u",
+      "image": null,
+      "role": "SUPERADMIN",
+      "createdAt": "2026-03-13T14:11:14.084Z",
+      "updatedAt": "2026-03-13T14:14:39.115Z"
     }
-  ]
+  ],
+  "accounts": [],
+  "sessions": [],
+  "passwordResetTokens": [],
+  "verificationTokens": []
 }

@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-02-14T16:06:42.466Z",
+  "exportedAt": "2026-03-22T15:02:49.009Z",
   "products": [
     {
       "id": "dark-stormy",
@@ -435,17 +435,6 @@
   ],
   "users": [
     {
-      "id": "cml3wsnwa00029itpczrbmgto",
-      "name": "abcName",
-      "email": "abc@abc.com",
-      "emailVerified": null,
-      "password": "$2b$12$WRy3Aqnyn2VFO0D.6LCiV.98o024ezcuII2hnYYFnBADkrbAvWeLa",
-      "image": null,
-      "role": "SUPERADMIN",
-      "createdAt": "2026-02-01T15:42:02.746Z",
-      "updatedAt": "2026-02-01T15:42:02.746Z"
-    },
-    {
       "id": "cml4marph000004kzl1evj8ij",
       "name": "KRISHANTHINI",
       "email": "burberry910@live.com",
@@ -466,6 +455,17 @@
       "role": "SUPERADMIN",
       "createdAt": "2026-02-02T03:38:01.290Z",
       "updatedAt": "2026-02-03T06:24:32.035Z"
+    },
+    {
+      "id": "cmmoz5ycm00006otpp52pr1wt",
+      "name": "Ooi Teng Hao",
+      "email": "thooi998@gmail.com",
+      "emailVerified": null,
+      "password": "$2b$12$l7P90k0DDg9AE6u1hTUNpuKUpE5vBYI4IGpcoUCTzd2AiaC0Qo01u",
+      "image": null,
+      "role": "SUPERADMIN",
+      "createdAt": "2026-03-13T14:11:14.084Z",
+      "updatedAt": "2026-03-13T14:14:39.115Z"
     }
   ]
 }

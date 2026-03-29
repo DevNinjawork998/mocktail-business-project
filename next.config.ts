@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Load Prisma from node_modules at runtime so `prisma generate` is respected without a stale webpack copy.
+  serverExternalPackages: [
+    "@prisma/client",
+    "prisma",
+    "@prisma/adapter-pg",
+    "@prisma/adapter-libsql",
+    "pg",
+  ],
   images: {
     remotePatterns: [
       {

@@ -97,7 +97,9 @@ describe("HealthBenefits", () => {
       screen.getByText(/Real Ingredients. Real Results./i),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/We source the finest ingredients from local suppliers, with Halal, Mesti, HACCP, and GMP certifications./i),
+      screen.getByText(
+        /We source the finest ingredients from local suppliers, with Halal, Mesti, HACCP, and GMP certifications./i,
+      ),
     ).toBeInTheDocument();
   });
 

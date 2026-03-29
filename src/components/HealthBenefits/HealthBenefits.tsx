@@ -152,9 +152,7 @@ const HealthBenefits = () => {
     }
 
     const timer = window.setInterval(() => {
-      setMobileCarouselIndex(
-        (i) => (i + 1) % sortedIngredients.length,
-      );
+      setMobileCarouselIndex((i) => (i + 1) % sortedIngredients.length);
     }, CAROUSEL_INTERVAL_MS);
 
     return () => {

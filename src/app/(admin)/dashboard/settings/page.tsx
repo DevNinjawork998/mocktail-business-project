@@ -7,7 +7,7 @@ export const metadata = {
 
 export default async function SettingsPage() {
   const result = await getLandingHeroSlideUrls();
-  const initialLandingSlideUrls = result.success ? result.data ?? [] : [];
+  const initialLandingSlideUrls = result.success ? (result.data ?? []) : [];
 
   return (
     <div>

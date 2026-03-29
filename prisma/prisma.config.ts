@@ -22,6 +22,17 @@ try {
   config({ path: resolve(__dirname, "../.env") });
 } catch {}
 
+// Let production DB URLs override .env.local (dotenv does not override by default)
+try {
+  if (process.env.PRISMA_DB_ENV === "production") {
+    config({
+      path: resolve(__dirname, "../.env.production.local"),
+      override: true,
+    });
+    config({ path: resolve(__dirname, "../.env.prod.local"), override: true });
+  }
+} catch {}
+
 // Determine the database URL based on environment
 const getDatabaseUrl = () => {
   // Check environment variables first (may be set externally via export)

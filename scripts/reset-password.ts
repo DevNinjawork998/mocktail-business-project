@@ -1,5 +1,7 @@
 /**
- * Reset a user's password and verify it works.
+ * Reset a user's password from the CLI (DB access only — for emergencies / local dev).
+ * End users should use the app: /forgot-password → email link → /reset-password.
+ *
  * Usage: ADMIN_EMAIL=user@example.com ADMIN_PASSWORD=newpass tsx scripts/reset-password.ts
  *
  * Uses same env loading as seed-admin (.env.development.local, .env.local)

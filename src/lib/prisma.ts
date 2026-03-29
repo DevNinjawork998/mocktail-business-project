@@ -1,12 +1,59 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient as BundledPrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
+
+type PrismaClientConstructor = typeof import("@prisma/client").PrismaClient;
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
   pool: Pool | undefined;
 };
+
+/**
+ * Cached constructor. Cleared when we bust require.cache so `npx prisma generate`
+ * is picked up without restarting Node (Next may otherwise keep a stale PrismaClient shape).
+ */
+let cachedPrismaClientClass: PrismaClientConstructor | null = null;
+
+/** One attempt to reload @prisma/client from disk if delegates (e.g. passwordResetToken) are missing. */
+let prismaStaleDelegateHealAttempted = false;
+
+function loadPrismaClientClass(): PrismaClientConstructor {
+  if (cachedPrismaClientClass) {
+    return cachedPrismaClientClass;
+  }
+
+  if (typeof require !== "undefined") {
+    try {
+      const mod = require("@prisma/client") as typeof import("@prisma/client");
+      cachedPrismaClientClass = mod.PrismaClient;
+      return mod.PrismaClient;
+    } catch {
+      // Fall through to bundled client (e.g. some edge bundles)
+    }
+  }
+
+  cachedPrismaClientClass = BundledPrismaClient;
+  return BundledPrismaClient;
+}
+
+function bustPrismaClientRequireCache(): void {
+  cachedPrismaClientClass = null;
+  if (typeof require === "undefined" || !require.cache) {
+    return;
+  }
+  const cache = require.cache as Record<string, unknown>;
+  for (const key of Object.keys(cache)) {
+    if (
+      key.includes("node_modules") &&
+      (key.includes("@prisma/client") || key.includes(".prisma/client"))
+    ) {
+      delete cache[key];
+    }
+  }
+}
 
 /**
  * Ensures the connection string uses sslmode=verify-full to suppress the
@@ -27,7 +74,9 @@ function ensureVerifyFullSsl(connectionString: string): string {
   }
 }
 
-function createPrismaClient() {
+function createPrismaClient(): PrismaClient {
+  const PrismaClientLocal = loadPrismaClientClass();
+
   // Priority 1: Direct PostgreSQL connection (works for both build and runtime)
   const directPostgresUrl = process.env.POSTGRES_URL || process.env.DIRECT_URL;
 
@@ -51,7 +100,7 @@ function createPrismaClient() {
     }
 
     const adapter = new PrismaPg(pool);
-    return new PrismaClient({ adapter });
+    return new PrismaClientLocal({ adapter });
   }
 
   // Priority 2: Check DATABASE_URL for direct PostgreSQL connection
@@ -78,7 +127,7 @@ function createPrismaClient() {
       }
 
       const adapter = new PrismaPg(pool);
-      return new PrismaClient({ adapter });
+      return new PrismaClientLocal({ adapter });
     }
 
     // Prisma Accelerate: prisma:// or prisma+postgres://
@@ -87,7 +136,7 @@ function createPrismaClient() {
       databaseUrl.startsWith("prisma+postgres://")
     ) {
       // Use standard PrismaClient - it will read DATABASE_URL from environment
-      return new PrismaClient({
+      return new PrismaClientLocal({
         log:
           process.env.NODE_ENV === "development"
             ? ["error", "warn"]
@@ -98,7 +147,7 @@ function createPrismaClient() {
     // SQLite: file://
     if (databaseUrl.startsWith("file:")) {
       const adapter = new PrismaLibSql({ url: databaseUrl });
-      return new PrismaClient({ adapter });
+      return new PrismaClientLocal({ adapter });
     }
   }
 
@@ -107,7 +156,7 @@ function createPrismaClient() {
   if (prismaAccelerateUrl) {
     // Set DATABASE_URL to Accelerate URL for Prisma Client
     process.env.DATABASE_URL = prismaAccelerateUrl;
-    return new PrismaClient({
+    return new PrismaClientLocal({
       log:
         process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
     });
@@ -167,6 +216,29 @@ function getPrismaClient(): PrismaClient {
       });
     }
   }
+
+  // Singleton may reference an old PrismaClient class (pre–`prisma generate`). Reload from disk once.
+  if (
+    globalForPrisma.prisma &&
+    !prismaStaleDelegateHealAttempted &&
+    Reflect.get(globalForPrisma.prisma, "passwordResetToken", globalForPrisma.prisma) ===
+      undefined
+  ) {
+    prismaStaleDelegateHealAttempted = true;
+    void globalForPrisma.prisma.$disconnect().catch(() => {});
+    bustPrismaClientRequireCache();
+    globalForPrisma.prisma = createPrismaClient();
+
+    if (
+      Reflect.get(globalForPrisma.prisma, "passwordResetToken", globalForPrisma.prisma) ===
+      undefined
+    ) {
+      console.error(
+        "[prisma] `passwordResetToken` is still missing on PrismaClient. Run `npx prisma generate`, apply migrations, then restart `next dev` so the server loads the new client.",
+      );
+    }
+  }
+
   return globalForPrisma.prisma;
 }
 
@@ -175,10 +247,8 @@ function getPrismaClient(): PrismaClient {
 export const prisma = new Proxy({} as PrismaClient, {
   get(_target, prop) {
     const client = getPrismaClient();
-    // Use unknown first to avoid type errors, then check the actual value
-    const value = (client as unknown as Record<string, unknown>)[
-      prop as string
-    ];
+    // Reflect.get invokes PrismaClient getters correctly (bracket access can miss some setups).
+    const value = Reflect.get(client, prop, client);
     // If it's a function, bind it to the client to preserve 'this' context
     if (typeof value === "function") {
       return (value as (...args: unknown[]) => unknown).bind(client);

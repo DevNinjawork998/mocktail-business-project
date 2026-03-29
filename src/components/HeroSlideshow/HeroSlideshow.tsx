@@ -56,8 +56,7 @@ const HeroSlideshow = () => {
 
   const displayUrls =
     reduceMotion && urls.length > 1 ? [urls[0] as string] : urls;
-  const shouldRotate =
-    !reduceMotion && displayUrls.length > 1 && !isLoading;
+  const shouldRotate = !reduceMotion && displayUrls.length > 1 && !isLoading;
 
   useEffect(() => {
     if (!shouldRotate) {
