@@ -2,10 +2,10 @@ import bcrypt from "bcryptjs";
 import { config } from "dotenv";
 import { resolve } from "path";
 
-// Load environment variables FIRST before any other imports
-config({ path: resolve(__dirname, "../.env.development.local") });
-config({ path: resolve(__dirname, "../.env.local") });
+// Load environment variables FIRST before any other imports (`.env.local` wins last).
 config({ path: resolve(__dirname, "../.env") });
+config({ path: resolve(__dirname, "../.env.development.local") });
+config({ path: resolve(__dirname, "../.env.local"), override: true });
 
 async function main() {
   // Dynamic import after env vars are loaded

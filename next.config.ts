@@ -1,4 +1,10 @@
+import { config as loadDotenv } from "dotenv";
+import { resolve } from "node:path";
 import type { NextConfig } from "next";
+
+// Next loads `.env.development.local` over `.env.local` by default. Re-apply `.env.local`
+// so full local dev (Docker Postgres, etc.) wins when both files define the same keys.
+loadDotenv({ path: resolve(process.cwd(), ".env.local"), override: true });
 
 const nextConfig: NextConfig = {
   images: {

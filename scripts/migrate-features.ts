@@ -4,8 +4,9 @@ import { resolve } from "path";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-config({ path: resolve(".env.development.local") });
-config({ path: resolve(".env.local") });
+config({ path: resolve(__dirname, "../.env") });
+config({ path: resolve(__dirname, "../.env.development.local") });
+config({ path: resolve(__dirname, "../.env.local"), override: true });
 
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({ connectionString });

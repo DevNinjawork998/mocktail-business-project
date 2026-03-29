@@ -8,9 +8,10 @@ import { resolve } from "path";
 import { readFileSync } from "fs";
 import { PrismaClient } from "@prisma/client";
 
-// Load environment variables for local development
+// `.env` → cloud dev → `.env.local` wins (Docker / full local).
+config({ path: resolve(__dirname, "../.env") });
 config({ path: resolve(__dirname, "../.env.development.local") });
-config({ path: resolve(__dirname, "../.env.local") });
+config({ path: resolve(__dirname, "../.env.local"), override: true });
 
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";

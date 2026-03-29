@@ -1,6 +1,6 @@
 /**
  * Script to backup development database data to JSON
- * Uses ONLY `.env.development.local` (override) so `.env.local` cannot point the script at the wrong DB.
+ * Uses `.env.local` with override (full local dev / Docker Postgres).
  * Reuses `src/lib/prisma` connection logic (POSTGRES_URL / DATABASE_URL).
  *
  * Usage:
@@ -14,7 +14,7 @@ import { resolve } from "path";
 import { writeFileSync } from "fs";
 
 config({
-  path: resolve(__dirname, "../.env.development.local"),
+  path: resolve(__dirname, "../.env.local"),
   override: true,
 });
 
