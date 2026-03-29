@@ -7,19 +7,19 @@ import { resolve } from "node:path";
 // dotenv will automatically load .env.local, .env.development.local, etc.
 // Silently fail if files don't exist (they won't in production)
 try {
-  config({ path: resolve(__dirname, "../.env.local") });
+  config({ path: resolve(__dirname, ".env.local") });
 } catch {}
 try {
-  config({ path: resolve(__dirname, "../.env.development.local") });
+  config({ path: resolve(__dirname, ".env.development.local") });
 } catch {}
 try {
-  config({ path: resolve(__dirname, "../.env.production.local") });
+  config({ path: resolve(__dirname, ".env.production.local") });
 } catch {}
 try {
-  config({ path: resolve(__dirname, "../.env.prod.local") }); // Legacy
+  config({ path: resolve(__dirname, ".env.prod.local") }); // Legacy
 } catch {}
 try {
-  config({ path: resolve(__dirname, "../.env") });
+  config({ path: resolve(__dirname, ".env") });
 } catch {}
 
 // Determine the database URL based on environment
@@ -78,7 +78,7 @@ const dbUrl = getDatabaseUrl();
 // Migrations will handle their own errors when actually run
 
 export default defineConfig({
-  schema: path.join(__dirname, "schema.prisma"),
+  schema: path.join(__dirname, "prisma", "schema.prisma"),
   datasource: {
     url: dbUrl,
   },
