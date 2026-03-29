@@ -35,8 +35,13 @@ const productSchema = z.object({
     .min(1, "Main photo is required"),
   supportingPhoto1Url: z.url().optional().nullable(),
   supportingPhoto2Url: z.url().optional().nullable(),
-  features: z.array(z.object({ text: z.string(), color: z.string() })),
-  ingredients: z.array(z.string()),
+  features: z.array(z.object({ text: z.string(), icon: z.string().optional(), color: z.string().optional() })),
+  ingredients: z.array(
+    z.object({
+      name: z.string(),
+      emoji: z.string().optional(),
+    })
+  ),
   productBrief: z.string().optional().nullable(),
 });
 
@@ -54,8 +59,8 @@ interface ProductFormProps {
     imageColor: string;
     imageUrl: string | null;
     images?: Array<{ url: string; order: number }>;
-    features: Array<{ text: string; color: string }>;
-    ingredients: string[] | null;
+    features: Array<{ text: string; icon?: string; color?: string }>;
+    ingredients: Array<string | { name: string; emoji?: string }> | null;
     productBrief: string | null;
   };
 }
@@ -132,8 +137,11 @@ export default function ProductForm({ product }: ProductFormProps) {
       imageUrl: initialMainPhotoUrl || undefined,
       supportingPhoto1Url: initialSupportingPhoto1Url || undefined,
       supportingPhoto2Url: initialSupportingPhoto2Url || undefined,
-      features: product?.features || [{ text: "", color: "#451515" }],
-      ingredients: (product?.ingredients ?? []) as string[],
+      features: product?.features || [{ icon: "✨", text: "", color: "#451515" }],
+      ingredients: (product?.ingredients ?? []).map((ing: any) => {
+        if (typeof ing === "string") return { name: ing, emoji: "" };
+        return { name: ing.name || "", emoji: ing.emoji || "" };
+      }),
       productBrief: product?.productBrief || "",
     },
   });
@@ -153,16 +161,12 @@ export default function ProductForm({ product }: ProductFormProps) {
     name: "longDescriptionParagraphs",
   });
 
-  // TypeScript incorrectly infers that only "longDescriptionParagraphs" | "features" are valid
-  // field array names, but "ingredients" is a valid string[] field in FormData.
-  // This is a known limitation with react-hook-form's type inference for optional array fields.
   const {
     fields: ingredientFields,
     append: appendIngredient,
     remove: removeIngredient,
   } = useFieldArray({
     control,
-    // @ts-expect-error - ingredients is a valid field in FormData, but TypeScript's inference is too strict
     name: "ingredients",
   });
 
@@ -311,8 +315,8 @@ export default function ProductForm({ product }: ProductFormProps) {
       supportingPhoto2Url: currentSupportingPhoto2Url || null,
       features: data.features,
       ingredients:
-        data.ingredients.filter((i) => i.trim()).length > 0
-          ? data.ingredients.filter((i) => i.trim())
+        data.ingredients.filter((i) => i.name.trim()).length > 0
+          ? data.ingredients.filter((i) => i.name.trim())
           : null,
       productBrief: data.productBrief || null,
     };
@@ -322,7 +326,14 @@ export default function ProductForm({ product }: ProductFormProps) {
       : await createProduct(formData);
 
     if (result.success) {
-      router.push("/dashboard/products");
+      // If we are creating a new product, redirect to the list
+      if (!product) {
+        router.push("/dashboard/products");
+      } else {
+        // Show success state briefly then re-enable button
+        setTimeout(() => setIsSubmitting(false), 500);
+      }
+      
       router.refresh();
     } else {
       setError(result.error);
@@ -546,12 +557,14 @@ export default function ProductForm({ product }: ProductFormProps) {
         {featureFields.map((field, index) => (
           <S.DynamicRow key={field.id}>
             <S.Input
-              {...register(`features.${index}.text`)}
-              placeholder="Feature text"
+              {...register(`features.${index}.icon`)}
+              placeholder="Emoji Icon (e.g. 🌱)"
+              style={{ width: "120px", flexShrink: 0 }}
             />
-            <S.ColorInput
-              type="color"
-              {...register(`features.${index}.color`)}
+            <S.Input
+              {...register(`features.${index}.text`)}
+              placeholder="Feature name (e.g. Vegan)"
+              style={{ flexGrow: 1 }}
             />
             <S.RemoveButton type="button" onClick={() => removeFeature(index)}>
               ×
@@ -561,7 +574,7 @@ export default function ProductForm({ product }: ProductFormProps) {
 
         <S.AddButton
           type="button"
-          onClick={() => appendFeature({ text: "", color: "#451515" })}
+          onClick={() => appendFeature({ icon: "✨", text: "", color: "#451515" })}
         >
           + Add Feature
         </S.AddButton>
@@ -575,8 +588,14 @@ export default function ProductForm({ product }: ProductFormProps) {
           {ingredientFields.map((field, index) => (
             <S.DynamicRow key={field.id}>
               <S.Input
-                {...register(`ingredients.${index}`)}
+                {...register(`ingredients.${index}.name`)}
                 placeholder="Ingredient name"
+                style={{ flexGrow: 1 }}
+              />
+              <S.Input
+                {...register(`ingredients.${index}.emoji`)}
+                placeholder="Emoji (e.g. 🫚)"
+                style={{ width: "120px", flexShrink: 0 }}
               />
               {ingredientFields.length > 1 && (
                 <S.RemoveButton
@@ -591,8 +610,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           <S.AddButton
             type="button"
             onClick={() => {
-              // @ts-expect-error - appendIngredient accepts string for ingredients array, but TypeScript infers wrong type
-              appendIngredient("" as string);
+              appendIngredient({ name: "", emoji: "" });
             }}
           >
             + Add Ingredient

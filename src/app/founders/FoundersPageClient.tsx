@@ -6,15 +6,20 @@ import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import FounderStory from "@/components/FounderStory/FounderStory";
 import Footer from "@/components/Footer/Footer";
 import * as S from "./FoundersPageClient.styles";
+import { FounderStoryData } from "@/types/founder";
 
-export default function FoundersPageClient() {
+interface FoundersPageClientProps {
+  storyData: FounderStoryData;
+}
+
+export default function FoundersPageClient({ storyData }: FoundersPageClientProps) {
   const breadcrumbItems = [{ label: "Meet Our Founders" }];
 
   return (
     <S.PageContainer>
       <Navigation />
       <Breadcrumb items={breadcrumbItems} />
-      <FounderStory />
+      <FounderStory storyData={storyData} />
       <Footer />
     </S.PageContainer>
   );

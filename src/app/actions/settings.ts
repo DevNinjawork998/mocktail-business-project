@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { getEditorRoles } from "@/lib/permissions";
 import { revalidatePath } from "next/cache";
 import { UTApi } from "uploadthing/server";
+import { FounderStoryData, DEFAULT_FOUNDER_STORY } from "@/types/founder";
 
 type ActionResult<T = void> =
   | { success: true; data?: T }
@@ -292,3 +293,98 @@ export async function updateLandingPhotoUrl(url: string): Promise<ActionResult> 
 export async function removeLandingPhoto(): Promise<ActionResult> {
   return setLandingHeroSlideUrls([]);
 }
+
+const SETTINGS_KEY_FOUNDER_STORY = "founderStory";
+
+/**
+ * Get the founder story from settings
+ */
+export async function getFounderStory(): Promise<ActionResult<FounderStoryData>> {
+  try {
+    const hasDatabaseUrl =
+      process.env.DATABASE_URL ||
+      process.env.POSTGRES_URL ||
+      process.env.DIRECT_URL ||
+      process.env.PRISMA_DATABASE_URL;
+
+    if (!hasDatabaseUrl) {
+      return { success: true, data: DEFAULT_FOUNDER_STORY };
+    }
+
+    const { prisma } = await import("@/lib/prisma");
+    const row = await prisma.settings
+      .findUnique({
+        where: { key: SETTINGS_KEY_FOUNDER_STORY },
+      })
+      .catch(() => null);
+
+    if (row?.value) {
+      try {
+        const parsed = JSON.parse(row.value) as Partial<FounderStoryData>;
+        return { 
+          success: true, 
+          data: {
+            ...DEFAULT_FOUNDER_STORY,
+            ...parsed
+          }
+        };
+      } catch {
+        // Fall back to default
+      }
+    }
+
+    return { success: true, data: DEFAULT_FOUNDER_STORY };
+  } catch (error) {
+    console.error("Error getting founder story:", error);
+    return { success: true, data: DEFAULT_FOUNDER_STORY };
+  }
+}
+
+/**
+ * Set the founder story
+ */
+export async function setFounderStory(
+  data: FounderStoryData,
+): Promise<ActionResult> {
+  const session = await auth();
+  if (!session?.user || !getEditorRoles().includes(session.user.role)) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  try {
+    await ensureSettingsTableExists();
+    const { prisma } = await import("@/lib/prisma");
+
+    // Optional: check if previous image was changed and delete the old one
+    const previousResult = await getFounderStory();
+    if (previousResult.success && previousResult.data) {
+      const oldUrl = previousResult.data.imageUrl;
+      if (oldUrl && oldUrl !== data.imageUrl && oldUrl.startsWith("http")) {
+        await deleteUploadThingFile(oldUrl);
+      }
+    }
+
+    const jsonValue = JSON.stringify(data);
+
+    await prisma.settings.upsert({
+      where: { key: SETTINGS_KEY_FOUNDER_STORY },
+      update: {
+        value: jsonValue,
+        updatedById: session.user.id,
+      },
+      create: {
+        key: SETTINGS_KEY_FOUNDER_STORY,
+        value: jsonValue,
+        updatedById: session.user.id,
+      },
+    });
+
+    revalidatePath("/founders");
+    revalidatePath("/dashboard/settings");
+    return { success: true };
+  } catch (error) {
+    console.error("Error saving founder story:", error);
+    return { success: false, error: "Failed to save founder story" };
+  }
+}
+

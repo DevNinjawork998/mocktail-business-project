@@ -78,8 +78,13 @@ const productSchema = z.object({
     )
     .nullable()
     .optional(),
-  features: z.array(z.object({ text: z.string(), color: z.string() })),
-  ingredients: z.array(z.string()).optional().nullable(),
+  features: z.array(z.object({ text: z.string(), icon: z.string().optional(), color: z.string().optional() })),
+  ingredients: z.array(
+    z.object({
+      name: z.string(),
+      emoji: z.string().optional(),
+    })
+  ).optional().nullable(),
   productBrief: z.string().optional().nullable(),
 });
 

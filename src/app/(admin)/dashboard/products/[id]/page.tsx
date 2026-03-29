@@ -51,8 +51,8 @@ export default async function EditProductPage({
 
   const formattedProduct = {
     ...product,
-    features: product.features as Array<{ text: string; color: string }>,
-    ingredients: product.ingredients as string[] | null,
+    features: product.features as Array<{ text: string; icon?: string; color?: string }>,
+    ingredients: product.ingredients as Array<string | { name: string; emoji?: string }> | null,
     images: product.images.map((img) => ({
       url: img.url,
       order: img.order,

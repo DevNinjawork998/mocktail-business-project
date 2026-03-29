@@ -24,6 +24,8 @@
     "db:reset-password": "tsx scripts/reset-password.ts",
     "db:create-settings-table": "tsx scripts/create-settings-table.ts",
     "db:backup:prod": "tsx scripts/backup-prod-db.ts",
+    "db:backup:dev": "tsx scripts/backup-dev-db.ts",
+    "db:seed:prod:backup": "tsx scripts/seed-prod-from-backup.ts",
     "upload:product-images": "tsx scripts/upload-product-images-from-zips.ts",
     "db:docker:up": "docker-compose up -d",
     "db:docker:down": "docker-compose down",
