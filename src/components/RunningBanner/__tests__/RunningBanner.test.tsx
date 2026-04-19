@@ -7,7 +7,7 @@ jest.mock("@/data/bannerData", () => ({
   bannerData: [
     {
       type: "message",
-      content: "Free shipping on all orders over $50!",
+      content: "Free shipping on all orders over RM 50!",
     },
     {
       type: "image",
@@ -27,7 +27,7 @@ describe("RunningBanner", () => {
 
     // Banner data is duplicated, so messages appear multiple times
     expect(
-      screen.getAllByText("Free shipping on all orders over $50!").length,
+      screen.getAllByText("Free shipping on all orders over RM 50!").length,
     ).toBeGreaterThan(0);
     expect(
       screen.getAllByText("New flavor just dropped: Strawberry Basil!").length,
@@ -47,7 +47,7 @@ describe("RunningBanner", () => {
 
     // Since messages are duplicated, we should see messages twice
     const messages = screen.getAllByText(
-      "Free shipping on all orders over $50!",
+      "Free shipping on all orders over RM 50!",
     );
     expect(messages.length).toBe(2);
   });
@@ -57,7 +57,7 @@ describe("RunningBanner", () => {
 
     // Only messages should be rendered
     expect(
-      screen.getAllByText("Free shipping on all orders over $50!").length,
+      screen.getAllByText("Free shipping on all orders over RM 50!").length,
     ).toBeGreaterThan(0);
     expect(
       screen.getAllByText("New flavor just dropped: Strawberry Basil!").length,

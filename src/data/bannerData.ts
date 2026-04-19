@@ -1,7 +1,7 @@
 export const bannerData = [
   {
     type: "message",
-    content: "Free shipping on all orders over $50!",
+    content: "Free shipping on all orders over RM 50!",
   },
   {
     type: "image",
