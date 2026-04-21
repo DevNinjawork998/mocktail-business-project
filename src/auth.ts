@@ -7,6 +7,9 @@ const { callbacks: authConfigCallbacks, ...restAuthConfig } = authConfig;
 // Using JWT strategy - works with both credentials and OAuth providers
 // OAuth account linking is handled in signIn callback
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // Required on Vercel and other proxied hosts so OAuth cookies (PKCE/state) use the
+  // correct host; otherwise callbacks can fail with InvalidCheck / pkceCodeVerifier parse errors.
+  trustHost: true,
   session: { strategy: "jwt" },
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   ...restAuthConfig,
