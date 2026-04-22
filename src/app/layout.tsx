@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { CartProvider } from "@/contexts/CartContext";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import StructuredData from "@/components/StructuredData/StructuredData";
+import GoogleAdsTag from "@/components/GoogleAdsTag/GoogleAdsTag";
 
 export const metadata: Metadata = {
   title: "Mocktails On The Go - Malaysia's 1st Ever Adaptogenic Mocktails",
@@ -71,6 +72,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <GoogleAdsTag />
         {/* Structured Data for Organization Logo - Google uses this for site logo in search results */}
         <StructuredData />
         <StyledComponentsRegistry>
