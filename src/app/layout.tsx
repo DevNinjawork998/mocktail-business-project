@@ -12,14 +12,14 @@ import GoogleAdsTag from "@/components/GoogleAdsTag/GoogleAdsTag";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "900"],
   display: "swap",
   variable: "--font-poppins",
 });
 
 const raleway = Raleway({
   subsets: ["latin"],
-  weight: ["700", "800", "900"],
+  weight: ["700", "900"],
   display: "swap",
   variable: "--font-raleway",
 });
@@ -77,7 +77,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        {/* Preconnect to CDN for faster image loading */}
+        <link rel="preconnect" href="https://qchbny9v2p.ufs.sh" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://qchbny9v2p.ufs.sh" />
+      </head>
       <body className={`${poppins.variable} ${raleway.variable}`}>
         <GoogleAdsTag />
         {/* Structured Data for Organization Logo - Google uses this for site logo in search results */}
@@ -87,7 +91,7 @@ export default function RootLayout({
             <StyledThemeWrapper>
               <CartProvider>
                 {children}
-                <Analytics debug={true} />
+                <Analytics />
                 <SpeedInsights />
               </CartProvider>
             </StyledThemeWrapper>

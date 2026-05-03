@@ -1,6 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { config } from "dotenv";
 import { Pool } from "pg";
+import { resolve } from "node:path";
+
+config({ path: resolve(__dirname, "../.env") });
+config({ path: resolve(__dirname, "../.env.development.local") });
+config({ path: resolve(__dirname, "../.env.production.local") });
+config({ path: resolve(__dirname, "../.env.prod.local") });
+config({ path: resolve(__dirname, "../.env.local"), override: true });
 
 /**
  * Ensures sslmode=verify-full to suppress the pg-connection-string security warning.

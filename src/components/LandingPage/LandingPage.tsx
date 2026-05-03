@@ -1,15 +1,25 @@
-"use client";
-
 import Link from "next/link";
+import { getLandingHeroSlideUrls } from "@/app/actions/settings";
 import * as S from "./LandingPage.styles";
 import RunningBanner from "../RunningBanner/RunningBanner";
-import dynamic from "next/dynamic";
+import HeroSlideshow from "../HeroSlideshow/HeroSlideshow";
 
-const HeroSlideshow = dynamic(() => import("../HeroSlideshow/HeroSlideshow"), {
-  ssr: false,
-});
+const FALLBACK_LANDING_PHOTO_URL =
+  process.env.NEXT_PUBLIC_LANDING_PHOTO_URL ||
+  "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLDgNsR5ihjkVF8eaqWlO3pXP4g9ZHb0cCNLnI";
 
-const LandingPage = () => {
+const LandingPage = async () => {
+  // Fetch hero URLs server-side to make image discoverable from HTML
+  let heroUrls: string[] = [FALLBACK_LANDING_PHOTO_URL];
+  try {
+    const result = await getLandingHeroSlideUrls();
+    if (result.success && result.data && result.data.length > 0) {
+      heroUrls = result.data;
+    }
+  } catch (error) {
+    console.error("Error fetching landing hero slides:", error);
+  }
+
   return (
     <S.LandingSection>
       <RunningBanner />
@@ -57,7 +67,7 @@ const LandingPage = () => {
 
           {/* Right Content - Product Image */}
           <S.RightContent>
-            <HeroSlideshow />
+            <HeroSlideshow heroUrls={heroUrls} firstImageUrl={heroUrls[0]} />
           </S.RightContent>
         </S.MainGrid>
       </S.Container>
