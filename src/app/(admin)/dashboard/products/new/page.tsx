@@ -1,8 +1,10 @@
-import ProductForm from "@/components/ProductForm";
+"use client";
 
-export const metadata = {
-  title: "New Product | Admin Dashboard",
-};
+import dynamic from "next/dynamic";
+
+const ProductForm = dynamic(() => import("@/components/ProductForm"), {
+  ssr: false,
+});
 
 export default function NewProductPage() {
   return (

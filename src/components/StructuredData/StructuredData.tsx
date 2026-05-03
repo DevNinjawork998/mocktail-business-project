@@ -40,12 +40,14 @@ export default function StructuredData(): React.ReactElement {
   return (
     <>
       <script
+        key="schema-organization"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(organizationSchema),
         }}
       />
       <script
+        key="schema-local-business"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(localBusinessSchema),

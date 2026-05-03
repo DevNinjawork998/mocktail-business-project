@@ -182,7 +182,7 @@ export const CartProvider: React.FC<{
   };
 
   return (
-    <CartContext.Provider
+    <CartContext
       value={{
         state,
         addItem,
@@ -192,7 +192,7 @@ export const CartProvider: React.FC<{
       }}
     >
       {children}
-    </CartContext.Provider>
+    </CartContext>
   );
 };
 

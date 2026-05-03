@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import LoginForm from "./LoginForm";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Login | Admin Dashboard",
   description: "Sign in to access the admin dashboard",
