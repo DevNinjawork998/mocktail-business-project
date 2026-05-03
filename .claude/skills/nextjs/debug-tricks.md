@@ -9,7 +9,7 @@ Next.js exposes a `/_next/mcp` endpoint in development for AI-assisted debugging
 - **Next.js 16+**: Enabled by default, use `next-devtools-mcp`
 - **Next.js < 16**: Requires `experimental.mcpServer: true` in next.config.js
 
-Reference: https://nextjs.org/docs/app/guides/mcp
+Reference: <https://nextjs.org/docs/app/guides/mcp>
 
 **Important**: Find the actual port of the running Next.js dev server (check terminal output or `package.json` scripts). Don't assume port 3000.
 
@@ -88,10 +88,7 @@ Returns path to `<distDir>/logs/next-development.log`
 Locate a Server Action by ID:
 
 ```json
-{
-  "name": "get_server_action_by_id",
-  "arguments": { "actionId": "<action-id>" }
-}
+{ "name": "get_server_action_by_id", "arguments": { "actionId": "<action-id>" } }
 ```
 
 ### Example: Get Errors
