@@ -27,9 +27,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     root.classList.add("light");
   }
 
-  return (
-    <ThemeContext value={value}>{children}</ThemeContext>
-  );
+  return <ThemeContext value={value}>{children}</ThemeContext>;
 }
 
 export function useTheme(): ThemeContextType {

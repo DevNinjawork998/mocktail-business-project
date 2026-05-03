@@ -25,9 +25,9 @@ export default function CareersPage() {
         <S.ContentSection>
           <S.Title>Careers</S.Title>
           <S.Paragraph>
-            Join us in changing the drinking scene! We&apos;re always looking for
-            passionate individuals who share our vision of creating functional,
-            delicious mocktails.
+            Join us in changing the drinking scene! We&apos;re always looking
+            for passionate individuals who share our vision of creating
+            functional, delicious mocktails.
           </S.Paragraph>
           <S.Paragraph>
             Stay tuned for career opportunities. Follow us on social media to be

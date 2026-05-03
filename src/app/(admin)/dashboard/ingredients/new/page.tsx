@@ -2,9 +2,12 @@
 
 import dynamic from "next/dynamic";
 
-const IngredientForm = dynamic(() => import("@/components/IngredientForm/IngredientForm"), {
-  ssr: false,
-});
+const IngredientForm = dynamic(
+  () => import("@/components/IngredientForm/IngredientForm"),
+  {
+    ssr: false,
+  },
+);
 
 export default function NewIngredientPage() {
   return (
@@ -23,4 +26,3 @@ export default function NewIngredientPage() {
     </div>
   );
 }
-
