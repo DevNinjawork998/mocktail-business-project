@@ -40,10 +40,9 @@ const FounderStory = dynamic(
 
 function extractSectionTitle(longDescription: string): string {
   if (!longDescription) return "";
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(longDescription, "text/html");
-  const h3Element = doc.querySelector("h3");
-  return h3Element?.textContent?.trim() || "";
+  const match = longDescription.match(/<h3[^>]*>([\s\S]*?)<\/h3>/i);
+  if (!match) return "";
+  return match[1].replace(/<[^>]+>/g, "").trim();
 }
 
 interface ShopPageClientProps {
