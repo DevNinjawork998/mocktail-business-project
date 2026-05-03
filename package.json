@@ -84,6 +84,15 @@
     "tsx": "^4.20.3",
     "typescript": "^5"
   },
+  "browserslist": [
+    "supports es6",
+    "last 2 chrome versions",
+    "last 2 firefox versions",
+    "last 2 safari versions",
+    "last 2 edge versions",
+    "not dead",
+    "not ie 11"
+  ],
   "overrides": {
     "smol-toml": "^1.6.1",
     "srvx": "^0.11.13",

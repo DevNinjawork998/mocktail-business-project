@@ -29,6 +29,8 @@ export default function ProductImageSlider({
   const sliderRef = useRef<HTMLDivElement>(null);
   const currentIndexRef = useRef(0);
   currentIndexRef.current = currentIndex;
+  const cachedOffsetLeftRef = useRef(0);
+  const cachedClientWidthRef = useRef(0);
 
   // If only one image, don't show slider controls
   const hasMultipleImages = (images?.length ?? 0) > 1;
@@ -36,7 +38,8 @@ export default function ProductImageSlider({
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     if (!hasMultipleImages || !sliderRef.current) return;
     setIsDragging(true);
-    setStartX(e.pageX - sliderRef.current.offsetLeft);
+    cachedOffsetLeftRef.current = sliderRef.current.offsetLeft;
+    setStartX(e.pageX - cachedOffsetLeftRef.current);
     setScrollLeft(sliderRef.current.scrollLeft);
   };
 
@@ -47,7 +50,7 @@ export default function ProductImageSlider({
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!isDragging || !hasMultipleImages || !sliderRef.current) return;
     e.preventDefault();
-    const x = e.pageX - sliderRef.current.offsetLeft;
+    const x = e.pageX - cachedOffsetLeftRef.current;
     const walk = (x - startX) * 2;
     sliderRef.current.scrollLeft = scrollLeft - walk;
   };
@@ -55,24 +58,23 @@ export default function ProductImageSlider({
   const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
     if (!hasMultipleImages || !sliderRef.current) return;
     setIsDragging(true);
-    setStartX(e.touches[0].pageX - sliderRef.current.offsetLeft);
+    cachedOffsetLeftRef.current = sliderRef.current.offsetLeft;
+    setStartX(e.touches[0].pageX - cachedOffsetLeftRef.current);
     setScrollLeft(sliderRef.current.scrollLeft);
   };
 
   const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
     if (!isDragging || !hasMultipleImages || !sliderRef.current) return;
-    const x = e.touches[0].pageX - sliderRef.current.offsetLeft;
+    const x = e.touches[0].pageX - cachedOffsetLeftRef.current;
     const walk = (x - startX) * 2;
     sliderRef.current.scrollLeft = scrollLeft - walk;
   };
 
   const handleTouchEnd = () => {
     setIsDragging(false);
-    // Update currentIndex based on scroll position
-    if (sliderRef.current && images) {
-      const scrollPosition = sliderRef.current.scrollLeft;
-      const imageWidth = sliderRef.current.clientWidth;
-      const newIndex = Math.round(scrollPosition / imageWidth);
+    if (images && cachedClientWidthRef.current > 0) {
+      const scrollPosition = sliderRef.current!.scrollLeft;
+      const newIndex = Math.round(scrollPosition / cachedClientWidthRef.current);
       setCurrentIndex(Math.max(0, Math.min(newIndex, images.length - 1)));
     }
   };
@@ -82,7 +84,7 @@ export default function ProductImageSlider({
       if (!hasMultipleImages || !sliderRef.current) return;
       setCurrentIndex(index);
       sliderRef.current.scrollTo({
-        left: index * sliderRef.current.clientWidth,
+        left: index * cachedClientWidthRef.current,
         behavior: "smooth",
       });
     },
@@ -90,12 +92,24 @@ export default function ProductImageSlider({
   );
 
   const handleScroll = () => {
-    if (!sliderRef.current || !hasMultipleImages || !images) return;
+    if (!sliderRef.current || !hasMultipleImages || !images || cachedClientWidthRef.current === 0) return;
     const scrollPosition = sliderRef.current.scrollLeft;
-    const imageWidth = sliderRef.current.clientWidth;
-    const newIndex = Math.round(scrollPosition / imageWidth);
+    const newIndex = Math.round(scrollPosition / cachedClientWidthRef.current);
     setCurrentIndex(Math.max(0, Math.min(newIndex, images.length - 1)));
   };
+
+  // Cache clientWidth and keep it up to date on resize
+  useEffect(() => {
+    if (!sliderRef.current) return;
+    cachedClientWidthRef.current = sliderRef.current.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (sliderRef.current) {
+        cachedClientWidthRef.current = sliderRef.current.clientWidth;
+      }
+    });
+    observer.observe(sliderRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   // Auto-rotate images every 3 seconds
   useEffect(() => {

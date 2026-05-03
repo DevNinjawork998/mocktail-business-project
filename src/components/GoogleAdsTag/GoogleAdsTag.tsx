@@ -13,9 +13,9 @@ export default function GoogleAdsTag(): React.JSX.Element | null {
     <>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GOOGLE_ADS_AW_ID)}`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
-      <Script id="google-ads-gtag-init" strategy="afterInteractive">
+      <Script id="google-ads-gtag-init" strategy="lazyOnload">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}

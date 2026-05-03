@@ -55,6 +55,7 @@ export default function IngredientsPage() {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const cachedOffsetLeftRef = useRef(0);
 
   useEffect(() => {
     const fetchIngredients = async () => {
@@ -84,7 +85,8 @@ export default function IngredientsPage() {
     if (!carouselRef.current) return;
     setIsDragging(true);
     setIsPaused(true);
-    setStartX(e.pageX - carouselRef.current.offsetLeft);
+    cachedOffsetLeftRef.current = carouselRef.current.offsetLeft;
+    setStartX(e.pageX - cachedOffsetLeftRef.current);
     setScrollLeft(carouselRef.current.scrollLeft);
   };
 
@@ -96,7 +98,7 @@ export default function IngredientsPage() {
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!isDragging || !carouselRef.current) return;
     e.preventDefault();
-    const x = e.pageX - carouselRef.current.offsetLeft;
+    const x = e.pageX - cachedOffsetLeftRef.current;
     const walk = (x - startX) * 2; // Scroll speed multiplier
     carouselRef.current.scrollLeft = scrollLeft - walk;
   };
@@ -105,13 +107,14 @@ export default function IngredientsPage() {
     if (!carouselRef.current) return;
     setIsDragging(true);
     setIsPaused(true);
-    setStartX(e.touches[0].pageX - carouselRef.current.offsetLeft);
+    cachedOffsetLeftRef.current = carouselRef.current.offsetLeft;
+    setStartX(e.touches[0].pageX - cachedOffsetLeftRef.current);
     setScrollLeft(carouselRef.current.scrollLeft);
   };
 
   const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
     if (!isDragging || !carouselRef.current) return;
-    const x = e.touches[0].pageX - carouselRef.current.offsetLeft;
+    const x = e.touches[0].pageX - cachedOffsetLeftRef.current;
     const walk = (x - startX) * 2;
     carouselRef.current.scrollLeft = scrollLeft - walk;
   };

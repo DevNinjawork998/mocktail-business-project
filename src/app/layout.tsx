@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Poppins, Raleway } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/theme/theme-provider";
 import { StyledThemeWrapper } from "@/theme/styled-theme-provider";
@@ -8,6 +9,20 @@ import { CartProvider } from "@/contexts/CartContext";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import StructuredData from "@/components/StructuredData/StructuredData";
 import GoogleAdsTag from "@/components/GoogleAdsTag/GoogleAdsTag";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+  variable: "--font-poppins",
+});
+
+const raleway = Raleway({
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
+  display: "swap",
+  variable: "--font-raleway",
+});
 
 export const metadata: Metadata = {
   title: "Mocktails On The Go - Malaysia's 1st Ever Adaptogenic Mocktails",
@@ -62,16 +77,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Preconnect to Google Fonts for faster font loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body>
+      <head />
+      <body className={`${poppins.variable} ${raleway.variable}`}>
         <GoogleAdsTag />
         {/* Structured Data for Organization Logo - Google uses this for site logo in search results */}
         <StructuredData />
