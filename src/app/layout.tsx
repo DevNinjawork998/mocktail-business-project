@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins, Raleway } from "next/font/google";
 import "./globals.css";
-import AppWrapper from "@/components/ui/AppWrapper/AppWrapper";
+import StyledComponentsRegistry from "@/app/lib/registry";
+import { ThemeProvider } from "@/theme/theme-provider";
+import { StyledThemeWrapper } from "@/theme/styled-theme-provider";
+import { CartProvider } from "@/contexts/CartContext";
 import StructuredData from "@/components/StructuredData/StructuredData";
 import GoogleAdsTag from "@/components/GoogleAdsTag/GoogleAdsTag";
 import { Analytics } from "@vercel/analytics/next";
@@ -82,11 +85,17 @@ export default function RootLayout({
       <body className={`${poppins.variable} ${raleway.variable}`}>
         <GoogleAdsTag key="google-ads" />
         <StructuredData key="structured-data" />
-        <AppWrapper>
-          {children}
-          <Analytics />
-          <SpeedInsights />
-        </AppWrapper>
+        <StyledComponentsRegistry>
+          <ThemeProvider>
+            <StyledThemeWrapper>
+              <CartProvider>
+                {children}
+                <Analytics />
+                <SpeedInsights />
+              </CartProvider>
+            </StyledThemeWrapper>
+          </ThemeProvider>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );
