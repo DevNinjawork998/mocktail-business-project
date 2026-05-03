@@ -104,12 +104,7 @@
           "color": "#3E2723"
         }
       ],
-      "ingredients": [
-        "tea",
-        "apple juice",
-        "cinnamon",
-        "star anise"
-      ],
+      "ingredients": ["tea", "apple juice", "cinnamon", "star anise"],
       "productBrief": "Creamy & Chocolaty to keep your spirits & mood up. Maca root, cocoa & coffee increases stamina & libido.",
       "nutritionFacts": [
         {
@@ -172,12 +167,7 @@
           "color": "#DC143C"
         }
       ],
-      "ingredients": [
-        "Orange juice",
-        "cranberry",
-        "peach",
-        "carbonated water"
-      ],
+      "ingredients": ["Orange juice", "cranberry", "peach", "carbonated water"],
       "productBrief": "A refreshing, tart and citrusy mocktail with orange and cranberry. High in antioxidants and vitamin C for gut health and immunity support.",
       "nutritionFacts": [
         {

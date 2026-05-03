@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
-import React from "react";
 import Navigation from "@/components/Navigation/Navigation";
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
+import Footer from "@/components/Footer/Footer";
+import Testimonials from "@/components/Testimonials/Testimonials";
+import Community from "@/components/Community/Community";
+import YourBuddiesPageWrapper from "./YourBuddiesPageWrapper";
 
 export const metadata: Metadata = {
   title: "Your Buddies | Mocktails On The Go",
@@ -14,19 +18,12 @@ export const metadata: Metadata = {
     url: "https://mocktailsonthego.com/your-buddies",
   },
 };
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import Footer from "@/components/Footer/Footer";
-import Testimonials from "@/components/Testimonials/Testimonials";
-import Community from "@/components/Community/Community";
-import * as S from "./page.styles";
 
-// Force dynamic rendering to avoid build-time database access
 export const dynamic = "force-dynamic";
 
 export default async function YourBuddiesPage() {
   const breadcrumbItems = [{ label: "Community" }];
 
-  // Check if DATABASE_URL is available before attempting database access
   const hasDatabaseUrl =
     process.env.DATABASE_URL ||
     process.env.POSTGRES_URL ||
@@ -49,7 +46,6 @@ export default async function YourBuddiesPage() {
 
   if (hasDatabaseUrl) {
     try {
-      // Dynamically import prisma only when DATABASE_URL is available
       const { prisma } = await import("@/lib/prisma");
 
       [testimonials, instagramPosts] = await Promise.all([
@@ -77,23 +73,17 @@ export default async function YourBuddiesPage() {
           .catch(() => []),
       ]);
     } catch (_error) {
-      // Silently handle errors - empty arrays will be used
-      // Errors are already logged by Prisma or the catch blocks above
+      // Silently handle errors — empty arrays will be used
     }
   }
 
   return (
-    <S.PageContainer>
+    <YourBuddiesPageWrapper>
       <Navigation />
       <Breadcrumb items={breadcrumbItems} />
-
-      {/* Customer Testimonials */}
       <Testimonials testimonials={testimonials} />
-
-      {/* Community Instagram Grid */}
       <Community instagramPosts={instagramPosts} />
-
       <Footer />
-    </S.PageContainer>
+    </YourBuddiesPageWrapper>
   );
 }
