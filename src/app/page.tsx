@@ -1,61 +1,34 @@
-"use client";
+import type { Metadata } from "next";
+import { getLandingHeroSlideUrls } from "@/app/actions/settings";
+import HomePageClient from "./HomePageClient";
 
-import { useState, useEffect } from "react";
-import Navigation from "@/components/Navigation/Navigation";
-import LandingPage from "@/components/LandingPage/LandingPage";
-import Footer from "@/components/Footer/Footer";
-import * as S from "./page.styles";
-import dynamic from "next/dynamic";
+export const metadata: Metadata = {
+  title: "Mocktails On The Go | Adaptogenic Mocktails",
+  description:
+    "Premium adaptogenic mocktails crafted with functional ingredients. Shop our signature collection and fuel your day the healthy way.",
+  alternates: { canonical: "https://mocktailsonthego.com" },
+  openGraph: {
+    title: "Mocktails On The Go | Adaptogenic Mocktails",
+    description:
+      "Premium adaptogenic mocktails crafted with functional ingredients. Shop our signature collection and fuel your day the healthy way.",
+    url: "https://mocktailsonthego.com",
+  },
+};
 
-// Dynamically import sections for better performance
-const ProductShowcase = dynamic(
-  () => import("@/components/ProductShowcase/ProductShowcase"),
-  { ssr: false },
-);
+const FALLBACK_LANDING_PHOTO_URL =
+  process.env.NEXT_PUBLIC_LANDING_PHOTO_URL ||
+  "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLDgNsR5ihjkVF8eaqWlO3pXP4g9ZHb0cCNLnI";
 
-const HealthBenefits = dynamic(
-  () => import("@/components/HealthBenefits/HealthBenefits"),
-  { ssr: false },
-);
-
-const WhyMocktails = dynamic(
-  () => import("@/components/WhyMocktails/WhyMocktails"),
-  { ssr: false },
-);
-
-const CTABanner = dynamic(() => import("@/components/CTABanner/CTABanner"), {
-  ssr: false,
-});
-
-const FounderStory = dynamic(
-  () => import("@/components/FounderStory/FounderStory"),
-  { ssr: false },
-);
-
-export default function Home() {
-  const [ctaBannerEnabled, setCtaBannerEnabled] = useState(true);
-
-  useEffect(() => {
-    // Check feature flag on client-side only to avoid hydration mismatch
-    const envValue = process.env.NEXT_PUBLIC_ENABLE_CTABANNER;
-    if (envValue !== undefined) {
-      setCtaBannerEnabled(envValue === "true" || envValue === "1");
-    } else {
-      // Default to enabled if not specified
-      setCtaBannerEnabled(true);
+export default async function Home() {
+  let heroUrls: string[] = [FALLBACK_LANDING_PHOTO_URL];
+  try {
+    const result = await getLandingHeroSlideUrls();
+    if (result.success && result.data && result.data.length > 0) {
+      heroUrls = result.data;
     }
-  }, []);
+  } catch {
+    // use fallback
+  }
 
-  return (
-    <S.PageContainer>
-      <Navigation />
-      <LandingPage />
-      <ProductShowcase />
-      <HealthBenefits />
-      <WhyMocktails />
-      {ctaBannerEnabled && <CTABanner />}
-      <FounderStory />
-      <Footer />
-    </S.PageContainer>
-  );
+  return <HomePageClient heroUrls={heroUrls} />;
 }

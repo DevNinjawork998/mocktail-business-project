@@ -1,8 +1,13 @@
-import IngredientForm from "@/components/IngredientForm";
+"use client";
 
-export const metadata = {
-  title: "New Ingredient | Admin Dashboard",
-};
+import dynamic from "next/dynamic";
+
+const IngredientForm = dynamic(
+  () => import("@/components/IngredientForm/IngredientForm"),
+  {
+    ssr: false,
+  },
+);
 
 export default function NewIngredientPage() {
   return (

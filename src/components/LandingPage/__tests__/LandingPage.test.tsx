@@ -35,23 +35,25 @@ jest.mock("../../HeroSlideshow/HeroSlideshow", () => {
   };
 });
 
+const TEST_HERO_URLS = ["https://example.com/hero.jpg"];
+
 describe("LandingPage", () => {
   it("renders badge text", () => {
-    render(<LandingPage />);
+    render(<LandingPage heroUrls={TEST_HERO_URLS} />);
     expect(
       screen.getByText(/Fresh. Functional. Delicious./i),
     ).toBeInTheDocument();
   });
 
   it("renders main title", () => {
-    render(<LandingPage />);
+    render(<LandingPage heroUrls={TEST_HERO_URLS} />);
     const title = screen.getByRole("heading", { level: 1 });
     expect(title).toHaveTextContent(/Mocktails that/i);
     expect(title).toHaveTextContent(/Fuel your day/i);
   });
 
   it("renders subtitle", () => {
-    render(<LandingPage />);
+    render(<LandingPage heroUrls={TEST_HERO_URLS} />);
     expect(
       screen.getByText(/These aren't just mocktails/i),
     ).toBeInTheDocument();
@@ -59,7 +61,7 @@ describe("LandingPage", () => {
   });
 
   it("renders CTA buttons", () => {
-    render(<LandingPage />);
+    render(<LandingPage heroUrls={TEST_HERO_URLS} />);
     expect(screen.getByRole("link", { name: /Shop Now/i })).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Explore Ingredients/i }),
@@ -67,7 +69,7 @@ describe("LandingPage", () => {
   });
 
   it("CTA buttons link to correct pages", () => {
-    render(<LandingPage />);
+    render(<LandingPage heroUrls={TEST_HERO_URLS} />);
     const shopNowLink = screen.getByRole("link", { name: /Shop Now/i });
     const exploreFlavorsLink = screen.getByRole("link", {
       name: /Explore Ingredients/i,
@@ -78,12 +80,12 @@ describe("LandingPage", () => {
   });
 
   it("renders hero slideshow component", () => {
-    render(<LandingPage />);
+    render(<LandingPage heroUrls={TEST_HERO_URLS} />);
     expect(screen.getByTestId("hero-slideshow")).toBeInTheDocument();
   });
 
   it("renders running banner component", () => {
-    render(<LandingPage />);
+    render(<LandingPage heroUrls={TEST_HERO_URLS} />);
     expect(screen.getByTestId("running-banner")).toBeInTheDocument();
   });
 });

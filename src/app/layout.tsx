@@ -1,14 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins, Raleway } from "next/font/google";
 import "./globals.css";
+import StyledComponentsRegistry from "@/app/lib/registry";
 import { ThemeProvider } from "@/theme/theme-provider";
 import { StyledThemeWrapper } from "@/theme/styled-theme-provider";
-import StyledComponentsRegistry from "./lib/registry";
-import { Analytics } from "@vercel/analytics/next";
 import { CartProvider } from "@/contexts/CartContext";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import StructuredData from "@/components/StructuredData/StructuredData";
 import GoogleAdsTag from "@/components/GoogleAdsTag/GoogleAdsTag";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -81,20 +81,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Preconnect to CDN for faster image loading */}
-        <link
-          rel="preconnect"
-          href="https://qchbny9v2p.ufs.sh"
-          crossOrigin="anonymous"
-        />
-        <link rel="dns-prefetch" href="https://qchbny9v2p.ufs.sh" />
-      </head>
+    <html key="mocktails-app-html" lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} ${raleway.variable}`}>
-        <GoogleAdsTag />
-        {/* Structured Data for Organization Logo - Google uses this for site logo in search results */}
-        <StructuredData />
+        <GoogleAdsTag key="google-ads" />
+        <StructuredData key="structured-data" />
         <StyledComponentsRegistry>
           <ThemeProvider>
             <StyledThemeWrapper>

@@ -50,6 +50,11 @@ const customJestConfig = {
     "!src/app/api/**/*.{ts,tsx}",
     // Exclude Next.js lib files that use server-side features
     "!src/app/lib/**/*.{ts,tsx}",
+    // Exclude top-level page client components (page-level UI, covered by E2E)
+    "!src/app/HomePageClient.tsx",
+    // Exclude thin wrapper/utility UI components (provider-like, no business logic)
+    "!src/components/ui/AppWrapper/AppWrapper.tsx",
+    "!src/components/ui/ClientOnly/ClientOnly.tsx",
     // Exclude admin dashboard client components (internal admin tools)
     "!src/app/(admin)/dashboard/**/*Client.tsx",
     "!src/app/(admin)/dashboard/DashboardClient.tsx",

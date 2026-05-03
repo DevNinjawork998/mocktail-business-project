@@ -1,25 +1,13 @@
 import Link from "next/link";
-import { getLandingHeroSlideUrls } from "@/app/actions/settings";
 import * as S from "./LandingPage.styles";
 import RunningBanner from "../RunningBanner/RunningBanner";
 import HeroSlideshow from "../HeroSlideshow/HeroSlideshow";
 
-const FALLBACK_LANDING_PHOTO_URL =
-  process.env.NEXT_PUBLIC_LANDING_PHOTO_URL ||
-  "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLDgNsR5ihjkVF8eaqWlO3pXP4g9ZHb0cCNLnI";
+interface LandingPageProps {
+  heroUrls: string[];
+}
 
-const LandingPage = async () => {
-  // Fetch hero URLs server-side to make image discoverable from HTML
-  let heroUrls: string[] = [FALLBACK_LANDING_PHOTO_URL];
-  try {
-    const result = await getLandingHeroSlideUrls();
-    if (result.success && result.data && result.data.length > 0) {
-      heroUrls = result.data;
-    }
-  } catch (error) {
-    console.error("Error fetching landing hero slides:", error);
-  }
-
+const LandingPage = ({ heroUrls }: LandingPageProps) => {
   return (
     <S.LandingSection>
       <RunningBanner />

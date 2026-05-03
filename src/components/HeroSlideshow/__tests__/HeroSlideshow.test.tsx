@@ -1,7 +1,6 @@
 import React from "react";
-import { render, screen, waitFor } from "../../../__tests__/test-utils";
+import { render, screen } from "../../../__tests__/test-utils";
 import HeroSlideshow from "../HeroSlideshow";
-import * as settingsActions from "@/app/actions/settings";
 
 const FALLBACK_SRC =
   process.env.NEXT_PUBLIC_LANDING_PHOTO_URL ||
@@ -26,71 +25,47 @@ jest.mock("next/image", () => ({
   },
 }));
 
-jest.mock("@/app/actions/settings", () => ({
-  getLandingHeroSlideUrls: jest.fn(),
-}));
-
-/** Wait until async fetch + loading gate finish so effects run inside RTL act(). */
-async function waitForHeroReady(): Promise<void> {
-  await waitFor(() => {
-    expect(
-      screen.getByAltText("Mocktails On the Go - Fresh Mocktail"),
-    ).toBeInTheDocument();
-  });
-}
-
 describe("HeroSlideshow", () => {
-  beforeEach(() => {
-    (
-      settingsActions.getLandingHeroSlideUrls as jest.MockedFunction<
-        typeof settingsActions.getLandingHeroSlideUrls
-      >
-    ).mockResolvedValue({
-      success: true,
-      data: [] as string[],
-    });
-  });
-
-  it("renders the hero image with correct src and alt", async () => {
-    render(<HeroSlideshow />);
-
-    await waitForHeroReady();
+  it("renders the hero image with correct src and alt", () => {
+    render(
+      <HeroSlideshow heroUrls={[FALLBACK_SRC]} firstImageUrl={FALLBACK_SRC} />,
+    );
 
     const image = screen.getByAltText("Mocktails On the Go - Fresh Mocktail");
     expect(image).toHaveAttribute("src", FALLBACK_SRC);
   });
 
-  it("renders the image with priority prop", async () => {
-    render(<HeroSlideshow />);
-
-    await waitForHeroReady();
+  it("renders the image with priority prop", () => {
+    render(
+      <HeroSlideshow heroUrls={[FALLBACK_SRC]} firstImageUrl={FALLBACK_SRC} />,
+    );
 
     const image = screen.getByAltText("Mocktails On the Go - Fresh Mocktail");
     expect(image).toHaveAttribute("data-priority", "true");
   });
 
-  it("renders the adaptogen badge", async () => {
-    render(<HeroSlideshow />);
-
-    await waitForHeroReady();
+  it("renders the adaptogen badge", () => {
+    render(
+      <HeroSlideshow heroUrls={[FALLBACK_SRC]} firstImageUrl={FALLBACK_SRC} />,
+    );
 
     expect(screen.getByText("🌿 Adaptogen Powered")).toBeInTheDocument();
   });
 
-  it("renders the fruit badge", async () => {
-    render(<HeroSlideshow />);
-
-    await waitForHeroReady();
+  it("renders the fruit badge", () => {
+    render(
+      <HeroSlideshow heroUrls={[FALLBACK_SRC]} firstImageUrl={FALLBACK_SRC} />,
+    );
 
     expect(
       screen.getByText("🍊 Wholesome Ingredients Only"),
     ).toBeInTheDocument();
   });
 
-  it("renders both badges", async () => {
-    render(<HeroSlideshow />);
-
-    await waitForHeroReady();
+  it("renders both badges", () => {
+    render(
+      <HeroSlideshow heroUrls={[FALLBACK_SRC]} firstImageUrl={FALLBACK_SRC} />,
+    );
 
     expect(screen.getByText("🌿 Adaptogen Powered")).toBeInTheDocument();
     expect(
@@ -98,31 +73,18 @@ describe("HeroSlideshow", () => {
     ).toBeInTheDocument();
   });
 
-  it("uses database slide URLs when provided", async () => {
-    (
-      settingsActions.getLandingHeroSlideUrls as jest.MockedFunction<
-        typeof settingsActions.getLandingHeroSlideUrls
-      >
-    ).mockResolvedValueOnce({
-      success: true,
-      data: [
-        "https://example.com/hero-a.jpg",
-        "https://example.com/hero-b.jpg",
-      ],
-    });
+  it("uses database slide URLs when provided", () => {
+    const urls = [
+      "https://example.com/hero-a.jpg",
+      "https://example.com/hero-b.jpg",
+    ];
 
-    render(<HeroSlideshow />);
-
-    await waitFor(() => {
-      const images = screen.getAllByAltText(
-        "Mocktails On the Go - Fresh Mocktail",
-      );
-      expect(images.length).toBe(2);
-    });
+    render(<HeroSlideshow heroUrls={urls} firstImageUrl={urls[0]} />);
 
     const images = screen.getAllByAltText(
       "Mocktails On the Go - Fresh Mocktail",
     );
+    expect(images.length).toBe(2);
     expect(images[0]).toHaveAttribute("src", "https://example.com/hero-a.jpg");
     expect(images[1]).toHaveAttribute("src", "https://example.com/hero-b.jpg");
   });
