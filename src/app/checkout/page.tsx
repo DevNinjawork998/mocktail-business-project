@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import CheckoutPageClient from "./CheckoutPageClient";
+
+export const metadata: Metadata = {
+  title: "Checkout | Mocktails On The Go",
+  robots: { index: false, follow: false },
+};
 import Navigation from "../../components/Navigation/Navigation";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Footer from "@/components/Footer/Footer";

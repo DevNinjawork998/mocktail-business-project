@@ -119,7 +119,6 @@ const CheckoutPageClient: React.FC<CheckoutPageClientProps> = ({
     },
   });
 
-
   const handleStripeCheckout = async () => {
     setLoading(true);
     try {

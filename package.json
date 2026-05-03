@@ -17,7 +17,6 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --watchAll=false",
-    "db:seed": "npx prisma generate && tsx prisma/seed.ts",
     "db:seed:prod": "tsx prisma/seed.prod.ts",
     "db:seed:from-backup": "tsx scripts/seed-from-backup.ts",
     "db:seed-admin": "tsx prisma/seed-admin.ts",

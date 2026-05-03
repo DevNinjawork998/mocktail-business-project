@@ -69,37 +69,56 @@ const normalizeFeatureLabel = (label: string): string => {
 
 async function run() {
   const products = await prisma.product.findMany();
-  
+
   for (const product of products) {
-    const ingredients = (product.ingredients as Array<string | { name: string; emoji?: string }> | null) || [];
-    
+    const ingredients =
+      (product.ingredients as Array<
+        string | { name: string; emoji?: string }
+      > | null) || [];
+
     // Convert current ingredients to array of strings for checking text
-    const ingredientStrings = ingredients.map(ing => typeof ing === "string" ? ing : ing.name);
-    
-    const hasMilk = ingredientStrings.some((ing) => ing.toLowerCase().includes("milk"));
+    const ingredientStrings = ingredients.map((ing) =>
+      typeof ing === "string" ? ing : ing.name,
+    );
+
+    const hasMilk = ingredientStrings.some((ing) =>
+      ing.toLowerCase().includes("milk"),
+    );
     const isMacaMartini = product.id === "maca-martini";
-    
+
     const defaultFeatures = baseDefaultFeatures.filter((f) => {
       if (hasMilk && f.label === "Vegan") return false;
       if (isMacaMartini && f.label === "Good Vit C") return false;
       return true;
     });
 
-    const currentFeatures = (product.features as Array<{ text: string; color?: string; icon?: string }>) || [];
-    
+    const currentFeatures =
+      (product.features as Array<{
+        text: string;
+        color?: string;
+        icon?: string;
+      }>) || [];
+
     const productSpecificFeatures = currentFeatures
       .filter((f) => !excludedFeatures.includes(f.text))
       .map((f) => {
         const normalizedLabel = normalizeFeatureLabel(f.text);
         return {
-          icon: f.icon || featureIconMap[normalizedLabel] || featureIconMap[f.text] || "✨",
+          icon:
+            f.icon ||
+            featureIconMap[normalizedLabel] ||
+            featureIconMap[f.text] ||
+            "✨",
           text: normalizedLabel,
-          color: f.color || "#451515"
+          color: f.color || "#451515",
         };
       });
-      
+
     const hasProductLessSugar = productSpecificFeatures.some(
-      (f) => f.text === "Less Sugar*" || f.text === "Less sugar" || f.text === "Less Sugar"
+      (f) =>
+        f.text === "Less Sugar*" ||
+        f.text === "Less sugar" ||
+        f.text === "Less Sugar",
     );
 
     const finalDefaultFeatures = hasProductLessSugar
@@ -107,22 +126,31 @@ async function run() {
       : defaultFeatures;
 
     // Combine default features with product-specific features
-    const allComputedFeatures = [...finalDefaultFeatures.map(f => ({ icon: f.icon, text: f.label, color: "#451515" })), ...productSpecificFeatures].filter(
+    const allComputedFeatures = [
+      ...finalDefaultFeatures.map((f) => ({
+        icon: f.icon,
+        text: f.label,
+        color: "#451515",
+      })),
+      ...productSpecificFeatures,
+    ].filter(
       (feature, index, self) =>
-        index === self.findIndex((f) => f.text === feature.text)
+        index === self.findIndex((f) => f.text === feature.text),
     );
-    
+
     console.log(`Updating product ${product.id} (${product.name}) features...`);
-    
+
     await prisma.product.update({
       where: { id: product.id },
       data: {
         features: allComputedFeatures as any,
-      }
+      },
     });
   }
-  
+
   console.log("Migration complete!");
 }
 
-run().catch(console.error).finally(() => prisma.$disconnect());
+run()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());

@@ -19,9 +19,7 @@ export default function SettingsClient({
   initialFounderStory = DEFAULT_FOUNDER_STORY,
 }: SettingsClientProps) {
   const router = useRouter();
-  const [slideUrls, setSlideUrls] = useState<string[]>(
-    initialLandingSlideUrls,
-  );
+  const [slideUrls, setSlideUrls] = useState<string[]>(initialLandingSlideUrls);
   const [addSlotKey, setAddSlotKey] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);

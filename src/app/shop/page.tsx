@@ -1,194 +1,44 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import type { Metadata } from "next";
 import Navigation from "../../components/Navigation/Navigation";
-import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
-import Image from "next/image";
-import {
-  ShopContainer,
-  ShopHeader,
-  ShopTitle,
-  ShopSubtitle,
-  ProductsGrid,
-  ProductCardLink,
-  ProductCard,
-  ProductImageContainer,
-  ProductImage,
-  ProductName,
-  ProductDescription,
-} from "./page.styles";
 import Footer from "@/components/Footer/Footer";
-import dynamic from "next/dynamic";
-import { getAllProducts, Product } from "@/data/productService";
+import ShopPageClient from "./ShopPageClient";
+import { getAllProducts, type Product } from "@/data/serverProductService";
 
-const HealthBenefits = dynamic(
-  () => import("@/components/HealthBenefits/HealthBenefits"),
-  {
-    ssr: false,
+export const metadata: Metadata = {
+  title: "Shop | Mocktails On The Go",
+  description:
+    "Explore our signature collection of adaptogenic mocktails. Premium halal-certified drinks crafted with functional herbs and natural ingredients.",
+  alternates: {
+    canonical: "https://mocktailsonthego.com/shop",
   },
-);
-
-const WhyMocktails = dynamic(
-  () => import("@/components/WhyMocktails/WhyMocktails"),
-  {
-    ssr: false,
+  openGraph: {
+    title: "Shop | Mocktails On The Go",
+    description:
+      "Explore our signature collection of adaptogenic mocktails. Premium halal-certified drinks crafted with functional herbs and natural ingredients.",
+    url: "https://mocktailsonthego.com/shop",
+    siteName: "Mocktails On The Go",
+    type: "website",
   },
-);
-
-const CTABanner = dynamic(() => import("@/components/CTABanner/CTABanner"), {
-  ssr: false,
-});
-
-const FounderStory = dynamic(
-  () => import("@/components/FounderStory/FounderStory"),
-  {
-    ssr: false,
+  twitter: {
+    card: "summary_large_image",
+    title: "Shop | Mocktails On The Go",
+    description:
+      "Explore our signature collection of adaptogenic mocktails. Premium halal-certified drinks crafted with functional herbs and natural ingredients.",
   },
-);
+};
 
-// Helper function to extract section title (h3) from longDescription HTML
-function extractSectionTitle(longDescription: string): string {
-  if (!longDescription) return "";
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(longDescription, "text/html");
-  const h3Element = doc.querySelector("h3");
-  return h3Element?.textContent?.trim() || "";
-}
-
-export default function ShopPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [ctaBannerEnabled, setCtaBannerEnabled] = useState(true);
-
-  const breadcrumbItems = [{ label: "Shop" }];
-
-  useEffect(() => {
-    // Check feature flag on client-side only to avoid hydration mismatch
-    const envValue = process.env.NEXT_PUBLIC_ENABLE_CTABANNER;
-    if (envValue !== undefined) {
-      setCtaBannerEnabled(envValue === "true" || envValue === "1");
-    } else {
-      // Default to enabled if not specified
-      setCtaBannerEnabled(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const productsData = await getAllProducts();
-        setProducts(productsData);
-      } catch (err) {
-        setError("Failed to load products");
-        console.error("Error fetching products:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  if (loading) {
-    return (
-      <>
-        <Navigation />
-        <Breadcrumb items={breadcrumbItems} />
-        <ShopContainer>
-          <ShopHeader>
-            <ShopTitle>Explore Our Ingredients</ShopTitle>
-            <ShopSubtitle>
-              Discover our premium collection of artisanal cocktail mixes,
-              crafted with the finest ingredients for the perfect drink
-              experience.
-            </ShopSubtitle>
-          </ShopHeader>
-          <div style={{ textAlign: "center", padding: "2rem" }}>
-            Loading products...
-          </div>
-        </ShopContainer>
-        <HealthBenefits />
-        <Footer />
-      </>
-    );
-  }
-
-  if (error) {
-    return (
-      <>
-        <Navigation />
-        <Breadcrumb items={breadcrumbItems} />
-        <ShopContainer>
-          <ShopHeader>
-            <ShopTitle>Explore Our Ingredients</ShopTitle>
-            <ShopSubtitle>
-              Discover our premium collection of artisanal cocktail mixes,
-              crafted with the finest ingredients for the perfect drink
-              experience.
-            </ShopSubtitle>
-          </ShopHeader>
-          <div style={{ textAlign: "center", padding: "2rem", color: "red" }}>
-            {error}
-          </div>
-        </ShopContainer>
-        <HealthBenefits />
-        <Footer />
-      </>
-    );
+export default async function ShopPage() {
+  let products: Product[] = [];
+  try {
+    products = await getAllProducts();
+  } catch {
+    products = [];
   }
 
   return (
     <>
       <Navigation />
-      <Breadcrumb items={breadcrumbItems} />
-      <ShopContainer>
-        <ShopHeader>
-          <ShopTitle>Our Signature Collection</ShopTitle>
-          <ShopSubtitle>
-            Each flavor is thoughtfully crafted with premium ingredients and
-            functional adaptogens.
-          </ShopSubtitle>
-        </ShopHeader>
-
-        <ProductsGrid>
-          {products.map((product) => (
-            <ProductCardLink key={product.id} href={`/shop/${product.id}`}>
-              <ProductCard>
-                <ProductImageContainer>
-                  {product.imageUrl ? (
-                    <div>
-                      <Image
-                        src={product.imageUrl}
-                        alt={product.name}
-                        fill
-                        style={{
-                          objectFit: "cover",
-                          objectPosition: "center",
-                        }}
-                        sizes="(max-width: 768px) 150px, 200px"
-                      />
-                    </div>
-                  ) : (
-                    <ProductImage $bgColor={product.imageColor}>
-                      {product.name}
-                    </ProductImage>
-                  )}
-                </ProductImageContainer>
-                <ProductName>{product.name}</ProductName>
-                <ProductDescription>
-                  {extractSectionTitle(product.longDescription) ||
-                    product.description}
-                </ProductDescription>
-              </ProductCard>
-            </ProductCardLink>
-          ))}
-        </ProductsGrid>
-      </ShopContainer>
-      <HealthBenefits />
-      <WhyMocktails />
-      {ctaBannerEnabled && <CTABanner />}
-      <FounderStory />
+      <ShopPageClient products={products} />
       <Footer />
     </>
   );

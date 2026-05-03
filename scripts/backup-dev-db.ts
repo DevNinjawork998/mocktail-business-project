@@ -85,10 +85,9 @@ async function main(): Promise<void> {
     const filename =
       outArg && outArg.endsWith(".json")
         ? outArg
-        : `prisma/dev-backup-${new Date()
-            .toISOString()
-            .replace(/[:.]/g, "-")
-            .split("T")[0]}.json`;
+        : `prisma/dev-backup-${
+            new Date().toISOString().replace(/[:.]/g, "-").split("T")[0]
+          }.json`;
 
     const absolutePath = resolve(__dirname, "..", filename);
 

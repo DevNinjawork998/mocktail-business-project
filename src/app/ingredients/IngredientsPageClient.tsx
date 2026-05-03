@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useRef,
-  type MouseEvent,
-  type TouchEvent,
-} from "react";
+import { useState, useRef, type MouseEvent, type TouchEvent } from "react";
 import Image from "next/image";
 import Navigation from "@/components/Navigation/Navigation";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
@@ -50,7 +45,9 @@ interface IngredientsPageClientProps {
 
 const breadcrumbItems = [{ label: "Ingredients" }];
 
-export default function IngredientsPageClient({ ingredients }: IngredientsPageClientProps) {
+export default function IngredientsPageClient({
+  ingredients,
+}: IngredientsPageClientProps) {
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [isDragging, setIsDragging] = useState(false);

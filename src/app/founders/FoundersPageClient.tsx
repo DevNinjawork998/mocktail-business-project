@@ -12,7 +12,9 @@ interface FoundersPageClientProps {
   storyData: FounderStoryData;
 }
 
-export default function FoundersPageClient({ storyData }: FoundersPageClientProps) {
+export default function FoundersPageClient({
+  storyData,
+}: FoundersPageClientProps) {
   const breadcrumbItems = [{ label: "Meet Our Founders" }];
 
   return (

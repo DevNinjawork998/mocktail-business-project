@@ -25,16 +25,18 @@ interface FounderStoryProps {
 
 const FounderStory = ({ storyData: initialStoryData }: FounderStoryProps) => {
   const [storyData, setStoryData] = useState<FounderStoryData>(
-    initialStoryData || DEFAULT_FOUNDER_STORY
+    initialStoryData || DEFAULT_FOUNDER_STORY,
   );
 
   useEffect(() => {
     if (!initialStoryData) {
-      getFounderStory().then((res) => {
-        if (res.success && res.data) {
-          setStoryData(res.data);
-        }
-      }).catch(console.error);
+      getFounderStory()
+        .then((res) => {
+          if (res.success && res.data) {
+            setStoryData(res.data);
+          }
+        })
+        .catch(console.error);
     }
   }, [initialStoryData]);
 

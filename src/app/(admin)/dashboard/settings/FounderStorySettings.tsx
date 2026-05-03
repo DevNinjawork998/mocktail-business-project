@@ -76,14 +76,23 @@ export default function FounderStorySettings({
       <S.SectionHeader>
         <S.SectionTitle>Founder Story</S.SectionTitle>
         <S.SectionDescription>
-          Update the content and image for the &quot;Meet Our Founder&quot; page.
+          Update the content and image for the &quot;Meet Our Founder&quot;
+          page.
         </S.SectionDescription>
       </S.SectionHeader>
 
       <S.FormSection>
         {/* Image */}
         <div>
-          <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 500, fontSize: "0.875rem", color: "#374151" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              color: "#374151",
+            }}
+          >
             Founder Photo
           </label>
           {data.imageUrl ? (
@@ -120,10 +129,20 @@ export default function FounderStorySettings({
 
         {/* Paragraphs */}
         <div>
-          <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 500, fontSize: "0.875rem", color: "#374151" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              color: "#374151",
+            }}
+          >
             Story Paragraphs
           </label>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+          >
             {data.paragraphs.map((p, index) => (
               <div key={index} style={{ position: "relative" }}>
                 <textarea
@@ -181,7 +200,15 @@ export default function FounderStorySettings({
 
         {/* Quote */}
         <div>
-          <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 500, fontSize: "0.875rem", color: "#374151" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              color: "#374151",
+            }}
+          >
             Quote Text
           </label>
           <input
@@ -200,7 +227,15 @@ export default function FounderStorySettings({
 
         {/* Quote Author */}
         <div>
-          <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 500, fontSize: "0.875rem", color: "#374151" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              color: "#374151",
+            }}
+          >
             Quote Author
           </label>
           <input

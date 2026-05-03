@@ -280,7 +280,9 @@ export async function removeLandingHeroSlideAt(
 /**
  * Update the landing photo URL (replaces all slides with a single image).
  */
-export async function updateLandingPhotoUrl(url: string): Promise<ActionResult> {
+export async function updateLandingPhotoUrl(
+  url: string,
+): Promise<ActionResult> {
   if (!url.trim().startsWith("http")) {
     return { success: false, error: "Invalid image URL" };
   }
@@ -299,7 +301,9 @@ const SETTINGS_KEY_FOUNDER_STORY = "founderStory";
 /**
  * Get the founder story from settings
  */
-export async function getFounderStory(): Promise<ActionResult<FounderStoryData>> {
+export async function getFounderStory(): Promise<
+  ActionResult<FounderStoryData>
+> {
   try {
     const hasDatabaseUrl =
       process.env.DATABASE_URL ||
@@ -321,12 +325,12 @@ export async function getFounderStory(): Promise<ActionResult<FounderStoryData>>
     if (row?.value) {
       try {
         const parsed = JSON.parse(row.value) as Partial<FounderStoryData>;
-        return { 
-          success: true, 
+        return {
+          success: true,
           data: {
             ...DEFAULT_FOUNDER_STORY,
-            ...parsed
-          }
+            ...parsed,
+          },
         };
       } catch {
         // Fall back to default
@@ -387,4 +391,3 @@ export async function setFounderStory(
     return { success: false, error: "Failed to save founder story" };
   }
 }
-

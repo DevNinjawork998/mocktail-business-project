@@ -1,5 +1,19 @@
+import type { Metadata } from "next";
 import React from "react";
 import Navigation from "@/components/Navigation/Navigation";
+
+export const metadata: Metadata = {
+  title: "Your Buddies | Mocktails On The Go",
+  description:
+    "See what our community is saying about Mocktails On The Go. Real reviews from real customers who love our adaptogenic mocktails.",
+  alternates: { canonical: "https://mocktailsonthego.com/your-buddies" },
+  openGraph: {
+    title: "Your Buddies | Mocktails On The Go",
+    description:
+      "See what our community is saying about Mocktails On The Go. Real reviews from real customers who love our adaptogenic mocktails.",
+    url: "https://mocktailsonthego.com/your-buddies",
+  },
+};
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Footer from "@/components/Footer/Footer";
 import Testimonials from "@/components/Testimonials/Testimonials";

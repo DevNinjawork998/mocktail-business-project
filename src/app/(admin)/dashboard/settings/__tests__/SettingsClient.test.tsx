@@ -95,9 +95,10 @@ describe("SettingsClient", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("img", { name: "Hero slide 1" }),
-    ).toHaveAttribute("src", "https://example.com/a.jpg");
+    expect(screen.getByRole("img", { name: "Hero slide 1" })).toHaveAttribute(
+      "src",
+      "https://example.com/a.jpg",
+    );
     expect(
       screen.getByRole("button", { name: "Remove hero image 1" }),
     ).toBeInTheDocument();
@@ -107,7 +108,9 @@ describe("SettingsClient", () => {
     const user = userEvent.setup();
     render(<SettingsClient initialLandingSlideUrls={[]} />);
 
-    const saveButton = screen.getByRole("button", { name: /save hero images/i });
+    const saveButton = screen.getByRole("button", {
+      name: /save hero images/i,
+    });
     expect(saveButton).toBeDisabled();
 
     await user.click(screen.getByTestId("upload-button"));
@@ -173,7 +176,9 @@ describe("SettingsClient", () => {
 
     await waitFor(() => {
       expect(mockSet).toHaveBeenCalledWith([]);
-      expect(screen.getByText("All landing hero images removed.")).toBeInTheDocument();
+      expect(
+        screen.getByText("All landing hero images removed."),
+      ).toBeInTheDocument();
     });
   });
 
@@ -201,7 +206,9 @@ describe("SettingsClient", () => {
 
     await user.click(screen.getByTestId("upload-button"));
 
-    const saveButton = screen.getByRole("button", { name: /save hero images/i });
+    const saveButton = screen.getByRole("button", {
+      name: /save hero images/i,
+    });
     await user.click(screen.getByTestId("trigger-upload"));
     expect(saveButton).toBeDisabled();
 

@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 
 export default async function FoundersPage() {
   const result = await getFounderStory();
-  const storyData = result.success && result.data ? result.data : DEFAULT_FOUNDER_STORY;
+  const storyData =
+    result.success && result.data ? result.data : DEFAULT_FOUNDER_STORY;
 
   return <FoundersPageClient storyData={storyData} />;
 }

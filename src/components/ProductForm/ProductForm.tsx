@@ -35,12 +35,18 @@ const productSchema = z.object({
     .min(1, "Main photo is required"),
   supportingPhoto1Url: z.url().optional().nullable(),
   supportingPhoto2Url: z.url().optional().nullable(),
-  features: z.array(z.object({ text: z.string(), icon: z.string().optional(), color: z.string().optional() })),
+  features: z.array(
+    z.object({
+      text: z.string(),
+      icon: z.string().optional(),
+      color: z.string().optional(),
+    }),
+  ),
   ingredients: z.array(
     z.object({
       name: z.string(),
       emoji: z.string().optional(),
-    })
+    }),
   ),
   productBrief: z.string().optional().nullable(),
 });
@@ -137,7 +143,9 @@ export default function ProductForm({ product }: ProductFormProps) {
       imageUrl: initialMainPhotoUrl || undefined,
       supportingPhoto1Url: initialSupportingPhoto1Url || undefined,
       supportingPhoto2Url: initialSupportingPhoto2Url || undefined,
-      features: product?.features || [{ icon: "✨", text: "", color: "#451515" }],
+      features: product?.features || [
+        { icon: "✨", text: "", color: "#451515" },
+      ],
       ingredients: (product?.ingredients ?? []).map((ing: any) => {
         if (typeof ing === "string") return { name: ing, emoji: "" };
         return { name: ing.name || "", emoji: ing.emoji || "" };
@@ -333,7 +341,7 @@ export default function ProductForm({ product }: ProductFormProps) {
         // Show success state briefly then re-enable button
         setTimeout(() => setIsSubmitting(false), 500);
       }
-      
+
       router.refresh();
     } else {
       setError(result.error);
@@ -574,7 +582,9 @@ export default function ProductForm({ product }: ProductFormProps) {
 
         <S.AddButton
           type="button"
-          onClick={() => appendFeature({ icon: "✨", text: "", color: "#451515" })}
+          onClick={() =>
+            appendFeature({ icon: "✨", text: "", color: "#451515" })
+          }
         >
           + Add Feature
         </S.AddButton>

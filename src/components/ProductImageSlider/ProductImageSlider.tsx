@@ -74,7 +74,9 @@ export default function ProductImageSlider({
     setIsDragging(false);
     if (images && cachedClientWidthRef.current > 0) {
       const scrollPosition = sliderRef.current!.scrollLeft;
-      const newIndex = Math.round(scrollPosition / cachedClientWidthRef.current);
+      const newIndex = Math.round(
+        scrollPosition / cachedClientWidthRef.current,
+      );
       setCurrentIndex(Math.max(0, Math.min(newIndex, images.length - 1)));
     }
   };
@@ -92,7 +94,13 @@ export default function ProductImageSlider({
   );
 
   const handleScroll = () => {
-    if (!sliderRef.current || !hasMultipleImages || !images || cachedClientWidthRef.current === 0) return;
+    if (
+      !sliderRef.current ||
+      !hasMultipleImages ||
+      !images ||
+      cachedClientWidthRef.current === 0
+    )
+      return;
     const scrollPosition = sliderRef.current.scrollLeft;
     const newIndex = Math.round(scrollPosition / cachedClientWidthRef.current);
     setCurrentIndex(Math.max(0, Math.min(newIndex, images.length - 1)));

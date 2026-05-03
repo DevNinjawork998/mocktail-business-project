@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins, Raleway } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/theme/theme-provider";
@@ -23,6 +23,11 @@ const raleway = Raleway({
   display: "swap",
   variable: "--font-raleway",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "Mocktails On The Go - Malaysia's 1st Ever Adaptogenic Mocktails",
@@ -58,7 +63,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Mocktails On The Go - Malaysia's 1st Ever Adaptogenic Mocktails",
     description:
       "Malaysia's 1st ever adaptogenic mocktails. 100% Halal Ingredients 0% Alcohol",
@@ -79,7 +84,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Preconnect to CDN for faster image loading */}
-        <link rel="preconnect" href="https://qchbny9v2p.ufs.sh" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://qchbny9v2p.ufs.sh"
+          crossOrigin="anonymous"
+        />
         <link rel="dns-prefetch" href="https://qchbny9v2p.ufs.sh" />
       </head>
       <body className={`${poppins.variable} ${raleway.variable}`}>

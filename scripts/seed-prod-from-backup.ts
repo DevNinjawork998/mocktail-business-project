@@ -16,7 +16,11 @@ config({
   override: true,
 });
 
-if (!process.env.DATABASE_URL && !process.env.DIRECT_URL && !process.env.POSTGRES_URL) {
+if (
+  !process.env.DATABASE_URL &&
+  !process.env.DIRECT_URL &&
+  !process.env.POSTGRES_URL
+) {
   console.error(
     "❌ Error: DATABASE_URL, DIRECT_URL, or POSTGRES_URL required in .env.production.local",
   );
@@ -98,9 +102,7 @@ async function main(): Promise<void> {
     await prisma.productImage.createMany({
       data: backupData.productImages as never[],
     });
-    console.log(
-      `✅ Seeded ${backupData.productImages.length} product images`,
-    );
+    console.log(`✅ Seeded ${backupData.productImages.length} product images`);
   }
 
   if (backupData.ingredients?.length) {

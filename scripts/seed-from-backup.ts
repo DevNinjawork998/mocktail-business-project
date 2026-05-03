@@ -23,17 +23,23 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const backupFilePath = process.argv[2] || "prisma/prod-backup-2026-02-14.json";
-  
+  const backupFilePath =
+    process.argv[2] || "prisma/prod-backup-2026-02-14.json";
+
   try {
     console.log(`🔄 Reading backup file from: ${backupFilePath}`);
-    
+
     // Read and parse the backup file
-    const fileContent = readFileSync(resolve(__dirname, "..", backupFilePath), "utf-8");
+    const fileContent = readFileSync(
+      resolve(__dirname, "..", backupFilePath),
+      "utf-8",
+    );
     const backupData = JSON.parse(fileContent);
-    
-    console.log(`✅ Loaded backup created at: ${backupData.exportedAt || 'Unknown'}`);
-    
+
+    console.log(
+      `✅ Loaded backup created at: ${backupData.exportedAt || "Unknown"}`,
+    );
+
     // Clear existing data (optional, but recommended for clean seed)
     console.log(`🧹 Clearing existing data...`);
     // Delete in reverse order of dependencies to avoid foreign key constraints
@@ -44,10 +50,10 @@ async function main() {
     await prisma.product.deleteMany();
     // Leaving users alone to avoid wiping out dev admin accounts, or wipe them if preferred
     // await prisma.user.deleteMany();
-    
+
     // Insert new data
     console.log(`🌱 Seeding data...`);
-    
+
     if (backupData.products && backupData.products.length > 0) {
       await prisma.product.createMany({
         data: backupData.products,
@@ -55,7 +61,7 @@ async function main() {
       });
       console.log(`✅ Seeded ${backupData.products.length} products`);
     }
-    
+
     if (backupData.ingredients && backupData.ingredients.length > 0) {
       await prisma.ingredient.createMany({
         data: backupData.ingredients,
@@ -63,7 +69,7 @@ async function main() {
       });
       console.log(`✅ Seeded ${backupData.ingredients.length} ingredients`);
     }
-    
+
     if (backupData.testimonials && backupData.testimonials.length > 0) {
       await prisma.testimonial.createMany({
         data: backupData.testimonials,
@@ -71,15 +77,17 @@ async function main() {
       });
       console.log(`✅ Seeded ${backupData.testimonials.length} testimonials`);
     }
-    
+
     if (backupData.instagramPosts && backupData.instagramPosts.length > 0) {
       await prisma.instagramPost.createMany({
         data: backupData.instagramPosts,
         skipDuplicates: true,
       });
-      console.log(`✅ Seeded ${backupData.instagramPosts.length} Instagram posts`);
+      console.log(
+        `✅ Seeded ${backupData.instagramPosts.length} Instagram posts`,
+      );
     }
-    
+
     if (backupData.users && backupData.users.length > 0) {
       // For users, we might want to be careful not to overwrite local test users
       // so we use skipDuplicates

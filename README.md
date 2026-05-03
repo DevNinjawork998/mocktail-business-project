@@ -94,6 +94,7 @@ A modern Next.js e-commerce application for a cocktail business, featuring dynam
    Create `.env.local` for development:
 
    **For Docker (PostgreSQL) setup:**
+
    ```env
    # Docker / local Postgres
    POSTGRES_URL=postgresql://postgres:password@localhost:5432/cocktail_db?schema=public
@@ -103,6 +104,7 @@ A modern Next.js e-commerce application for a cocktail business, featuring dynam
    ```
 
    **For SQLite setup:**
+
    ```env
    DATABASE_URL="file:./dev.db"
    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="your_stripe_public_key"
@@ -113,14 +115,17 @@ A modern Next.js e-commerce application for a cocktail business, featuring dynam
 
    **Option A: Using Docker (Recommended for PostgreSQL development)**
    Start a local PostgreSQL database using Docker Compose:
+
    ```bash
    npm run db:docker:up
    npm run db:dev
    npm run db:seed
    ```
-   *To stop the database later, run `npm run db:docker:down`.*
+
+   _To stop the database later, run `npm run db:docker:down`._
 
    **Option B: Using SQLite (Without Docker)**
+
    ```bash
    # Make sure DATABASE_URL in .env.local points to "file:./dev.db"
    npm run db:dev
@@ -128,6 +133,7 @@ A modern Next.js e-commerce application for a cocktail business, featuring dynam
    ```
 
    **For production (PostgreSQL)**
+
    ```bash
    npm run db:prod
    npx prisma migrate deploy

@@ -16,7 +16,7 @@ export default async function EditProductPage({
   const { id } = await params;
 
   // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
-   
+
   const product = (await (prisma.product.findUnique as any)({
     where: { id },
     include: {
@@ -51,8 +51,14 @@ export default async function EditProductPage({
 
   const formattedProduct = {
     ...product,
-    features: product.features as Array<{ text: string; icon?: string; color?: string }>,
-    ingredients: product.ingredients as Array<string | { name: string; emoji?: string }> | null,
+    features: product.features as Array<{
+      text: string;
+      icon?: string;
+      color?: string;
+    }>,
+    ingredients: product.ingredients as Array<
+      string | { name: string; emoji?: string }
+    > | null,
     images: product.images.map((img) => ({
       url: img.url,
       order: img.order,

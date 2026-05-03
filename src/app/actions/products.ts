@@ -61,9 +61,7 @@ const productSchema = z.object({
   price: z.string().min(1, "Price is required"),
   priceSubtext: z.string().min(1, "Price subtext is required"),
   imageColor: z.string().min(1, "Image color is required"),
-  imageUrl: z
-    .url("Main photo is required")
-    .min(1, "Main photo is required"),
+  imageUrl: z.url("Main photo is required").min(1, "Main photo is required"),
   supportingPhoto1Url: z
     .union([z.url(), z.literal(""), z.null(), z.undefined()])
     .transform((val) =>
@@ -78,13 +76,22 @@ const productSchema = z.object({
     )
     .nullable()
     .optional(),
-  features: z.array(z.object({ text: z.string(), icon: z.string().optional(), color: z.string().optional() })),
-  ingredients: z.array(
+  features: z.array(
     z.object({
-      name: z.string(),
-      emoji: z.string().optional(),
-    })
-  ).optional().nullable(),
+      text: z.string(),
+      icon: z.string().optional(),
+      color: z.string().optional(),
+    }),
+  ),
+  ingredients: z
+    .array(
+      z.object({
+        name: z.string(),
+        emoji: z.string().optional(),
+      }),
+    )
+    .optional()
+    .nullable(),
   productBrief: z.string().optional().nullable(),
 });
 
@@ -107,7 +114,7 @@ export async function createProduct(
     }
 
     // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
-     
+
     const product = await (prisma.product.create as any)({
       data: {
         name: validated.name,
@@ -182,7 +189,7 @@ export async function updateProduct(
 
     // Get the current product with images to check what needs to be deleted
     // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
-     
+
     const currentProduct = (await (prisma.product.findUnique as any)({
       where: { id },
       select: {
@@ -224,7 +231,7 @@ export async function updateProduct(
         // Main photo is being replaced
         urlsToDelete.push(existingMainPhoto.url);
         // Update existing ProductImage record
-         
+
         await ((prisma as any).productImage.update as any)({
           where: { id: existingMainPhoto.id },
           data: { url: validated.imageUrl },
@@ -233,7 +240,7 @@ export async function updateProduct(
       // If URL is the same, no update needed
     } else {
       // Create new ProductImage record for main photo
-       
+
       await ((prisma as any).productImage.create as any)({
         data: {
           productId: id,
@@ -256,7 +263,7 @@ export async function updateProduct(
         // Update existing record if URL changed
         if (existingSupportingPhoto1.url !== validated.supportingPhoto1Url) {
           urlsToDelete.push(existingSupportingPhoto1.url);
-           
+
           await ((prisma as any).productImage.update as any)({
             where: { id: existingSupportingPhoto1.id },
             data: { url: validated.supportingPhoto1Url },
@@ -264,7 +271,7 @@ export async function updateProduct(
         }
       } else {
         // Create new ProductImage record at order 1
-         
+
         await ((prisma as any).productImage.create as any)({
           data: {
             productId: id,
@@ -277,7 +284,7 @@ export async function updateProduct(
       // Delete supporting photo 1 if it exists (no shifting)
       if (existingSupportingPhoto1) {
         urlsToDelete.push(existingSupportingPhoto1.url);
-         
+
         await ((prisma as any).productImage.delete as any)({
           where: { id: existingSupportingPhoto1.id },
         });
@@ -290,9 +297,9 @@ export async function updateProduct(
         // Update existing record if URL changed
         if (existingSupportingPhoto2.url !== validated.supportingPhoto2Url) {
           urlsToDelete.push(existingSupportingPhoto2.url);
-           
+
           const productImageUpdate = (prisma as any).productImage.update;
-           
+
           await (productImageUpdate as any)({
             where: { id: existingSupportingPhoto2.id },
             data: { url: validated.supportingPhoto2Url },
@@ -300,9 +307,9 @@ export async function updateProduct(
         }
       } else {
         // Create new ProductImage record at order 2
-         
+
         const productImageCreate = (prisma as any).productImage.create;
-         
+
         await (productImageCreate as any)({
           data: {
             productId: id,
@@ -315,9 +322,9 @@ export async function updateProduct(
       // Delete supporting photo 2 if it exists (no shifting)
       if (existingSupportingPhoto2) {
         urlsToDelete.push(existingSupportingPhoto2.url);
-         
+
         const productImageDelete = (prisma as any).productImage.delete;
-         
+
         await (productImageDelete as any)({
           where: { id: existingSupportingPhoto2.id },
         });
@@ -370,7 +377,7 @@ export async function deleteProduct(id: string): Promise<ActionResult> {
   try {
     // First, get the product with all images to delete from UploadThing
     // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
-     
+
     const product = (await (prisma.product.findUnique as any)({
       where: { id },
       select: {

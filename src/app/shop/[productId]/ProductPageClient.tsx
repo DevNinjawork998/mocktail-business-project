@@ -290,7 +290,10 @@ export default function ProductPageClient({
   };
 
   // Data from Prisma database
-  const rawIngredients = product.ingredients as Array<string | { name: string; emoji?: string }> | undefined | null;
+  const rawIngredients = product.ingredients as
+    | Array<string | { name: string; emoji?: string }>
+    | undefined
+    | null;
   const ingredients = useMemo(() => {
     if (!rawIngredients || rawIngredients.length === 0) return [];
     return rawIngredients.map((ing) => {
@@ -302,7 +305,7 @@ export default function ProductPageClient({
   // Extract features directly from product data, defaulting to empty array if none exist
   const features = useMemo(() => {
     if (!product.features || !Array.isArray(product.features)) return [];
-    
+
     return product.features.map((f: any) => ({
       icon: f.icon || "✨",
       label: f.text || "",

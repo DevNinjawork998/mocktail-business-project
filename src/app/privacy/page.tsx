@@ -1,9 +1,15 @@
-"use client";
-
-import React from "react";
+import type { Metadata } from "next";
 import Navigation from "@/components/Navigation/Navigation";
 import Footer from "@/components/Footer/Footer";
 import * as S from "./page.styles";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Mocktails On The Go",
+  description:
+    "Read the Mocktails On The Go privacy policy to understand how we collect, use, and protect your personal information.",
+  alternates: { canonical: "https://mocktailsonthego.com/privacy" },
+  robots: { index: true, follow: false },
+};
 
 export default function PrivacyPage() {
   return (
