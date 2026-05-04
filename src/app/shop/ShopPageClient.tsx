@@ -42,9 +42,7 @@ function extractSectionTitle(longDescription: string): string {
   if (!longDescription) return "";
   const match = longDescription.match(/<h3[^>]*>([\s\S]*?)<\/h3>/i);
   if (!match) return "";
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(match[1], "text/html");
-  return (doc.body.textContent || "").trim();
+  return match[1].replace(/<[^>]+>/g, "").trim();
 }
 
 interface ShopPageClientProps {
