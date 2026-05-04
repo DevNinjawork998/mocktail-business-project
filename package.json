@@ -94,6 +94,7 @@
     "not ie 11"
   ],
   "overrides": {
+    "postcss": "^8.5.13",
     "smol-toml": "^1.6.1",
     "srvx": "^0.11.13",
     "@hono/node-server": "^1.19.10",
