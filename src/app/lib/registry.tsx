@@ -1,12 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useServerInsertedHTML } from "next/navigation";
-import {
-  ServerStyleSheet,
-  StyleSheetManager,
-  ThemeProvider,
-} from "styled-components";
+import React from "react";
+import { ThemeProvider } from "styled-components";
 import { styledTheme } from "@/theme/styled-theme";
 import { semanticColors } from "@/theme/colors";
 
@@ -23,21 +18,5 @@ export default function StyledComponentsRegistry({
 }: {
   children: React.ReactNode;
 }) {
-  const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
-
-  useServerInsertedHTML(() => {
-    const styles = styledComponentsStyleSheet.getStyleElement();
-    styledComponentsStyleSheet.instance.clearTag();
-    return <>{styles}</>;
-  });
-
-  if (typeof window === "undefined") {
-    return (
-      <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
-        <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>
-      </StyleSheetManager>
-    );
-  }
-
   return <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>;
 }

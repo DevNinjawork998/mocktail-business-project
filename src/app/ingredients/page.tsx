@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
+import IngredientsPageClient, {
+  type Ingredient,
+} from "./IngredientsPageClient";
 
 export const metadata: Metadata = {
   title: "Our Ingredients | Mocktails On The Go",
@@ -13,12 +15,28 @@ export const metadata: Metadata = {
     url: "https://mocktailsonthego.com/ingredients",
   },
 };
-import IngredientsPageClient from "./IngredientsPageClient";
+
+export const dynamic = "force-dynamic";
 
 export default async function IngredientsPage() {
-  const ingredients = await prisma.ingredient.findMany({
-    orderBy: { order: "asc" },
-  });
+  const hasDatabaseUrl =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.DIRECT_URL ||
+    process.env.PRISMA_DATABASE_URL;
+
+  let ingredients: Ingredient[] = [];
+
+  if (hasDatabaseUrl) {
+    try {
+      const { prisma } = await import("@/lib/prisma");
+      ingredients = await prisma.ingredient
+        .findMany({ orderBy: { order: "asc" } })
+        .catch(() => []);
+    } catch (_error) {
+      // Silently handle errors — empty array will be used
+    }
+  }
 
   return <IngredientsPageClient ingredients={ingredients} />;
 }
