@@ -28,7 +28,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               select: { role: true },
             });
             token.role = dbUser?.role ?? "EDITOR";
-          } catch {
+          } catch (error) {
+            console.error(
+              "Failed to fetch user role during OAuth sign-in:",
+              error,
+            );
             token.role = "EDITOR";
           }
         } else {
