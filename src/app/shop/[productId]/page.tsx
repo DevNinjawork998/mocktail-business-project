@@ -5,6 +5,7 @@ import Navigation from "../../../components/Navigation/Navigation";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Footer from "@/components/Footer/Footer";
 import { getProductById, getOtherProducts } from "@/data/serverProductService";
+import { cartFlag } from "@/flags";
 
 interface ProductPageProps {
   params: Promise<{
@@ -60,7 +61,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
       notFound();
     }
 
-    const otherProducts = await getOtherProducts(productId);
+    const [otherProducts, cartIconEnabled] = await Promise.all([
+      getOtherProducts(productId),
+      cartFlag(),
+    ]);
 
     const breadcrumbItems = [
       { label: "Shop", href: "/shop" },
@@ -97,7 +101,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
         />
-        <Navigation />
+        <Navigation cartIconEnabled={cartIconEnabled} />
         <Breadcrumb items={breadcrumbItems} />
         <ProductPageWrapper product={product} otherProducts={otherProducts} />
         <Footer />

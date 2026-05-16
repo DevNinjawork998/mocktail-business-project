@@ -3,6 +3,7 @@ import Navigation from "@/components/Navigation/Navigation";
 import Footer from "@/components/Footer/Footer";
 import * as S from "./page.styles";
 import ClientOnly from "@/components/ui/ClientOnly/ClientOnly";
+import { cartFlag } from "@/flags";
 
 export const metadata: Metadata = {
   title: "Careers | Mocktails On The Go",
@@ -17,11 +18,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const cartIconEnabled = await cartFlag();
   return (
     <ClientOnly>
       <S.PageContainer>
-        <Navigation />
+        <Navigation cartIconEnabled={cartIconEnabled} />
         <S.ContentSection>
           <S.Title>Careers</S.Title>
           <S.Paragraph>
