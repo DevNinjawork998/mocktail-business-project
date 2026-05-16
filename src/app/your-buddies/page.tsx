@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Navigation from "@/components/Navigation/Navigation";
+import { cartFlag } from "@/flags";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Footer from "@/components/Footer/Footer";
 import Testimonials from "@/components/Testimonials/Testimonials";
@@ -44,6 +45,8 @@ export default async function YourBuddiesPage() {
     imageUrl: string | null;
   }> = [];
 
+  const cartIconEnabled = await cartFlag();
+
   if (hasDatabaseUrl) {
     try {
       const { prisma } = await import("@/lib/prisma");
@@ -79,7 +82,7 @@ export default async function YourBuddiesPage() {
 
   return (
     <YourBuddiesPageWrapper>
-      <Navigation />
+      <Navigation cartIconEnabled={cartIconEnabled} />
       <Breadcrumb items={breadcrumbItems} />
       <Testimonials testimonials={testimonials} />
       <Community instagramPosts={instagramPosts} />

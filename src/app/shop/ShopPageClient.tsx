@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Image from "next/image";
 import {
@@ -47,21 +46,14 @@ function extractSectionTitle(longDescription: string): string {
 
 interface ShopPageClientProps {
   products: Product[];
+  ctaBannerEnabled: boolean;
 }
 
-export default function ShopPageClient({ products }: ShopPageClientProps) {
-  const [ctaBannerEnabled, setCtaBannerEnabled] = useState(true);
-
+export default function ShopPageClient({
+  products,
+  ctaBannerEnabled,
+}: ShopPageClientProps) {
   const breadcrumbItems = [{ label: "Shop" }];
-
-  useEffect(() => {
-    const envValue = process.env.NEXT_PUBLIC_ENABLE_CTABANNER;
-    if (envValue !== undefined) {
-      setCtaBannerEnabled(envValue === "true" || envValue === "1");
-    } else {
-      setCtaBannerEnabled(true);
-    }
-  }, []);
 
   return (
     <>

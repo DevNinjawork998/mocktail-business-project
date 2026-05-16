@@ -9,22 +9,25 @@ export const metadata: Metadata = {
 import Navigation from "../../components/Navigation/Navigation";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Footer from "@/components/Footer/Footer";
-import { isStripeEnabled } from "@/lib/featureFlags";
+import { stripeFlag, cartFlag } from "@/flags";
 
 export const dynamic = "force-dynamic";
 
-export default function CheckoutPage() {
+export default async function CheckoutPage() {
   const breadcrumbItems = [
     { label: "Shop", href: "/shop" },
     { label: "Cart", href: "/cart" },
     { label: "Checkout" },
   ];
 
-  const stripeEnabled = isStripeEnabled();
+  const [stripeEnabled, cartIconEnabled] = await Promise.all([
+    stripeFlag(),
+    cartFlag(),
+  ]);
 
   return (
     <>
-      <Navigation />
+      <Navigation cartIconEnabled={cartIconEnabled} />
       <Breadcrumb items={breadcrumbItems} />
       <CheckoutPageClient stripeEnabled={stripeEnabled} />
       <Footer />
