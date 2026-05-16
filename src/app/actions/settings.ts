@@ -95,7 +95,13 @@ async function fetchLandingSlideUrlsFromDatabase(): Promise<string[]> {
     .findUnique({
       where: { key: SETTINGS_KEY_LANDING_HERO_SLIDE_URLS },
     })
-    .catch(() => null);
+    .catch((error) => {
+      console.error(
+        "Failed to read landing hero slide URLs from settings:",
+        error,
+      );
+      return null;
+    });
 
   if (slidesRow) {
     const fromJson = parseSlideUrlsJson(slidesRow.value);
@@ -108,7 +114,13 @@ async function fetchLandingSlideUrlsFromDatabase(): Promise<string[]> {
     .findUnique({
       where: { key: SETTINGS_KEY_LANDING_PHOTO },
     })
-    .catch(() => null);
+    .catch((error) => {
+      console.error(
+        "Failed to read legacy landing photo URL from settings:",
+        error,
+      );
+      return null;
+    });
 
   const legacy = legacyRow?.value?.trim();
   if (legacy && legacy.startsWith("http")) {
@@ -320,7 +332,10 @@ export async function getFounderStory(): Promise<
       .findUnique({
         where: { key: SETTINGS_KEY_FOUNDER_STORY },
       })
-      .catch(() => null);
+      .catch((error) => {
+        console.error("Failed to read founder story from settings:", error);
+        return null;
+      });
 
     if (row?.value) {
       try {

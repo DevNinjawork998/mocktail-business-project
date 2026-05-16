@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { getDeleterRoles } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
 // Check if a URL is from UploadThing (supports both utfs.io and ufs.sh domains)
@@ -95,6 +97,11 @@ const products = [
 ];
 
 export async function POST() {
+  const session = await auth();
+  if (!session?.user || !getDeleterRoles().includes(session.user.role)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     // Get existing products to preserve UploadThing URLs
     const existingProducts = await prisma.product.findMany({

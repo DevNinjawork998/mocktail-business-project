@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { getDeleterRoles } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
 // Product image mappings - add your UploadThing URLs here
@@ -10,6 +12,11 @@ const productImageUpdates: Record<string, string> = {
 };
 
 export async function POST() {
+  const session = await auth();
+  if (!session?.user || !getDeleterRoles().includes(session.user.role)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const results = [];
 
@@ -41,6 +48,11 @@ export async function POST() {
 
 // GET endpoint to check current product images
 export async function GET() {
+  const session = await auth();
+  if (!session?.user || !getDeleterRoles().includes(session.user.role)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const products = await prisma.product.findMany({
       select: {

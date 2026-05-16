@@ -63,201 +63,39 @@ function nameToSlug(name: string): string {
 
 export async function getProductById(id: string): Promise<Product | null> {
   try {
-    // #region agent log
-    // Server-side logging - write directly to file
-    const fs = await import("fs");
-    const logPath =
-      "/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log";
-    const logEntry =
-      JSON.stringify({
-        location: "serverProductService.ts:69",
-        message: "Fetching product from DB",
-        data: { productId: id },
-        timestamp: Date.now(),
-        runId: "run1",
-        hypothesisId: "A",
-      }) + "\n";
-    fs.promises.appendFile(logPath, logEntry).catch(() => {});
-    // #endregion
-    // First, try to find by ID directly (works for both CUIDs and slug IDs)
-    // Type assertion needed due to Prisma Proxy wrapper interfering with type inference
-
-    let product = (await (prisma.product.findUnique as any)({
-      where: {
-        id: id,
-      },
-      include: {
-        images: {
-          orderBy: {
-            order: "asc",
-          },
-        },
-      },
-    })) as {
-      id: string;
-      name: string;
-      subtitle: string;
-      description: string;
-      longDescription: string;
-      price: string;
-      priceSubtext: string;
-      imageColor: string;
-      imageUrl: string | null;
-      features: unknown;
-      ingredients: unknown;
-      productBrief: string | null;
-      nutritionFacts: unknown;
-      images: Array<{ url: string; order: number }>;
-      createdAt: Date;
-      updatedAt: Date;
-    } | null;
-
-    // If not found and ID looks like a slug (contains hyphens), try finding by name
-    if (!product && id.includes("-")) {
-      // #region agent log
-      const fsSlug = await import("fs");
-      const logPathSlug =
-        "/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log";
-      const logEntrySlug =
-        JSON.stringify({
-          location: "serverProductService.ts:109",
-          message: "Product not found by ID, trying slug lookup",
-          data: { productId: id },
-          timestamp: Date.now(),
-          runId: "run1",
-          hypothesisId: "A",
-        }) + "\n";
-      fsSlug.promises.appendFile(logPathSlug, logEntrySlug).catch(() => {});
-      // #endregion
-
-      const allProducts = (await (prisma.product.findMany as any)({
-        include: {
-          images: {
-            orderBy: {
-              order: "asc",
-            },
-          },
-        },
-      })) as Array<{
-        id: string;
-        name: string;
-        subtitle: string;
-        description: string;
-        longDescription: string;
-        price: string;
-        priceSubtext: string;
-        imageColor: string;
-        imageUrl: string | null;
-        features: unknown;
-        ingredients: unknown;
-        productBrief: string | null;
-        nutritionFacts: unknown;
-        images: Array<{ url: string; order: number }>;
-        createdAt: Date;
-        updatedAt: Date;
-      }>;
-      product =
-        allProducts.find((p) => {
-          const slug = nameToSlug(p.name);
-          return slug === id || p.id === id;
-        }) || null;
-      // #region agent log
-      const fsSlug2 = await import("fs");
-      const logPathSlug2 =
-        "/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log";
-      const logEntrySlug2 =
-        JSON.stringify({
-          location: "serverProductService.ts:142",
-          message: "Slug lookup result",
-          data: {
-            productFound: !!product,
-            productId: id,
-            searchedProductsCount: allProducts.length,
-            imageUrl: product?.imageUrl,
-            imagesCount: product?.images?.length || 0,
-          },
-          timestamp: Date.now(),
-          runId: "run1",
-          hypothesisId: "A",
-        }) + "\n";
-      fsSlug2.promises.appendFile(logPathSlug2, logEntrySlug2).catch(() => {});
-      // #endregion
-    }
-
-    // #region agent log
-    const fs2 = await import("fs");
-    const logPath2 =
-      "/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log";
-    const logEntry2 =
-      JSON.stringify({
-        location: "serverProductService.ts:137",
-        message: "Product query result",
-        data: {
-          productFound: !!product,
-          productId: id,
-          imageUrl: product?.imageUrl,
-          imagesCount: product?.images?.length || 0,
-          images:
-            product?.images?.map((i: { url: string; order: number }) => ({
-              order: i.order,
-              url: i.url,
-            })) || [],
-        },
-        timestamp: Date.now(),
-        runId: "run1",
-        hypothesisId: "C",
-      }) + "\n";
-    fs2.promises.appendFile(logPath2, logEntry2).catch(() => {});
-    // #endregion
-
-    if (!product) return null;
-
-    const mappedProduct = {
-      ...product,
-      features: product.features as Array<{ text: string; color: string }>,
-      ingredients: (product as unknown as Product).ingredients as
-        | string[]
-        | undefined,
-      nutritionFacts: (product as unknown as Product).nutritionFacts as
-        | Array<{ label: string; value: string }>
-        | undefined,
-      imageUrl: product.imageUrl || undefined,
-      productBrief: (product as unknown as Product).productBrief || undefined,
-      images:
-        product.images && product.images.length > 0
-          ? product.images.map((img) => ({
-              url: img.url,
-              order: img.order,
-            }))
-          : undefined,
+    const includeImages = {
+      images: { orderBy: { order: "asc" as const } },
     };
 
-    // #region agent log
-    const fs3 = await import("fs");
-    const logPath3 =
-      "/Users/jacktenghaoooi/Personal_project/cocktail-business-project/.cursor/debug.log";
-    const logEntry3 =
-      JSON.stringify({
-        location: "serverProductService.ts:164",
-        message: "Mapped product ready to return",
-        data: {
-          productId: id,
-          imageUrl: mappedProduct.imageUrl,
-          imagesCount: mappedProduct.images?.length || 0,
-          images:
-            mappedProduct.images?.map((i: { url: string; order: number }) => ({
-              order: i.order,
-              url: i.url,
-            })) || [],
-        },
-        timestamp: Date.now(),
-        runId: "run1",
-        hypothesisId: "C",
-      }) + "\n";
-    fs3.promises.appendFile(logPath3, logEntry3).catch(() => {});
-    // #endregion
+    const byId = await prisma.product.findUnique({
+      where: { id },
+      include: includeImages,
+    });
 
-    return mappedProduct;
+    const raw =
+      byId ??
+      (id.includes("-")
+        ? ((await prisma.product.findMany({ include: includeImages })).find(
+            (p) => nameToSlug(p.name) === id || p.id === id,
+          ) ?? null)
+        : null);
+
+    if (!raw) return null;
+
+    return {
+      ...raw,
+      features: raw.features as Array<{ text: string; color: string }>,
+      ingredients: raw.ingredients as string[] | undefined,
+      nutritionFacts: raw.nutritionFacts as
+        | Array<{ label: string; value: string }>
+        | undefined,
+      imageUrl: raw.imageUrl || undefined,
+      productBrief: raw.productBrief || undefined,
+      images:
+        raw.images.length > 0
+          ? raw.images.map((img) => ({ url: img.url, order: img.order }))
+          : undefined,
+    };
   } catch (error) {
     console.error("Error fetching product:", error);
     throw error;
