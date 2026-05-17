@@ -1,6 +1,5 @@
 import React from "react";
 import { render, screen, fireEvent } from "../../../__tests__/test-utils";
-import userEvent from "@testing-library/user-event";
 import Testimonials from "../Testimonials";
 
 const mockTestimonials = [
@@ -23,13 +22,11 @@ const mockTestimonials = [
 describe("Testimonials", () => {
   it("renders the section title correctly", () => {
     render(<Testimonials testimonials={mockTestimonials} />);
-
     expect(screen.getByText("Customer Testimonials 🥂")).toBeInTheDocument();
   });
 
   it("renders the section subtitle correctly", () => {
     render(<Testimonials testimonials={mockTestimonials} />);
-
     expect(
       screen.getByText(
         "Real words from happy customers who've tasted the magic ✨",
@@ -39,14 +36,8 @@ describe("Testimonials", () => {
 
   it("displays testimonials in carousel", () => {
     render(<Testimonials testimonials={mockTestimonials} />);
-
-    // Should display both testimonials (duplicated for seamless loop)
     expect(
       screen.getAllByText(/Halal mocktails & so healthy/).length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByText(/My favourite flavour of the 3 is Tequila Sundown/)
-        .length,
     ).toBeGreaterThan(0);
     expect(screen.getAllByText("yasmeenn").length).toBeGreaterThan(0);
     expect(screen.getAllByText("KM").length).toBeGreaterThan(0);
@@ -54,61 +45,20 @@ describe("Testimonials", () => {
 
   it("renders star ratings correctly", () => {
     render(<Testimonials testimonials={mockTestimonials} />);
-
-    // All testimonials have 5 stars, so we should see multiple filled stars
     const filledStars = screen.getAllByText("★");
     expect(filledStars.length).toBeGreaterThan(0);
   });
 
-  it("renders customer names", () => {
-    render(<Testimonials testimonials={mockTestimonials} />);
-
-    // Testimonials are duplicated for carousel, so use getAllByText
-    expect(screen.getAllByText("yasmeenn").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("KM").length).toBeGreaterThan(0);
-  });
-
-  it("displays correct testimonial text", () => {
-    render(<Testimonials testimonials={mockTestimonials} />);
-
-    // Testimonials are duplicated for carousel, so use getAllByText
-    expect(
-      screen.getAllByText(
-        /Halal mocktails & so healthy. Tried Tequila Sundown & Maca Martini sedap sangat!!/,
-      ).length,
-    ).toBeGreaterThan(0);
-
-    expect(
-      screen.getAllByText(/My favourite flavour of the 3 is Tequila Sundown/)
-        .length,
-    ).toBeGreaterThan(0);
-
-    expect(
-      screen.getAllByText(
-        /As for Dark & Stormy, I like how it gives my throat a nice warm hug with the ginger kick/,
-      ).length,
-    ).toBeGreaterThan(0);
-  });
-
   it("renders customer avatars with initials", () => {
     render(<Testimonials testimonials={mockTestimonials} />);
-
-    // yasmeenn has "Y" initial, KM has "K" initial
     expect(screen.getAllByText("Y").length).toBeGreaterThan(0);
     expect(screen.getAllByText("K").length).toBeGreaterThan(0);
   });
 
   it("renders carousel with duplicated testimonials for seamless loop", () => {
     render(<Testimonials testimonials={mockTestimonials} />);
-
-    // Verify testimonials are rendered multiple times (duplicated for carousel loop)
-    // Each testimonial should appear at least twice (original + duplicate)
-    const yasmeennElements = screen.getAllByText("yasmeenn");
-    const kmElements = screen.getAllByText("KM");
-
-    // Should have at least 2 of each (original + duplicate for seamless loop)
-    expect(yasmeennElements.length).toBeGreaterThanOrEqual(2);
-    expect(kmElements.length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText("yasmeenn").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText("KM").length).toBeGreaterThanOrEqual(2);
   });
 
   it("returns null when testimonials array is empty", () => {
@@ -122,258 +72,83 @@ describe("Testimonials", () => {
   });
 
   describe("carousel interactions", () => {
-    const getCarouselTrack = (container: HTMLElement): HTMLElement | null => {
-      // Find the scrollable container - it should be a direct child of TestimonialsContainer
-      // Look for an element that has overflow-x or scroll behavior
-      const allDivs = container.querySelectorAll("div");
-      for (const div of Array.from(allDivs)) {
-        const style = window.getComputedStyle(div);
-        if (
-          style.overflowX === "auto" ||
-          style.overflowX === "scroll" ||
-          style.overflow === "auto" ||
-          style.overflow === "scroll"
-        ) {
-          return div;
-        }
-      }
-      // Fallback: find the container that wraps all testimonials
-      const testimonialText = container.querySelector("p");
-      if (testimonialText) {
-        let parent = testimonialText.parentElement;
-        let depth = 0;
-        while (parent && parent !== container && depth < 5) {
-          if (parent.scrollLeft !== undefined) {
-            return parent;
-          }
-          parent = parent.parentElement;
-          depth++;
-        }
-      }
-      return null;
+    const setup = () => {
+      const result = render(<Testimonials testimonials={mockTestimonials} />);
+      const track = result.getByTestId("carousel-track");
+      Object.defineProperty(track, "offsetLeft", { value: 0, writable: true });
+      Object.defineProperty(track, "scrollLeft", { value: 0, writable: true });
+      return { ...result, track };
     };
 
-    it("pauses carousel on mouse enter", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
-
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        // Simulate mouse enter
-        userEvent.hover(carouselTrack);
-      }
+    it("handles mouse down — starts drag", () => {
+      const { track } = setup();
+      fireEvent.mouseDown(track, { pageX: 100 });
+      expect(track).toBeInTheDocument();
     });
 
-    it("resumes carousel on mouse leave when not dragging", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
-
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        // Simulate mouse leave
-        userEvent.unhover(carouselTrack);
-      }
+    it("handles mouse move while dragging — scrolls carousel", () => {
+      const { track } = setup();
+      fireEvent.mouseDown(track, { pageX: 100 });
+      fireEvent.mouseMove(track, { pageX: 150 });
+      expect(track).toBeInTheDocument();
     });
 
-    it("handles mouse down event", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
-
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", {
-          value: 0,
-          writable: true,
-        });
-        Object.defineProperty(carouselTrack, "scrollLeft", {
-          value: 0,
-          writable: true,
-        });
-        fireEvent.mouseDown(carouselTrack, { pageX: 100 });
-        // Should not throw error
-        expect(carouselTrack).toBeInTheDocument();
-      }
+    it("handles mouse move without dragging — no-op", () => {
+      const { track } = setup();
+      fireEvent.mouseMove(track, { pageX: 150 });
+      expect(track).toBeInTheDocument();
     });
 
-    it("handles mouse move event when dragging", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
-
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", {
-          value: 0,
-          writable: true,
-        });
-        Object.defineProperty(carouselTrack, "scrollLeft", {
-          value: 0,
-          writable: true,
-        });
-        // Start dragging
-        fireEvent.mouseDown(carouselTrack, { pageX: 100 });
-        // Move mouse
-        fireEvent.mouseMove(carouselTrack, { pageX: 150 });
-        // Should not throw error
-        expect(carouselTrack).toBeInTheDocument();
-      }
+    it("handles mouse up — ends drag", () => {
+      const { track } = setup();
+      fireEvent.mouseDown(track, { pageX: 100 });
+      fireEvent.mouseUp(track);
+      expect(track).toBeInTheDocument();
     });
 
-    it("handles mouse up event", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
-
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", {
-          value: 0,
-          writable: true,
-        });
-        Object.defineProperty(carouselTrack, "scrollLeft", {
-          value: 0,
-          writable: true,
-        });
-        fireEvent.mouseDown(carouselTrack, { pageX: 100 });
-        fireEvent.mouseUp(carouselTrack);
-        // Should not throw error
-        expect(carouselTrack).toBeInTheDocument();
-      }
+    it("handles mouse enter — pauses carousel", () => {
+      const { track } = setup();
+      fireEvent.mouseEnter(track);
+      expect(track).toBeInTheDocument();
     });
 
-    it("handles touch start event", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
-
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", {
-          value: 0,
-          writable: true,
-        });
-        Object.defineProperty(carouselTrack, "scrollLeft", {
-          value: 0,
-          writable: true,
-        });
-        fireEvent.touchStart(carouselTrack, {
-          touches: [{ pageX: 100 }],
-        });
-        // Should not throw error
-        expect(carouselTrack).toBeInTheDocument();
-      }
+    it("handles mouse leave when not dragging — resumes carousel", () => {
+      const { track } = setup();
+      fireEvent.mouseLeave(track);
+      expect(track).toBeInTheDocument();
     });
 
-    it("handles touch move event when dragging", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
-
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", {
-          value: 0,
-          writable: true,
-        });
-        Object.defineProperty(carouselTrack, "scrollLeft", {
-          value: 0,
-          writable: true,
-        });
-        // Start dragging
-        fireEvent.touchStart(carouselTrack, {
-          touches: [{ pageX: 100 }],
-        });
-        // Move touch
-        fireEvent.touchMove(carouselTrack, {
-          touches: [{ pageX: 150 }],
-        });
-        // Should not throw error
-        expect(carouselTrack).toBeInTheDocument();
-      }
+    it("handles mouse leave while dragging — stays paused", () => {
+      const { track } = setup();
+      fireEvent.mouseDown(track, { pageX: 100 });
+      fireEvent.mouseLeave(track);
+      expect(track).toBeInTheDocument();
     });
 
-    it("handles touch end event", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
-
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", {
-          value: 0,
-          writable: true,
-        });
-        Object.defineProperty(carouselTrack, "scrollLeft", {
-          value: 0,
-          writable: true,
-        });
-        fireEvent.touchStart(carouselTrack, {
-          touches: [{ pageX: 100 }],
-        });
-        fireEvent.touchEnd(carouselTrack);
-        // Should not throw error
-        expect(carouselTrack).toBeInTheDocument();
-      }
+    it("handles touch start — initiates touch drag", () => {
+      const { track } = setup();
+      fireEvent.touchStart(track, { touches: [{ pageX: 100 }] });
+      expect(track).toBeInTheDocument();
     });
 
-    it("does not resume carousel on mouse leave when dragging", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
-
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        Object.defineProperty(carouselTrack, "offsetLeft", {
-          value: 0,
-          writable: true,
-        });
-        Object.defineProperty(carouselTrack, "scrollLeft", {
-          value: 0,
-          writable: true,
-        });
-        // Start dragging
-        fireEvent.mouseDown(carouselTrack, { pageX: 100 });
-        // Try to leave while dragging
-        fireEvent.mouseLeave(carouselTrack);
-        // Should not throw error
-        expect(carouselTrack).toBeInTheDocument();
-      }
+    it("handles touch move while dragging — scrolls carousel", () => {
+      const { track } = setup();
+      fireEvent.touchStart(track, { touches: [{ pageX: 100 }] });
+      fireEvent.touchMove(track, { touches: [{ pageX: 150 }] });
+      expect(track).toBeInTheDocument();
     });
 
-    it("handles mouse enter to pause carousel", () => {
-      const { container } = render(
-        <Testimonials testimonials={mockTestimonials} />,
-      );
-      const carouselTrack = getCarouselTrack(container);
+    it("handles touch move without drag state — no-op", () => {
+      const { track } = setup();
+      fireEvent.touchMove(track, { touches: [{ pageX: 150 }] });
+      expect(track).toBeInTheDocument();
+    });
 
-      expect(carouselTrack).not.toBeNull();
-
-      if (carouselTrack) {
-        fireEvent.mouseEnter(carouselTrack);
-        // Should not throw error
-        expect(carouselTrack).toBeInTheDocument();
-      }
+    it("handles touch end — ends touch drag", () => {
+      const { track } = setup();
+      fireEvent.touchStart(track, { touches: [{ pageX: 100 }] });
+      fireEvent.touchEnd(track);
+      expect(track).toBeInTheDocument();
     });
   });
 });

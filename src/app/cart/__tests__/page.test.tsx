@@ -33,16 +33,13 @@ jest.mock("../CartPageClient", () => {
 });
 
 describe("CartPage", () => {
-  const renderCartPage = () => {
-    return render(
-      <CartProvider>
-        <CartPage />
-      </CartProvider>,
-    );
+  const renderCartPage = async () => {
+    const resolvedPage = await CartPage();
+    return render(<CartProvider>{resolvedPage}</CartProvider>);
   };
 
-  it("renders all main components", () => {
-    renderCartPage();
+  it("renders all main components", async () => {
+    await renderCartPage();
 
     expect(screen.getByTestId("navigation")).toBeInTheDocument();
     expect(screen.getByTestId("breadcrumb")).toBeInTheDocument();
@@ -50,15 +47,15 @@ describe("CartPage", () => {
     expect(screen.getByTestId("footer")).toBeInTheDocument();
   });
 
-  it("displays correct breadcrumb navigation", () => {
-    renderCartPage();
+  it("displays correct breadcrumb navigation", async () => {
+    await renderCartPage();
 
     const breadcrumb = screen.getByTestId("breadcrumb");
     expect(breadcrumb).toHaveTextContent("Shop > Cart");
   });
 
-  it("renders in correct order", () => {
-    renderCartPage();
+  it("renders in correct order", async () => {
+    await renderCartPage();
 
     const navigation = screen.getByTestId("navigation");
     const breadcrumb = screen.getByTestId("breadcrumb");

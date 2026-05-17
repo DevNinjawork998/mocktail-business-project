@@ -123,6 +123,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({ testimonials = [] }) => {
         <TestimonialsContainer>
           <CarouselTrack
             ref={carouselRef}
+            data-testid="carousel-track"
             $isPaused={isPaused}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}

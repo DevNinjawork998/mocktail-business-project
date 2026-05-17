@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation/Navigation";
 import LandingPage from "@/components/LandingPage/LandingPage";
 import Footer from "@/components/Footer/Footer";
@@ -33,23 +32,18 @@ const FounderStory = dynamic(
 
 interface HomePageClientProps {
   heroUrls: string[];
+  cartIconEnabled: boolean;
+  ctaBannerEnabled: boolean;
 }
 
-export default function HomePageClient({ heroUrls }: HomePageClientProps) {
-  const [ctaBannerEnabled, setCtaBannerEnabled] = useState(true);
-
-  useEffect(() => {
-    const envValue = process.env.NEXT_PUBLIC_ENABLE_CTABANNER;
-    if (envValue !== undefined) {
-      setCtaBannerEnabled(envValue === "true" || envValue === "1");
-    } else {
-      setCtaBannerEnabled(true);
-    }
-  }, []);
-
+export default function HomePageClient({
+  heroUrls,
+  cartIconEnabled,
+  ctaBannerEnabled,
+}: HomePageClientProps) {
   return (
     <S.PageContainer>
-      <Navigation />
+      <Navigation cartIconEnabled={cartIconEnabled} />
       <LandingPage heroUrls={heroUrls} />
       <ProductShowcase />
       <HealthBenefits />

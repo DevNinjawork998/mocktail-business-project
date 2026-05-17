@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "npx prisma generate && next build --webpack --experimental-build-mode=compile",
+    "build": "node scripts/prepare-flags.mjs && npx prisma generate && next build --webpack --experimental-build-mode=compile",
     "start": "next start",
     "lint": "eslint . --max-warnings=0 --ext .ts,.tsx",
     "format": "prettier --write .",
@@ -37,6 +37,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
     "@eslint/eslintrc": "^3",
+    "@flags-sdk/vercel": "^1.2.1",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-libsql": "^7.2.0",
     "@prisma/adapter-pg": "^7.2.0",
@@ -47,9 +48,11 @@
     "@uploadthing/react": "^7.3.3",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
+    "@vercel/toolbar": "^0.2.6",
     "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.3",
     "eslint": "^9",
+    "flags": "^4.0.6",
     "lightningcss": "^1.30.1",
     "next": "^16.2.3",
     "next-auth": "^5.0.0-beta.30",

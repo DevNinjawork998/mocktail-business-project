@@ -3,6 +3,7 @@ import Navigation from "../../components/Navigation/Navigation";
 import Footer from "@/components/Footer/Footer";
 import ShopPageClient from "./ShopPageClient";
 import { getAllProducts, type Product } from "@/data/serverProductService";
+import { cartFlag, ctaBannerFlag } from "@/flags";
 
 export const metadata: Metadata = {
   title: "Shop | Mocktails On The Go",
@@ -28,17 +29,16 @@ export const metadata: Metadata = {
 };
 
 export default async function ShopPage() {
-  let products: Product[] = [];
-  try {
-    products = await getAllProducts();
-  } catch {
-    products = [];
-  }
+  const [products, cartIconEnabledRaw, ctaBannerEnabledRaw] = await Promise.all(
+    [getAllProducts().catch((): Product[] => []), cartFlag(), ctaBannerFlag()],
+  );
+  const cartIconEnabled = cartIconEnabledRaw ?? true;
+  const ctaBannerEnabled = ctaBannerEnabledRaw ?? true;
 
   return (
     <>
-      <Navigation />
-      <ShopPageClient products={products} />
+      <Navigation cartIconEnabled={cartIconEnabled} />
+      <ShopPageClient products={products} ctaBannerEnabled={ctaBannerEnabled} />
       <Footer />
     </>
   );
