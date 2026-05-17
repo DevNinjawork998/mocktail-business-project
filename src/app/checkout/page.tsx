@@ -20,10 +20,12 @@ export default async function CheckoutPage() {
     { label: "Checkout" },
   ];
 
-  const [stripeEnabled, cartIconEnabled] = await Promise.all([
+  const [stripeEnabledRaw, cartIconEnabledRaw] = await Promise.all([
     stripeFlag(),
     cartFlag(),
   ]);
+  const stripeEnabled = stripeEnabledRaw ?? true;
+  const cartIconEnabled = cartIconEnabledRaw ?? true;
 
   return (
     <>

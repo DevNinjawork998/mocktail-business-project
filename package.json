@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "npx prisma generate && next build --webpack --experimental-build-mode=compile",
+    "build": "node --input-type=module scripts/prepare-flags.js && npx prisma generate && next build --webpack --experimental-build-mode=compile",
     "start": "next start",
     "lint": "eslint . --max-warnings=0 --ext .ts,.tsx",
     "format": "prettier --write .",

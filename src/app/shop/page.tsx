@@ -29,11 +29,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ShopPage() {
-  const [products, cartIconEnabled, ctaBannerEnabled] = await Promise.all([
-    getAllProducts().catch((): Product[] => []),
-    cartFlag(),
-    ctaBannerFlag(),
-  ]);
+  const [products, cartIconEnabledRaw, ctaBannerEnabledRaw] = await Promise.all(
+    [getAllProducts().catch((): Product[] => []), cartFlag(), ctaBannerFlag()],
+  );
+  const cartIconEnabled = cartIconEnabledRaw ?? true;
+  const ctaBannerEnabled = ctaBannerEnabledRaw ?? true;
 
   return (
     <>

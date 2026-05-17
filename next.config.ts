@@ -1,5 +1,6 @@
 import { config as loadDotenv } from "dotenv";
 import { resolve } from "node:path";
+import { existsSync } from "node:fs";
 import type { NextConfig } from "next";
 
 // Next loads `.env.development.local` over `.env.local` by default. Re-apply `.env.local`
@@ -107,15 +108,21 @@ const nextConfig: NextConfig = {
       loader: "ignore-loader",
     });
 
-    // @vercel/flags-core dynamically imports @vercel/flags-definitions which is
-    // generated at Vercel build time by @vercel/prepare-flags-definitions. When
-    // building with webpack (not Turbopack) the /* turbopackOptional */ hint is
-    // ignored and webpack fails. Aliasing to false produces an empty module {};
-    // flags-core already handles this via its `typeof get !== "function"` guard.
-    config.resolve.alias = {
-      ...(config.resolve.alias as Record<string, unknown>),
-      "@vercel/flags-definitions": false,
-    };
+    // @vercel/flags-core imports @vercel/flags-definitions with a dynamic import
+    // annotated /* turbopackOptional */ — Turbopack skips it when missing, but
+    // webpack does not. scripts/prepare-flags.js generates the package before
+    // `next build`, so the alias only applies in local dev (npm run dev) where
+    // the package hasn't been generated. flags-core handles the empty module
+    // gracefully via its `typeof get !== "function"` guard.
+    const flagsDefinitionsExists = existsSync(
+      resolve(process.cwd(), "node_modules/@vercel/flags-definitions"),
+    );
+    if (!flagsDefinitionsExists) {
+      config.resolve.alias = {
+        ...(config.resolve.alias as Record<string, unknown>),
+        "@vercel/flags-definitions": false,
+      };
+    }
 
     return config;
   },

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CareersPage() {
-  const cartIconEnabled = await cartFlag();
+  const cartIconEnabled = (await cartFlag()) ?? true;
   return (
     <ClientOnly>
       <S.PageContainer>

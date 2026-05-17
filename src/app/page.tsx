@@ -21,14 +21,17 @@ const FALLBACK_LANDING_PHOTO_URL =
   "https://qchbny9v2p.ufs.sh/f/2frRLzpx3hGLDgNsR5ihjkVF8eaqWlO3pXP4g9ZHb0cCNLnI";
 
 export default async function Home() {
-  const [heroResult, cartIconEnabled, ctaBannerEnabled] = await Promise.all([
-    getLandingHeroSlideUrls().catch(() => ({
-      success: false as const,
-      data: undefined,
-    })),
-    cartFlag(),
-    ctaBannerFlag(),
-  ]);
+  const [heroResult, cartIconEnabledRaw, ctaBannerEnabledRaw] =
+    await Promise.all([
+      getLandingHeroSlideUrls().catch(() => ({
+        success: false as const,
+        data: undefined,
+      })),
+      cartFlag(),
+      ctaBannerFlag(),
+    ]);
+  const cartIconEnabled = cartIconEnabledRaw ?? true;
+  const ctaBannerEnabled = ctaBannerEnabledRaw ?? true;
 
   const heroUrls =
     heroResult.success && heroResult.data && heroResult.data.length > 0

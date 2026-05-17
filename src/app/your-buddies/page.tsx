@@ -45,7 +45,7 @@ export default async function YourBuddiesPage() {
     imageUrl: string | null;
   }> = [];
 
-  const cartIconEnabled = await cartFlag();
+  const cartIconEnabled = (await cartFlag()) ?? true;
 
   if (hasDatabaseUrl) {
     try {

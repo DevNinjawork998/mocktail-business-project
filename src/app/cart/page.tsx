@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function CartPage() {
   const breadcrumbItems = [{ label: "Shop", href: "/shop" }, { label: "Cart" }];
-  const cartIconEnabled = await cartFlag();
+  const cartIconEnabled = (await cartFlag()) ?? true;
 
   return (
     <CartPageBackground>

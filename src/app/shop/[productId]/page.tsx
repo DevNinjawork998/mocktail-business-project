@@ -61,10 +61,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
       notFound();
     }
 
-    const [otherProducts, cartIconEnabled] = await Promise.all([
+    const [otherProducts, cartIconEnabledRaw] = await Promise.all([
       getOtherProducts(productId),
       cartFlag(),
     ]);
+    const cartIconEnabled = cartIconEnabledRaw ?? true;
 
     const breadcrumbItems = [
       { label: "Shop", href: "/shop" },

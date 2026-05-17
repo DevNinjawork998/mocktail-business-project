@@ -18,7 +18,7 @@ export default async function SuccessPage() {
     { label: "Success" },
   ];
 
-  const cartIconEnabled = await cartFlag();
+  const cartIconEnabled = (await cartFlag()) ?? true;
 
   return (
     <>
