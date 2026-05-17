@@ -107,6 +107,16 @@ const nextConfig: NextConfig = {
       loader: "ignore-loader",
     });
 
+    // @vercel/flags-core dynamically imports @vercel/flags-definitions which is
+    // generated at Vercel build time by @vercel/prepare-flags-definitions. When
+    // building with webpack (not Turbopack) the /* turbopackOptional */ hint is
+    // ignored and webpack fails. Aliasing to false produces an empty module {};
+    // flags-core already handles this via its `typeof get !== "function"` guard.
+    config.resolve.alias = {
+      ...(config.resolve.alias as Record<string, unknown>),
+      "@vercel/flags-definitions": false,
+    };
+
     return config;
   },
 };
