@@ -48,6 +48,7 @@
     "@uploadthing/react": "^7.3.3",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
+    "@vercel/toolbar": "^0.2.6",
     "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.3",
     "eslint": "^9",

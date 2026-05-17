@@ -9,6 +9,7 @@ import StructuredData from "@/components/StructuredData/StructuredData";
 import GoogleAdsTag from "@/components/GoogleAdsTag/GoogleAdsTag";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { VercelToolbar } from "@vercel/toolbar/next";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -92,6 +93,7 @@ export default function RootLayout({
                 {children}
                 <Analytics />
                 <SpeedInsights />
+                {process.env.NODE_ENV === "development" && <VercelToolbar />}
               </CartProvider>
             </StyledThemeWrapper>
           </ThemeProvider>
