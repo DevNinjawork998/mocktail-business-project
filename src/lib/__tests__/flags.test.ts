@@ -1,20 +1,25 @@
 import { stripeFlag, cartFlag, ctaBannerFlag } from "@/flags";
 
 // flags/next and @flags-sdk/vercel are mocked globally in jest.setup.js
+// The adapter returns undefined in tests (no dashboard/cookie). Pages apply
+// ?? true so the UI defaults to showing features when no value is configured.
 
 describe("feature flags — keys and default values", () => {
-  it("stripeFlag has key 'stripe' and defaults to true", async () => {
+  it("stripeFlag has key 'stripe'", () => {
     expect(stripeFlag.key).toBe("stripe");
-    await expect(stripeFlag()).resolves.toBe(true);
   });
 
-  it("cartFlag has key 'cart' and defaults to true", async () => {
+  it("cartFlag has key 'cart'", () => {
     expect(cartFlag.key).toBe("cart");
-    await expect(cartFlag()).resolves.toBe(true);
   });
 
-  it("ctaBannerFlag has key 'ctabanner' and defaults to true", async () => {
+  it("ctaBannerFlag has key 'ctabanner'", () => {
     expect(ctaBannerFlag.key).toBe("ctabanner");
-    await expect(ctaBannerFlag()).resolves.toBe(true);
+  });
+
+  it("flags return undefined when adapter has no value (pages fall back to ?? true)", async () => {
+    await expect(stripeFlag()).resolves.toBeUndefined();
+    await expect(cartFlag()).resolves.toBeUndefined();
+    await expect(ctaBannerFlag()).resolves.toBeUndefined();
   });
 });
