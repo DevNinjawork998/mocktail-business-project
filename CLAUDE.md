@@ -110,13 +110,7 @@ UploadThing (`src/lib/uploadthing.ts`, `/api/uploadthing`). Components: `ImageUp
 
 ### Feature flags
 
-Flags are defined in `src/flags.ts` using `@flags-sdk/vercel` with `vercelAdapter()`. Current flags: `stripeFlag` (enable Stripe/checkout), `cartFlag` (show cart icon), `ctaBannerFlag` (show promotional banner). Flags are evaluated server-side in `page.tsx` (via `await cartFlag()`) and passed as props down to Client components — never evaluated client-side.
-
-`scripts/prepare-flags.mjs` generates `@vercel/flags-definitions` before `next build`. In local dev without this package, `next.config.ts` aliases it to `false` so webpack skips it gracefully.
-
-### Dynamic imports
-
-Below-the-fold and heavy components are loaded with `next/dynamic` + `{ ssr: false }` and a fixed-height `loading` placeholder to prevent layout shift. See `HomePageClient.tsx` for the pattern (ProductShowcase, HealthBenefits, WhyMocktails, CTABanner, FounderStory).
+Vercel feature flags via `@vercel/flags`. The `scripts/prepare-flags.mjs` script generates `@vercel/flags-definitions` before `next build`. In local dev without this package, `next.config.ts` aliases it to `false` so webpack skips it gracefully.
 
 ### Security headers
 
