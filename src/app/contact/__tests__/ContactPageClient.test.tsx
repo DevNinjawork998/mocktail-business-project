@@ -2,15 +2,19 @@ import React from "react";
 import { render, screen } from "../../../__tests__/test-utils";
 import ContactPageClient from "../ContactPageClient";
 
-jest.mock("../../../components/Navigation/Navigation", () =>
-  function MockNavigation() {
-    return <div data-testid="navigation" />;
-  },
+jest.mock(
+  "../../../components/Navigation/Navigation",
+  () =>
+    function MockNavigation() {
+      return <div data-testid="navigation" />;
+    },
 );
-jest.mock("../../../components/Footer/Footer", () =>
-  function MockFooter() {
-    return <div data-testid="footer" />;
-  },
+jest.mock(
+  "../../../components/Footer/Footer",
+  () =>
+    function MockFooter() {
+      return <div data-testid="footer" />;
+    },
 );
 
 describe("ContactPageClient", () => {

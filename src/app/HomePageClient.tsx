@@ -8,26 +8,27 @@ import dynamic from "next/dynamic";
 
 const ProductShowcase = dynamic(
   () => import("@/components/ProductShowcase/ProductShowcase"),
-  { ssr: false },
+  { ssr: false, loading: () => <div style={{ minHeight: "600px" }} /> },
 );
 
 const HealthBenefits = dynamic(
   () => import("@/components/HealthBenefits/HealthBenefits"),
-  { ssr: false },
+  { ssr: false, loading: () => <div style={{ minHeight: "500px" }} /> },
 );
 
 const WhyMocktails = dynamic(
   () => import("@/components/WhyMocktails/WhyMocktails"),
-  { ssr: false },
+  { ssr: false, loading: () => <div style={{ minHeight: "500px" }} /> },
 );
 
 const CTABanner = dynamic(() => import("@/components/CTABanner/CTABanner"), {
   ssr: false,
+  loading: () => <div style={{ minHeight: "250px" }} />,
 });
 
 const FounderStory = dynamic(
   () => import("@/components/FounderStory/FounderStory"),
-  { ssr: false },
+  { ssr: false, loading: () => <div style={{ minHeight: "600px" }} /> },
 );
 
 interface HomePageClientProps {

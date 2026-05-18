@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import CheckoutPageClient from "./CheckoutPageClient";
-import ClientOnly from "@/components/ui/ClientOnly/ClientOnly";
 
 export const metadata: Metadata = {
   title: "Checkout | Mocktails On The Go",
@@ -9,27 +8,22 @@ export const metadata: Metadata = {
 import Navigation from "../../components/Navigation/Navigation";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
 import Footer from "@/components/Footer/Footer";
-import { stripeFlag, cartFlag } from "@/flags";
+import { isStripeEnabled } from "@/lib/featureFlags";
 
 export const dynamic = "force-dynamic";
 
-export default async function CheckoutPage() {
+export default function CheckoutPage() {
   const breadcrumbItems = [
     { label: "Shop", href: "/shop" },
     { label: "Cart", href: "/cart" },
     { label: "Checkout" },
   ];
 
-  const [stripeEnabledRaw, cartIconEnabledRaw] = await Promise.all([
-    stripeFlag(),
-    cartFlag(),
-  ]);
-  const stripeEnabled = stripeEnabledRaw ?? true;
-  const cartIconEnabled = cartIconEnabledRaw ?? true;
+  const stripeEnabled = isStripeEnabled();
 
   return (
     <>
-      <Navigation cartIconEnabled={cartIconEnabled} />
+      <Navigation />
       <Breadcrumb items={breadcrumbItems} />
       <CheckoutPageClient stripeEnabled={stripeEnabled} />
       <Footer />

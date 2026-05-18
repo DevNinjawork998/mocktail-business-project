@@ -145,7 +145,9 @@ describe("HeroSlideshow", () => {
       act(() => {
         mq._listeners.forEach((fn: () => void) => fn());
       });
-      expect(screen.getAllByAltText("Mocktails On the Go - Fresh Mocktail").length).toBeGreaterThan(0);
+      expect(
+        screen.getAllByAltText("Mocktails On the Go - Fresh Mocktail").length,
+      ).toBeGreaterThan(0);
     });
   });
 
@@ -180,7 +182,10 @@ describe("HeroSlideshow", () => {
 
     it("does not set rotation timer for single image", () => {
       render(
-        <HeroSlideshow heroUrls={[FALLBACK_SRC]} firstImageUrl={FALLBACK_SRC} />,
+        <HeroSlideshow
+          heroUrls={[FALLBACK_SRC]}
+          firstImageUrl={FALLBACK_SRC}
+        />,
       );
       act(() => {
         jest.advanceTimersByTime(5000);
