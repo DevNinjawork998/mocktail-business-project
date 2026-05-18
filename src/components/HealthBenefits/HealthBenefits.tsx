@@ -72,6 +72,9 @@ const HealthBenefits = () => {
     getMatchesDesktopIngredientsLayout,
   );
   const hasSeededMobileCarousel = useRef(false);
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const wasSwipedRef = useRef(false);
 
   const sortedIngredients = useMemo(
     () => [...ingredients].sort((a, b) => a.order - b.order),
@@ -122,6 +125,28 @@ const HealthBenefits = () => {
     );
     setMobileCarouselIndex(baobabIndex >= 0 ? baobabIndex : 0);
   }, [sortedIngredients]);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+    wasSwipedRef.current = false;
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+      const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
+      if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        wasSwipedRef.current = true;
+        setMobileCarouselIndex((i) =>
+          deltaX < 0
+            ? (i + 1) % sortedIngredients.length
+            : (i - 1 + sortedIngredients.length) % sortedIngredients.length,
+        );
+      }
+    },
+    [sortedIngredients.length],
+  );
 
   const toggleFlip = useCallback((ingredientId: string): void => {
     setFlippedCards((prev) => {
@@ -221,6 +246,10 @@ const HealthBenefits = () => {
         <FlipCard
           $isFlipped={isFlipped}
           onClick={(e) => {
+            if (wasSwipedRef.current) {
+              wasSwipedRef.current = false;
+              return;
+            }
             e.preventDefault();
             e.stopPropagation();
             toggleFlip(ingredient.id);
@@ -262,7 +291,10 @@ const HealthBenefits = () => {
         Mesti, HACCP, and GMP certifications.
       </Intro>
       {!isDesktopLayout && mobileFeaturedIngredient ? (
-        <MobileCarouselWrapper>
+        <MobileCarouselWrapper
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           {sortedIngredients.length > 1 ? (
             <VisuallyHidden aria-live="polite" aria-atomic="true">
               {`Ingredient ${mobileCarouselIndex + 1} of ${sortedIngredients.length}: ${mobileFeaturedIngredient.name}`}

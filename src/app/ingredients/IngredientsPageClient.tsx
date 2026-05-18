@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useRef, type MouseEvent, type TouchEvent } from "react";
+import {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  type MouseEvent,
+} from "react";
 import Image from "next/image";
 import Navigation from "@/components/Navigation/Navigation";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb";
@@ -44,63 +50,103 @@ interface IngredientsPageClientProps {
 }
 
 const breadcrumbItems = [{ label: "Ingredients" }];
+const SCROLL_SPEED_PX_PER_S = 50;
 
 export default function IngredientsPageClient({
   ingredients,
 }: IngredientsPageClientProps) {
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
-  const [isDragging, setIsDragging] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const cachedOffsetLeftRef = useRef(0);
+  const rafRef = useRef<number | null>(null);
+  const lastTimestampRef = useRef<number | null>(null);
+  const isDraggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragScrollLeftRef = useRef(0);
+  const isTouchingRef = useRef(false);
 
-  // Baobab is the featured ingredient
   const otherIngredients = ingredients.filter((ing) => ing.name !== "Baobab");
 
-  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
-    if (!carouselRef.current) return;
-    setIsDragging(true);
-    setIsPaused(true);
-    cachedOffsetLeftRef.current = carouselRef.current.offsetLeft;
-    setStartX(e.pageX - cachedOffsetLeftRef.current);
-    setScrollLeft(carouselRef.current.scrollLeft);
-  };
+  const stopAutoScroll = useCallback(() => {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    lastTimestampRef.current = null;
+  }, []);
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    setIsPaused(false);
+  const startAutoScroll = useCallback(() => {
+    if (rafRef.current !== null) return;
+    const step = (timestamp: number) => {
+      if (isDraggingRef.current || isTouchingRef.current) {
+        rafRef.current = null;
+        lastTimestampRef.current = null;
+        return;
+      }
+      const container = carouselRef.current;
+      if (!container) {
+        rafRef.current = null;
+        return;
+      }
+      if (lastTimestampRef.current !== null) {
+        const delta = timestamp - lastTimestampRef.current;
+        container.scrollLeft += (SCROLL_SPEED_PX_PER_S * delta) / 1000;
+        const halfWidth = container.scrollWidth / 2;
+        if (container.scrollLeft >= halfWidth) {
+          container.scrollLeft -= halfWidth;
+        }
+      }
+      lastTimestampRef.current = timestamp;
+      rafRef.current = requestAnimationFrame(step);
+    };
+    rafRef.current = requestAnimationFrame(step);
+  }, []);
+
+  useEffect(() => {
+    startAutoScroll();
+    return stopAutoScroll;
+  }, [startAutoScroll, stopAutoScroll]);
+
+  const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    const container = carouselRef.current;
+    if (!container) return;
+    isDraggingRef.current = true;
+    stopAutoScroll();
+    dragStartXRef.current = e.pageX - container.getBoundingClientRect().left;
+    dragScrollLeftRef.current = container.scrollLeft;
+    container.style.cursor = "grabbing";
   };
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!isDragging || !carouselRef.current) return;
+    if (!isDraggingRef.current || !carouselRef.current) return;
     e.preventDefault();
-    const x = e.pageX - cachedOffsetLeftRef.current;
-    const walk = (x - startX) * 2;
-    carouselRef.current.scrollLeft = scrollLeft - walk;
+    const x = e.pageX - carouselRef.current.getBoundingClientRect().left;
+    const walk = (x - dragStartXRef.current) * 1.5;
+    carouselRef.current.scrollLeft = dragScrollLeftRef.current - walk;
   };
 
-  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    if (!carouselRef.current) return;
-    setIsDragging(true);
-    setIsPaused(true);
-    cachedOffsetLeftRef.current = carouselRef.current.offsetLeft;
-    setStartX(e.touches[0].pageX - cachedOffsetLeftRef.current);
-    setScrollLeft(carouselRef.current.scrollLeft);
+  const handleMouseUp = () => {
+    isDraggingRef.current = false;
+    if (carouselRef.current) carouselRef.current.style.cursor = "";
+    startAutoScroll();
   };
 
-  const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
-    if (!isDragging || !carouselRef.current) return;
-    const x = e.touches[0].pageX - cachedOffsetLeftRef.current;
-    const walk = (x - startX) * 2;
-    carouselRef.current.scrollLeft = scrollLeft - walk;
+  const handleMouseLeave = () => {
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false;
+      if (carouselRef.current) carouselRef.current.style.cursor = "";
+    }
+    startAutoScroll();
+  };
+
+  const handleTouchStart = () => {
+    isTouchingRef.current = true;
+    stopAutoScroll();
   };
 
   const handleTouchEnd = () => {
-    setIsDragging(false);
-    setIsPaused(false);
+    isTouchingRef.current = false;
+    setTimeout(startAutoScroll, 600);
   };
 
   return (
@@ -117,24 +163,17 @@ export default function IngredientsPageClient({
       </HeroSection>
 
       <IngredientsSection>
-        <CarouselContainer>
-          <CarouselTrack
-            ref={carouselRef}
-            $isPaused={isPaused}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => {
-              if (!isDragging) {
-                setIsPaused(false);
-              }
-            }}
-          >
-            {/* Duplicate ingredients for seamless loop */}
+        <CarouselContainer
+          ref={carouselRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          onMouseEnter={stopAutoScroll}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <CarouselTrack>
             {[...otherIngredients, ...otherIngredients].map(
               (ingredient, index) => {
                 const isFlipped = flippedCards.has(`${ingredient.id}-${index}`);

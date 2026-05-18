@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 export const PageContainer = styled.div`
   min-height: 100vh;
@@ -94,36 +94,31 @@ export const FeaturedBenefit = styled.p`
   opacity: 0.95;
 `;
 
-const scrollAnimation = keyframes`
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-`;
-
 export const CarouselContainer = styled.div`
-  overflow: hidden;
+  overflow-x: scroll;
+  overflow-y: hidden;
   width: 100%;
   position: relative;
   padding: ${({ theme }) => theme.spacing.md} 0;
   margin-top: ${({ theme }) => theme.spacing["2xl"]};
-`;
-
-export const CarouselTrack = styled.div<{ $isPaused?: boolean }>`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.xl};
-  width: fit-content;
-  animation: ${scrollAnimation} 40s linear infinite;
-  animation-play-state: ${({ $isPaused }) =>
-    $isPaused ? "paused" : "running"};
   cursor: grab;
   user-select: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   &:active {
     cursor: grabbing;
   }
+`;
+
+export const CarouselTrack = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.xl};
+  width: fit-content;
 `;
 
 export const CarouselCardWrapper = styled.div`
