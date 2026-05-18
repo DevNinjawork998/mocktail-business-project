@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm run dev           # Start dev server (Next.js with webpack)
 npm run build         # Generate Prisma client + production build
+npm run build:prod    # Switch to PostgreSQL schema, then build (used by Vercel)
 npm run lint          # ESLint with zero warnings tolerance
 npm run format        # Prettier write pass (auto-fixes formatting)
 npm run type-check    # TypeScript tsc --noEmit
@@ -28,6 +29,7 @@ npx jest path/to/file.test.tsx
 npm run db:dev          # Switch to SQLite schema (dev)
 npm run db:prod         # Switch to PostgreSQL schema (prod)
 npm run db:seed         # Push schema + generate + seed (dev/SQLite)
+npm run db:seed:prod    # Seed production database
 npm run db:studio       # Open Prisma Studio GUI
 npm run db:docker:up    # Start PostgreSQL Docker container
 npm run db:docker:down  # Stop PostgreSQL Docker container
@@ -43,32 +45,60 @@ Always run these three in order after making changes:
 
 ## Architecture
 
-Full-stack Next.js 16 e-commerce platform for a mocktail business. Uses the App Router (`src/app/`).
+Full-stack Next.js e-commerce platform for a mocktail business (Mocktails On The Go). Uses the App Router (`src/app/`).
 
 ### Key directories
 
 - `src/app/(admin)/dashboard/` — Admin dashboard (products, ingredients, testimonials, instagram posts, users, settings). Protected by role-based auth.
 - `src/app/(auth)/login/` — Authentication page
 - `src/app/api/` — API routes (NextAuth, Stripe checkout, UploadThing, product CRUD)
-- `src/app/actions/` — Next.js Server Actions for all CRUD operations
+- `src/app/actions/` — Next.js Server Actions for all CRUD operations (`products.ts`, `ingredients.ts`, `testimonials.ts`, `instagramPosts.ts`, `users.ts`, `settings.ts`)
+- `src/app/lib/` — App-level utilities: `registry.tsx` (styled-components SSR), `stripe.ts` (client), `stripe-server.ts` (server)
 - `src/components/` — Reusable React components
-- `src/data/` — Data fetching services (`productService.ts` for client, `serverProductService.ts` for server)
-- `src/lib/` — Prisma client singleton, UploadThing config, feature flags, role-based permissions
-- `src/contexts/` — React Context providers (cart, etc.)
+- `src/data/` — Data fetching services (`productService.ts` for client-side fetch via `/api/products`, `serverProductService.ts` for server-side Prisma calls)
+- `src/lib/` — Prisma client singleton, UploadThing config, role-based permissions, Instagram API
+- `src/contexts/` — React Context providers (`CartContext` with localStorage persistence)
 - `src/theme/` — Styled-components theme and providers
 - `prisma/` — Dual schema setup: `schema.dev.prisma` (SQLite), `schema.prod.prisma` (PostgreSQL)
 
+### Page/component convention
+
+Every page follows this pattern:
+- `page.tsx` — Server component; fetches data via Prisma directly, passes as props to the Client component
+- `*PageClient.tsx` or `*Client.tsx` — Client component (`"use client"`); receives server-fetched props, handles interactivity
+- `*.styles.tsx` — Styled-components for the page/component
+
+Never remove `"use client"` from pages that use styled-components; always use the server wrapper + `*PageClient.tsx` pattern instead.
+
 ### Dual database setup
 
-The project uses SQLite locally and PostgreSQL in production. `npm run db:dev` / `npm run db:prod` swap `prisma/schema.prisma` by copying the appropriate source file. CI always runs with the dev (SQLite) schema.
-
-### Styling
-
-Both Styled-components and Tailwind CSS are used together. Styled-components requires the custom SSR registry at `src/app/lib/registry.tsx`. The theme is defined in `src/theme/` with cocktail brand colors: `chocolate-kisses` (#451515), `mauvelous` (#D4AAB3), `caramel` (#FAC358), `royal-orange` (#DD541C).
+The project uses SQLite locally and PostgreSQL in production. `npm run db:dev` / `npm run db:prod` swap `prisma/schema.prisma` by copying the appropriate source file. CI always runs with the dev (SQLite) schema. Vercel's `buildCommand` in `vercel.json` is `npm run build:prod`, which switches to PostgreSQL before building.
 
 ### Authentication
 
-NextAuth.js v5 (`src/auth.ts`, `src/auth.config.ts`) with credentials (email + bcrypt password) and Google OAuth. Roles: `SUPERADMIN`, `ADMIN`, `EDITOR`. Permissions enforced via `src/lib/permissions.ts`.
+Two-layer protection for `/dashboard` routes:
+
+1. **`src/proxy.ts`** — Next.js 16 Proxy (not `middleware.ts`). Matcher covers `/dashboard/:path*`. Redirects unauthenticated users to `/login` before the request reaches the route.
+2. **`src/app/(admin)/layout.tsx`** — Server component double-check with `auth()` + `redirect("/login")`.
+
+`middleware.ts` only handles HTTPS redirect (not auth). Auth is handled by `src/proxy.ts`.
+
+NextAuth.js v5 (`src/auth.ts`, `src/auth.config.ts`) with credentials (email + bcrypt) and Google OAuth. JWT strategy used. Roles: `SUPERADMIN`, `ADMIN`, `EDITOR`. Permission helpers live in `src/lib/permissions.ts`:
+- `canManageUsers` — SUPERADMIN only
+- `canDelete` — SUPERADMIN, ADMIN
+- `canEdit` — SUPERADMIN, ADMIN, EDITOR
+
+### Styling
+
+Both styled-components and Tailwind CSS are used together. Styled-components requires the custom SSR registry at `src/app/lib/registry.tsx`.
+
+The root layout wraps children in three providers (in order):
+1. `StyledComponentsRegistry` — SSR style flushing
+2. `ThemeProvider` — always light mode only (no dark mode implemented)
+3. `StyledThemeWrapper` — injects styled-components theme object
+4. `CartProvider` — cart state via `useReducer`, persisted to `localStorage`
+
+Brand colors: `chocolate-kisses` (#451515), `mauvelous` (#D4AAB3), `caramel` (#FAC358), `royal-orange` (#DD541C). Fonts: Poppins (body) and Raleway (headings).
 
 ### Payments
 
@@ -76,12 +106,18 @@ Stripe via `src/app/lib/stripe.ts` (client) and `src/app/lib/stripe-server.ts` (
 
 ### File uploads
 
-UploadThing (`src/lib/uploadthing.ts`, `/api/uploadthing`). Components: `ImageUpload` (single), `ImageUploadMulti` (multi).
-
-### Client vs server components
-
-Server components are plain `.tsx` files. Client components are named `*PageClient.tsx` or use `"use client"` at the top. Server Actions live in `src/app/actions/`.
+UploadThing (`src/lib/uploadthing.ts`, `/api/uploadthing`). Components: `ImageUpload` (single), `ImageUploadMulti` (multi). Allowed image hosts in `next.config.ts`: `images.unsplash.com`, `utfs.io`, `qchbny9v2p.ufs.sh`.
 
 ### Feature flags
 
-`src/lib/featureFlags.ts` — simple flag system used for gradual rollouts (e.g. cart icon visibility via `src/lib/cart-icon-enabled.ts`).
+Flags are defined in `src/flags.ts` using `@flags-sdk/vercel` with `vercelAdapter()`. Current flags: `stripeFlag` (enable Stripe/checkout), `cartFlag` (show cart icon), `ctaBannerFlag` (show promotional banner). Flags are evaluated server-side in `page.tsx` (via `await cartFlag()`) and passed as props down to Client components — never evaluated client-side.
+
+`scripts/prepare-flags.mjs` generates `@vercel/flags-definitions` before `next build`. In local dev without this package, `next.config.ts` aliases it to `false` so webpack skips it gracefully.
+
+### Dynamic imports
+
+Below-the-fold and heavy components are loaded with `next/dynamic` + `{ ssr: false }` and a fixed-height `loading` placeholder to prevent layout shift. See `HomePageClient.tsx` for the pattern (ProductShowcase, HealthBenefits, WhyMocktails, CTABanner, FounderStory).
+
+### Security headers
+
+All security headers (CSP, HSTS, X-Frame-Options, etc.) are set globally via `next.config.ts` `headers()` — not in middleware. The CSP allows Stripe, UploadThing, Google Analytics, and Vercel services.
