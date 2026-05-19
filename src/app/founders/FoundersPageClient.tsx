@@ -10,16 +10,18 @@ import { FounderStoryData } from "@/types/founder";
 
 interface FoundersPageClientProps {
   storyData: FounderStoryData;
+  cartIconEnabled?: boolean;
 }
 
 export default function FoundersPageClient({
   storyData,
+  cartIconEnabled = true,
 }: FoundersPageClientProps) {
   const breadcrumbItems = [{ label: "Meet Our Founders" }];
 
   return (
     <S.PageContainer>
-      <Navigation />
+      <Navigation cartIconEnabled={cartIconEnabled} />
       <Breadcrumb items={breadcrumbItems} />
       <FounderStory storyData={storyData} />
       <Footer />

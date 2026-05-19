@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import IngredientsPageClient, {
   type Ingredient,
 } from "./IngredientsPageClient";
+import { cartFlag } from "@/flags";
 
 export const metadata: Metadata = {
   title: "Our Ingredients | Mocktails On The Go",
@@ -19,6 +20,9 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function IngredientsPage() {
+  const cartIconEnabledRaw = await cartFlag();
+  const cartIconEnabled = cartIconEnabledRaw ?? true;
+
   const hasDatabaseUrl =
     process.env.DATABASE_URL ||
     process.env.POSTGRES_URL ||
@@ -38,5 +42,5 @@ export default async function IngredientsPage() {
     }
   }
 
-  return <IngredientsPageClient ingredients={ingredients} />;
+  return <IngredientsPageClient ingredients={ingredients} cartIconEnabled={cartIconEnabled} />;
 }

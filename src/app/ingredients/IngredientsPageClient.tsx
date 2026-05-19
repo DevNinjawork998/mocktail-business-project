@@ -47,6 +47,7 @@ export interface Ingredient {
 
 interface IngredientsPageClientProps {
   ingredients: Ingredient[];
+  cartIconEnabled?: boolean;
 }
 
 const breadcrumbItems = [{ label: "Ingredients" }];
@@ -54,6 +55,7 @@ const SCROLL_SPEED_PX_PER_S = 50;
 
 export default function IngredientsPageClient({
   ingredients,
+  cartIconEnabled = true,
 }: IngredientsPageClientProps) {
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
@@ -151,7 +153,7 @@ export default function IngredientsPageClient({
 
   return (
     <PageContainer>
-      <Navigation />
+      <Navigation cartIconEnabled={cartIconEnabled} />
       <Breadcrumb items={breadcrumbItems} />
 
       <HeroSection>
